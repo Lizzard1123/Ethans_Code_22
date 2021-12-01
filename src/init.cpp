@@ -991,8 +991,8 @@ void initialize()
     initAllScreens();
     //calibrate potentiometer if used
     //liftPot.calibrate();
-    //leftWingPot.calibrate();
-    //rightWingPot.calibrate();
+    leftArmPot.calibrate();
+    rightArmPot.calibrate();
     ////printf("Init pot \n");
     //delay(250); idk about this delay
     //locks
@@ -1029,6 +1029,9 @@ void initialize()
     //leftEye.set_signature(MOGO_CUSTOM_YELLOW_NUM, &MOGO_CUSTOM_YELLOW);
     //rightEye.set_signature(MOGO_CUSTOM_YELLOW_NUM, &MOGO_CUSTOM_YELLOW);
     //backEye.set_signature(MOGO_CUSTOM_YELLOW_NUM, &MOGO_CUSTOM_YELLOW);
+    ADIDigitalOut clawLock('E');
+    ADIDigitalOut frontLock('H');
+    ADIDigitalOut backLock('G');
 }
 
 /**

@@ -18,6 +18,8 @@ void opcontrol()
 {
     //space to run stuff once before begin driving
     ADIDigitalOut clawLock('E');
+    ADIDigitalOut frontLock('H');
+    ADIDigitalOut backLock('G');
     master.print(0, 8, "Player 1");
     while (true)
     {
@@ -39,17 +41,33 @@ void opcontrol()
         }
 
         if (master.get_digital(DIGITAL_R2)){
-            Bongo.Lift.clawDown(); //manually pushes arm down at max torque
+            Bongo.Lift.clawDown(); //manually pushes claw down at max torque
+            Bongo.Lift.setAutoLevel(false);
         } else if (master.get_digital(DIGITAL_R1)){
-            Bongo.Lift.clawUp(); //manually lifts arm with max torque
+            Bongo.Lift.clawUp(); //manually lifts claw with max torque
+            Bongo.Lift.setAutoLevel(false);
         } else {
             Bongo.Lift.stopClaw(); //stops manual controll
         }
 
-        if (master.get_digital(DIGITAL_A)){
-            clawLock.set_value(HIGH);;
-        } else if (master.get_digital(DIGITAL_Y)){
-            clawLock.set_value(LOW);
+        //Toggle claw
+        if (master.get_digital_new_press(DIGITAL_A)){
+            Bongo.Pneumatics.toggleClaw();
+        }
+
+        //Toggle frpnt
+        if (master.get_digital_new_press(DIGITAL_X)){
+            Bongo.Pneumatics.toggleFront();
+        }
+
+        //Toggle back
+        if (master.get_digital_new_press(DIGITAL_B)){
+            Bongo.Pneumatics.toggleBack();
+        }
+
+        //Toggle level
+        if (master.get_digital_new_press(DIGITAL_LEFT)){
+            Bongo.Lift.toggleAutoLevel();
         }
 
         // starts the spin on motors or cuts power

@@ -56,7 +56,7 @@ extern Controller partner;
 extern ADIDigitalOut frontLock;
 extern ADIDigitalOut backLock;
 extern ADIDigitalOut liftShifter;
-extern ADIAnalogOut clawLock;
+extern ADIDigitalOut clawLock;
 
 
 //limit switch / button
@@ -68,7 +68,8 @@ extern pros::c::ext_adi_encoder_t  rightOdom;
 //extern okapi::ADIEncoder  middleOdom;
 
 //pots
-//extern ADIAnalogIn TeamColor;
+extern ADIAnalogIn leftArmPot;
+extern ADIAnalogIn rightArmPot;
 
 //labels debug
 extern lv_obj_t *debugXLabel;

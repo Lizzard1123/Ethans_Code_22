@@ -2,6 +2,7 @@
 #define ROBOT
 #include "lift.h"
 #include "movement.h"
+#include "pneumatics.h"
 #include <climits>
 
 class Robot
@@ -54,6 +55,8 @@ public:
     static RobotMovement Movement;
     // custom math reference
     static Math myMath;
+    //custom static pneumatics class
+    static PneumaticsClass Pneumatics;
 
     // sets team color to red
     void setRed()
@@ -506,12 +509,26 @@ public:
         return initz;
     }
 
+    //calls upon subsystems and updates them
+    static void updateLiftSpeed(void *)
+    {
+        while (true)
+        {
+            //update subsystem motors in their methods respectivley 
+            Lift.update();
+            c::task_delay(10);
+        }
+    }
+
     //starts up threads
     void initThreads()
-    {
+    {//updateLift
+        Task updateLift(updateLiftSpeed, nullptr, TASK_PRIORITY_DEFAULT,
+                            TASK_STACK_DEPTH_DEFAULT, "updateLift");
         // track locationFty
         Task updatePosition(updatePos, nullptr, TASK_PRIORITY_DEFAULT,
                             TASK_STACK_DEPTH_DEFAULT, "updatePos");
+        
         initz = true;
     }
 
