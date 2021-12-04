@@ -433,7 +433,7 @@ public:
             rotation += changeOfHeading;
             //set new
             //TODO i thought this went before but try accuracy when its after computed distance moved idk i think its right
-            head = rotation;
+            head = 0; //rotation; TODO fix heading
             //debug
             //printf("right: %f\n", rightDist);
             //printf("left: %f\n", leftDist);
@@ -579,12 +579,34 @@ public:
     }
     */
     //AUTONS
+    void moveForwardTimed(double time){
+        Movement.moveFL(100);
+        Movement.moveFR(100);
+        Movement.moveBL(100);
+        Movement.moveBR(100);
+        delay(time*1000);
+        Movement.stopAll();
+    }
+
+    void moveBackwardTimed(double time){
+        Movement.moveFL(-100);
+        Movement.moveFR(-100);
+        Movement.moveBL(-100);
+        Movement.moveBR(-100);
+        delay(time*1000);
+        Movement.stopAll();
+    }
 
     void AutonomousOne(bool isLeft, bool isBlue){
+        moveForwardTimed(1.5);
+        Pneumatics.toggleClaw();
+        moveBackwardTimed(1.5);
 
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
-        //TODO finish this auton pathing
+        moveForwardTimed(2.25);
+        Pneumatics.toggleClaw();
+        moveBackwardTimed(2.25);
     };
     void AutonomousThree(bool isLeft, bool isBlue){
         //TODO finish this auton pathing

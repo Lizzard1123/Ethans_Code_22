@@ -15,5 +15,5 @@ Robot Bongo;
  */
 void autonomous()
 {
-  //Bongo.autonomous();
+  Bongo.autonomous();
 }

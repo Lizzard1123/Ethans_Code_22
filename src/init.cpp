@@ -1032,6 +1032,7 @@ void initialize()
     ADIDigitalOut clawLock('E');
     ADIDigitalOut frontLock('H');
     ADIDigitalOut backLock('G');
+    //Bongo.Pneumatics.clawGrab();
 }
 
 /**

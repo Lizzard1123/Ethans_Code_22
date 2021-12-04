@@ -22,6 +22,9 @@ private:
 
     double offset = 50;
 
+    double defaultClawSpeed = 100;
+    double liftSpeed = 50;
+
     double clawSpeed = 0;
     double RarmLiftSpeed = 0;
     double LarmLiftSpeed = 0;
@@ -111,21 +114,32 @@ public:
     }
 
     void liftUp(){
+        /*
         LarmLiftSpeed = torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
         RarmLiftSpeed = torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        */
+       LarmLiftSpeed = liftSpeed;
+       RarmLiftSpeed = liftSpeed;
+
     }
 
     void liftDown(){
+        /*
         LarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
         RarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        */
+       LarmLiftSpeed = -liftSpeed;
+       RarmLiftSpeed = -liftSpeed;
     }
 
     void clawUp(){
-        clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        clawSpeed = defaultClawSpeed;
     }
 
     void clawDown(){
-        clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        clawSpeed = -defaultClawSpeed;
     }
 
 

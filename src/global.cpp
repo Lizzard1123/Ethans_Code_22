@@ -52,7 +52,7 @@ ADIAnalogIn leftArmPot('D');
 ADIAnalogIn rightArmPot('F');
 
 // Odom 
-okapi::ADIEncoder  leftOdom('A', 'B', false);
+okapi::ADIEncoder  leftOdom('A', 'B', true);
 pros::c::ext_adi_encoder_t rightOdom = pros::c::ext_adi_encoder_init(expanderPort, 'A', 'B', false);
 //okapi::ADIEncoder  middleOdom('a', 'b', false);
 
