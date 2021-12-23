@@ -8,8 +8,8 @@
 #define BRPort 8 
 #define LarmPort 3
 #define RarmPort 9
-#define ClawPort 7
-#define LiftPort 15
+#define ClawPort 15
+#define LiftPort 7
 //other defines
 #define LeftSideNum 0
 #define RightSideNum 1
@@ -53,7 +53,7 @@ extern Controller partner;
 
 //LED
 //extern ADIDigitalOut led;
-extern ADIDigitalOut frontLock;
+extern ADIDigitalOut tiltLock;
 extern ADIDigitalOut backLock;
 extern ADIDigitalOut liftShifter;
 extern ADIDigitalOut clawLock;
@@ -63,13 +63,13 @@ extern ADIDigitalOut clawLock;
 //extern ADIDigitalIn tailSensor;
 
 //Odom
-extern okapi::ADIEncoder  leftOdom;
-extern pros::c::ext_adi_encoder_t  rightOdom;
+extern okapi::ADIEncoder  rightOdom;
+extern pros::c::ext_adi_encoder_t  leftOdom;
 //extern okapi::ADIEncoder  middleOdom;
 
 //pots
-extern ADIAnalogIn leftArmPot;
-extern ADIAnalogIn rightArmPot;
+//extern ADIAnalogIn leftArmPot;
+//extern ADIAnalogIn rightArmPot;
 
 //labels debug
 extern lv_obj_t *debugXLabel;

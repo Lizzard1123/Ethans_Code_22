@@ -1,4 +1,4 @@
-#if 0 // OUTDATED
+
 #include "custom/robot.h"
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -17,25 +17,10 @@
 void opcontrol()
 {
     //space to run stuff once before begin driving
-    // change teams failsafe
-    if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_A))
-    {
-        Bongo.changeTeam();
-    }
-    
-    //toggle intake
-    if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)){
-        Bongo.Intake.toggle();
-    }
-    
-    //locks
-    if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)){
-        Bongo.Wings.toggleLeftLock();
-    } else if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
-        Bongo.Wings.toggleRightLock();
-    } else if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)){
-        Bongo.Tail.toggleLock();
-    }
+    //ADIDigitalOut clawLock('E');
+    //ADIDigitalOut tiltLock('G');
+    //ADIDigitalOut backLock('H');
+    master.print(0, 8, "Player 1");
     while (true)
     {
         //prints to screen the position and rotation of bongo
@@ -46,52 +31,68 @@ void opcontrol()
         // catie control
         //Bongo.catieControl();
 
-        //Left wing
-        if(master.get_digital(E_CONTROLLER_DIGITAL_L1)){ //tilt up
-            Bongo.Wings.tiltLeftWing(Bongo.Wings.speedMedium);
-        } else if(master.get_digital(E_CONTROLLER_DIGITAL_L2)){ //tilt down
-            Bongo.Wings.tiltLeftWing(-Bongo.Wings.speedMedium);
-        } else { //stops left wing motor
-            Bongo.Wings.tiltRightWing(0);
-        }
-        //right wing
-        if(master.get_digital(E_CONTROLLER_DIGITAL_R1)){ //tilt up
-            Bongo.Wings.tiltRightWing(Bongo.Wings.speedMedium);
-        } else if(master.get_digital(E_CONTROLLER_DIGITAL_R2)){ //tilt down
-            Bongo.Wings.tiltRightWing(-Bongo.Wings.speedMedium);
-        } else { //stops left wing motor
-            Bongo.Wings.tiltRightWing(0);
-        }
-        //back wing
-        if(master.get_digital(E_CONTROLLER_DIGITAL_X)){ //tilt up
-            Bongo.Tail.tiltTail(Bongo.Tail.speedMedium);
-        } else if(master.get_digital(E_CONTROLLER_DIGITAL_B)){ //tilt down
-            Bongo.Tail.tiltTail(-Bongo.Tail.speedMedium);
-        } else { //stops left wing motor
-            Bongo.Tail.tiltTail(0);
-        }
-        
-        //lift control
-        if(master.get_digital(E_CONTROLLER_DIGITAL_A)){
-            Bongo.Intake.setSpeed(Bongo.Intake.liftSpeedHigh);
+        //manual powering 
+        if (master.get_digital(DIGITAL_L2)){
+            Bongo.Lift.liftDown(); //manually pushes arm down at max torque
+        } else if (master.get_digital(DIGITAL_L1)){
+            Bongo.Lift.liftUp(); //manually lifts arm with max torque
         } else {
-            Bongo.Intake.setSpeed(Bongo.Intake.liftSpeedLow);
+            Bongo.Lift.stopAll(); //stops manual controll
         }
-        // starts the spin on motors or cuts power
-        //debug
-        if(master.get_digital(E_CONTROLLER_DIGITAL_A)){
+
+        if (master.get_digital(DIGITAL_R2)){
+            Bongo.Lift.clawDown(); //manually pushes claw down at max torque
+            Bongo.Lift.setAutoLevel(false);
+        } else if (master.get_digital(DIGITAL_R1)){
+            Bongo.Lift.clawUp(); //manually lifts claw with max torque
+            Bongo.Lift.setAutoLevel(false);
+        } else {
+            Bongo.Lift.stopClaw(); //stops manual controll
+        }
+
+        //Toggle claw
+        if (master.get_digital_new_press(DIGITAL_A)){
+            Bongo.Pneumatics.toggleClaw();
+        }
+
+        //Toggle frpnt
+        if (master.get_digital_new_press(DIGITAL_X)){
+            Bongo.Pneumatics.toggletilt();
+        }
+
+        //Toggle back
+        if (master.get_digital_new_press(DIGITAL_B)){
+            Bongo.Pneumatics.toggleBack();
+        }
+
+        //Toggle level
+        if (master.get_digital_new_press(DIGITAL_LEFT)){
+            Bongo.Lift.toggleAutoLevel();
+        }
+
+        if(master.get_digital_new_press(DIGITAL_UP)){
+            Bongo.Pneumatics.toggleRingles();
+        }
+
+        //testODOM
+        if(master.get_digital_new_press(DIGITAL_UP)){
             Bongo.resetOdom();
-        }
-        Bongo.debugPos();
-        if(master.get_digital(E_CONTROLLER_DIGITAL_B)){
             Bongo.testOdom2();
         }
-        if(master.get_digital(E_CONTROLLER_DIGITAL_Y)){
-            Bongo.testOdom();
+        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+            printf("starting");
+            Bongo.AutonomousOne(false, false);
         }
+        if(master.get_digital_new_press(DIGITAL_DOWN)){
+            Bongo.testOdom3();
+        }
+
+        // starts the spin on motors or cuts power
         Bongo.Movement.move();
+        //FL:FR:BL:BR:Rarm:Larm:Claw
+        std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+        master.set_text(2, 0, values);
         //delay between updates
         delay(20);
     }
 }
-#endif

@@ -991,8 +991,8 @@ void initialize()
     initAllScreens();
     //calibrate potentiometer if used
     //liftPot.calibrate();
-    leftArmPot.calibrate();
-    rightArmPot.calibrate();
+    //leftArmPot.calibrate();
+    //rightArmPot.calibrate();
     ////printf("Init pot \n");
     //delay(250); idk about this delay
     //locks
@@ -1033,6 +1033,9 @@ void initialize()
     ADIDigitalOut frontLock('H');
     ADIDigitalOut backLock('G');
     //Bongo.Pneumatics.clawGrab();
+    Bongo.Pneumatics.backRelease();
+    Bongo.Pneumatics.tiltRelease();
+
 }
 
 /**

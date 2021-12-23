@@ -39,15 +39,17 @@ private:
     double mt_widthLimit = 20;
 
     double t_tolerance = .5;
-    double t_Pval = 2.5;
+    double t_Pval = 2; //2.5
     double t_Ival = 0;//double Ival = .1;// double Ival = 0;
-    double t_Dval = 0;//double Dval = .7;// double Dval = 0;
+    double t_Dval = 1;//double Dval = .7;// double Dval = 0;
 
     int PIDspeed = 50;// in ms
     double m_tolerance = .2;// tolerance in inches
     double m_Pval = 8; //13
     double m_Ival = .25; //0
     double m_Dval = 0; //0
+
+    static double totalForwardMovement;
 
 public:
     static LiftClass Lift;
@@ -210,6 +212,42 @@ public:
         return 1;
     }
 
+    void PIDStraight(double distance, double keepAngle){
+        //others
+        double M_Pval = 4;
+        double M_Dval = 2.5;
+        double T_Pval = 0; //doesnt work
+         //pid vars
+        double lastError = 0;
+        totalForwardMovement = 0;
+        while(true){
+
+            double M_error = distance - totalForwardMovement;
+            double T_error = keepAngle - rotation;
+            double M_derivative = (M_error - lastError)/ PIDspeed;
+
+            double leftSpeed = M_error * M_Pval + M_derivative * M_Dval - T_Pval * T_error;
+            double rightSpeed = M_error * M_Pval + M_derivative * M_Dval + T_Pval * T_error;
+
+            Movement.moveLeft(leftSpeed);
+            Movement.moveRight(rightSpeed);
+            printf("leftSpeed: %f", leftSpeed);
+            printf("rightSpeed: %f", rightSpeed);
+            printf("M_error: %f", M_error);
+            printf("T_error: %f", T_error);
+
+            if(fabs(M_error) < m_tolerance){
+                Movement.moveLeft(0);
+                Movement.moveRight(0);
+                break;
+            }
+
+            delay(PIDspeed);
+        }
+
+    }
+
+
     // PID syncronous turning TODO merge with movement
     int PIDTurn(double target, double maxspeed = 100)
     {
@@ -219,12 +257,16 @@ public:
         double error;
         double Derivative = 0;
         double integralone = 0;
+        double lastError = 0; // should start off being current error not doing that though
 
         while (true)
         {
             //printf("Heading: %f", headingVal);
             // find the error of both sides  for P
             error = turnTarget - rotation;
+            printf("Error: %f \n", error);
+            printf("rotation: %f \n", rotation);
+
 
             // find the intergral part for I
             // integralone = 0;
@@ -239,7 +281,8 @@ public:
             //}
 
             // find the derivative part for D
-            //Derivative = error / PIDspeed;
+            Derivative = (error - lastError) / PIDspeed;
+            lastError = error;
 
             // PID ALGO
             motorSpeed = (error * t_Pval) + (integralone * t_Ival) + (Derivative * t_Dval);
@@ -388,10 +431,10 @@ public:
     {
         //I derived the original formula and for the reiteration and added wheel i combined it with work done here
         //https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-186-mobile-autonomous-systems-laboratory-january-iap-2005/study-materials/odomtutorial.pdf
-        double wheelCircumfrence = 10.21;
+        double wheelCircumfrence = 11.2; //10.19
         double wheelSmallCircumfrence = 8.64;
         //bigger increases angle more
-        double wheelSeperation = 4.6 * 2; //4.4
+        double wheelSeperation = 6.45 * 2; //4.4
         double wheelOffset = 5.5;
         double head = rotation;
         double rightOdomVal;
@@ -411,13 +454,14 @@ public:
             
             
             //find isolated forward and sideways movement
-            double leftDist = myMath.toInch(leftOdom.get(), wheelCircumfrence);
-            double rightDist = myMath.toInch(pros::c::ext_adi_encoder_get(rightOdom), wheelCircumfrence);
+            double leftDist = myMath.toInch(pros::c::ext_adi_encoder_get(leftOdom), wheelCircumfrence);
+            double rightDist = myMath.toInch(rightOdom.get(), wheelCircumfrence);
             double forwardMovement = (rightDist + leftDist) / 2;
+            totalForwardMovement += forwardMovement;
             double sidewaysMovement = 0;// myMath.toInch(middleOdom.get(), wheelSmallCircumfrence);
             double changeOfHeading = ((leftDist - rightDist) / wheelSeperation) * 180 / M_PI;
             //to distance
-            sidewaysMovement += wheelOffset * (changeOfHeading  * M_PI / 180);
+            //sidewaysMovement += wheelOffset * (changeOfHeading  * M_PI / 180);
 
             // forward wheels in relation to coordinates
             //HEY YOU
@@ -426,14 +470,14 @@ public:
             X += forwardMovement * sin(head * M_PI / 180);
             //crackhead
             // sideways wheel in relation to cooridantes
-            Y -= sidewaysMovement * sin(head * M_PI / 180);
-            X += sidewaysMovement * cos(head * M_PI / 180);
+            //Y -= sidewaysMovement * sin(head * M_PI / 180);
+            //X += sidewaysMovement * cos(head * M_PI / 180);
             //heading//update heading part
             
             rotation += changeOfHeading;
             //set new
             //TODO i thought this went before but try accuracy when its after computed distance moved idk i think its right
-            head = 0; //rotation; TODO fix heading
+            head = rotation;// TODO fix heading
             //debug
             //printf("right: %f\n", rightDist);
             //printf("left: %f\n", leftDist);
@@ -448,8 +492,8 @@ public:
             //printf("Back wheel rotation %f\n", myMath.toInch(sidewaysMovement, wheelSmallCircumfrence));
             //printf("\n");
             // reset
-            pros::c::ext_adi_encoder_reset(rightOdom);
-            leftOdom.reset();
+            rightOdom.reset();
+            pros::c::ext_adi_encoder_reset(leftOdom);
             //middleOdom.reset();
             c::task_delay(posDelay);
         }
@@ -462,13 +506,14 @@ public:
     }
 
     void testOdom3(){
-        //PIDTurn(360);
-        PIDMoveTurn(0, 72, 0, 100);
+        PIDTurn(360);
+        //PIDMoveTurn(0, 72, 0, 100);
     }
 
     void testOdom2()
     {
-        PIDMoveTurn(72, 0, 0, 100);
+        PIDTurn(90);
+        //PIDMoveTurn(72, 0, 0, 100);
     }
 
     // set current position of bongo
@@ -579,33 +624,61 @@ public:
     }
     */
     //AUTONS
-    void moveForwardTimed(double time){
-        Movement.moveFL(100);
-        Movement.moveFR(100);
-        Movement.moveBL(100);
-        Movement.moveBR(100);
+    void moveForwardTimed(double time, double speed = 100){
+        Movement.moveFL(speed);
+        Movement.moveFR(speed);
+        Movement.moveBL(speed);
+        Movement.moveBR(speed);
         delay(time*1000);
         Movement.stopAll();
     }
 
-    void moveBackwardTimed(double time){
-        Movement.moveFL(-100);
-        Movement.moveFR(-100);
-        Movement.moveBL(-100);
-        Movement.moveBR(-100);
+    void moveBackwardTimed(double time, double speed = 100){
+        Movement.moveFL(-speed);
+        Movement.moveFR(-speed);
+        Movement.moveBL(-speed);
+        Movement.moveBR(-speed);
         delay(time*1000);
         Movement.stopAll();
     }
 
     void AutonomousOne(bool isLeft, bool isBlue){
+        //Pneumatics.toggleClaw();
+        //delay(.25);
+        Pneumatics.clawRelease();
+        moveForwardTimed(.25);
+        moveBackwardTimed(.25);
+        Pneumatics.clawRelease();
         moveForwardTimed(1.5);
-        Pneumatics.toggleClaw();
-        moveBackwardTimed(1.5);
-
+        Pneumatics.clawGrab();
+        moveBackwardTimed(2);
+        //ringles
+        PIDStraight(3, 0);
+        Lift.liftUp();
+        Lift.clawUp();
+        delay(800);
+        Lift.stopAll();
+        //rotate and grab
+        PIDTurn(rotation - 90);
+        Pneumatics.toggletilt();
+        moveBackwardTimed(.75, 60);
+        Pneumatics.toggleBack();
+        Pneumatics.toggletilt();
+        Pneumatics.toggleRingles();
+        moveForwardTimed(2, 30);
+        moveBackwardTimed(2, 30);
+        moveForwardTimed(2, 30);
+        moveBackwardTimed(2, 30);
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
+        //Pneumatics.toggleClaw();
+        //delay(.25);
+        Pneumatics.clawRelease();
+        moveForwardTimed(.25);
+        moveBackwardTimed(.25);
+        Pneumatics.clawRelease();
         moveForwardTimed(2.25);
-        Pneumatics.toggleClaw();
+        Pneumatics.clawGrab();
         moveBackwardTimed(2.25);
     };
     void AutonomousThree(bool isLeft, bool isBlue){

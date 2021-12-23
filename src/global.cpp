@@ -8,9 +8,9 @@ Motor FR(FRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor BL(BLPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor BR(BRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor Larm(LarmPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
-Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_COUNTS); 
-Motor Claw(ClawPort, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES); 
-Motor Lift(LiftPort, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES); 
+Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES); 
+Motor Claw(ClawPort, E_MOTOR_GEARSET_36, false, E_MOTOR_ENCODER_DEGREES); 
+Motor Lift(LiftPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
 
 
 // controllers
@@ -38,8 +38,8 @@ vision::signature SIG_1 (1, 189, 1879, 1034, -3857, -2845, -3352, 0.700, 0);
 //ADIDigitalOut  leftLock ({{expanderPort, leftLockPort}});
 //ADIDigitalOut  rightLock ({{expanderPort, rightLockPort}});
 ADIDigitalOut clawLock('E');
-ADIDigitalOut frontLock('H');
-ADIDigitalOut backLock('G');
+ADIDigitalOut tiltLock('G');
+ADIDigitalOut backLock('H');
 
 
 
@@ -48,12 +48,12 @@ ADIDigitalOut backLock('G');
 
 //pots
 //ADIAnalogIn liftPot('c');
-ADIAnalogIn leftArmPot('D');
-ADIAnalogIn rightArmPot('F');
+//ADIAnalogIn leftArmPot('D');
+//ADIAnalogIn rightArmPot('F');
 
 // Odom 
-okapi::ADIEncoder  leftOdom('A', 'B', true);
-pros::c::ext_adi_encoder_t rightOdom = pros::c::ext_adi_encoder_init(expanderPort, 'A', 'B', false);
+okapi::ADIEncoder  rightOdom('A', 'B', true); //true
+pros::c::ext_adi_encoder_t leftOdom = pros::c::ext_adi_encoder_init(expanderPort, 'G', 'H', false); //false
 //okapi::ADIEncoder  middleOdom('a', 'b', false);
 
 // Staic defines
@@ -64,5 +64,6 @@ PneumaticsClass Robot::Pneumatics;
 bool Robot::teamIsBlue = false;
 const double Robot::posDelay = 50;
 double Robot::X = 0;
+double Robot::totalForwardMovement = 0;
 double Robot::Y = 0;
 double Robot::rotation = 0;
