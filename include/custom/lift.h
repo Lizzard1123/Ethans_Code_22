@@ -73,12 +73,16 @@ public:
             Claw.move_velocity(clawSpeed);
         }
 
-        if(!rightSwitch.get_value()){
+        if(!rightSwitch.get_value() && RarmLiftSpeed < 0){
+          Rarm.move_velocity(RarmLiftSpeed);  
+        } else if(RarmLiftSpeed > 0){
           Rarm.move_velocity(RarmLiftSpeed);  
         }else {
             Rarm.move_velocity(0);
         }
-        if(!leftSwitch.get_value()){
+        if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
+            Larm.move_velocity(LarmLiftSpeed);
+        } else if (RarmLiftSpeed > 0){
             Larm.move_velocity(LarmLiftSpeed);
         } else {
             Larm.move_velocity(0);

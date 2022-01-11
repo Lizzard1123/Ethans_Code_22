@@ -645,8 +645,8 @@ public:
     void strafeTimed(double time, bool reverse, double speed = 100){
         Movement.moveFL(-speed * (reverse ? -1 : 1));
         Movement.moveFR(speed * (reverse ? -1 : 1));
-        Movement.moveBL(-speed * (reverse ? -1 : 1));
-        Movement.moveBR(speed * (reverse ? -1 : 1));
+        Movement.moveBL(speed * (reverse ? -1 : 1));
+        Movement.moveBR(-speed * (reverse ? -1 : 1));
         delay(time*1000);
         Movement.stopAll();
     }
@@ -661,22 +661,23 @@ public:
         moveForwardTimed(1.4);
         Pneumatics.clawGrab();
         //drop turn lift manuver
-        moveBackwardTimed(.75);
+        moveBackwardTimed(1.25);
         Pneumatics.clawRelease();
-        moveBackwardTimed(.75);
+        moveBackwardTimed(.15);
         //sus code
         Lift.liftUp();
         PIDTurn(rotation - 100);
-        Lift.stopAll();
         //strafe left to wall
-        strafeTimed(.8, false, 50);
+        strafeTimed(1.4, false, 50);
+        //right
         strafeTimed(.4, true, 50);
+        Lift.stopAll();
         //rotate and grab
         Pneumatics.toggletilt();
-        moveBackwardTimed(.75, 60);
+        Pneumatics.toggleRingles();
+        moveBackwardTimed(.6, 50);
         Pneumatics.toggleBack();
         Pneumatics.toggletilt();
-        Pneumatics.toggleRingles();
         moveForwardTimed(2, 30);
         moveBackwardTimed(2, 30);
         moveForwardTimed(2, 30);
