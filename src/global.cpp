@@ -45,6 +45,8 @@ ADIDigitalOut backLock('H');
 
 //button / limit switch
 //ADIDigitalIn tailSensor(tailSensorPort);
+ADIDigitalIn leftSwitch('D');
+ADIDigitalIn rightSwitch('C');
 
 //pots
 //ADIAnalogIn liftPot('c');

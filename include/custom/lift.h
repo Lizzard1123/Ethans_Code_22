@@ -73,22 +73,18 @@ public:
             Claw.move_velocity(clawSpeed);
         }
 
-        if(RarmLiftSpeed <= 0 && Rarm.get_position() >= liftMinPos + offset){
+        if(!rightSwitch.get_value()){
           Rarm.move_velocity(RarmLiftSpeed);  
-        } else if (RarmLiftSpeed >= 0 && Rarm.get_position() <= liftMaxPos - offset){
-            Rarm.move_velocity(RarmLiftSpeed);
-        } else {
+        }else {
             Rarm.move_velocity(0);
         }
-        if(LarmLiftSpeed <= 0 && Larm.get_position() >= liftMinPos + offset){
-            Larm.move_velocity(LarmLiftSpeed);
-        } else if (LarmLiftSpeed >= 0 && Larm.get_position()  <= liftMaxPos - offset){
+        if(!leftSwitch.get_value()){
             Larm.move_velocity(LarmLiftSpeed);
         } else {
             Larm.move_velocity(0);
         }
-        std::string firstLine = "L:" + std::__cxx11::to_string(int(Larm.get_position())) + "_R:" + std::__cxx11::to_string(int(Rarm.get_position())) + "_C:" + std::__cxx11::to_string(int(Claw.get_position()));
-        master.set_text(1, 1, firstLine);
+        //std::string firstLine = "L:" + std::__cxx11::to_string(int(Larm.get_position())) + "_R:" + std::__cxx11::to_string(int(Rarm.get_position())) + "_C:" + std::__cxx11::to_string(int(Claw.get_position()));
+        //master.set_text(1, 1, firstLine);
     }
 
     void stopClaw()

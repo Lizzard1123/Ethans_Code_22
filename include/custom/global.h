@@ -60,7 +60,9 @@ extern ADIDigitalOut clawLock;
 
 
 //limit switch / button
-//extern ADIDigitalIn tailSensor;
+extern ADIDigitalIn leftSwitch;
+extern ADIDigitalIn rightSwitch;
+
 
 //Odom
 extern okapi::ADIEncoder  rightOdom;
