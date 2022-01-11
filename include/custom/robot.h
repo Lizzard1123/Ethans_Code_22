@@ -642,6 +642,15 @@ public:
         Movement.stopAll();
     }
 
+    void strafeTimed(double time, bool reverse, double speed = 100){
+        Movement.moveFL(-speed * (reverse ? -1 : 1));
+        Movement.moveFR(speed * (reverse ? -1 : 1));
+        Movement.moveBL(-speed * (reverse ? -1 : 1));
+        Movement.moveBR(speed * (reverse ? -1 : 1));
+        delay(time*1000);
+        Movement.stopAll();
+    }
+
     void AutonomousOne(bool isLeft, bool isBlue){
         //Pneumatics.toggleClaw();
         //delay(.25);
@@ -649,17 +658,20 @@ public:
         moveForwardTimed(.25);
         moveBackwardTimed(.25);
         Pneumatics.clawRelease();
-        moveForwardTimed(1.5);
+        moveForwardTimed(1.4);
         Pneumatics.clawGrab();
-        moveBackwardTimed(2);
-        //ringles
-        PIDStraight(3, 0);
+        //drop turn lift manuver
+        moveBackwardTimed(.75);
+        Pneumatics.clawRelease();
+        moveBackwardTimed(.75);
+        //sus code
         Lift.liftUp();
-        Lift.clawUp();
-        delay(800);
+        PIDTurn(rotation - 100);
         Lift.stopAll();
+        //strafe left to wall
+        strafeTimed(.8, false, 50);
+        strafeTimed(.4, true, 50);
         //rotate and grab
-        PIDTurn(rotation - 90);
         Pneumatics.toggletilt();
         moveBackwardTimed(.75, 60);
         Pneumatics.toggleBack();
