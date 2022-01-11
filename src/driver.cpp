@@ -38,15 +38,15 @@ void opcontrol()
         } else if (master.get_digital(DIGITAL_L1)){
             Bongo.Lift.liftUp(); //manually lifts arm with max torque
         } else {
-            Bongo.Lift.stopAll(); //stops manual controll
+            Bongo.Lift.stopArm(); //stops manual controll
         }
 
         if (master.get_digital(DIGITAL_R2)){
             Bongo.Lift.clawDown(); //manually pushes claw down at max torque
-            Bongo.Lift.setAutoLevel(false);
+            //Bongo.Lift.setAutoLevel(false);
         } else if (master.get_digital(DIGITAL_R1)){
             Bongo.Lift.clawUp(); //manually lifts claw with max torque
-            Bongo.Lift.setAutoLevel(false);
+            //Bongo.Lift.setAutoLevel(false);
         } else {
             Bongo.Lift.stopClaw(); //stops manual controll
         }
@@ -62,13 +62,17 @@ void opcontrol()
         }
 
         //Toggle back
-        if (master.get_digital_new_press(DIGITAL_B)){
+        if (master.get_digital_new_press(DIGITAL_Y)){
             Bongo.Pneumatics.toggleBack();
         }
 
         //Toggle level
-        if (master.get_digital_new_press(DIGITAL_LEFT)){
-            Bongo.Lift.toggleAutoLevel();
+        //if (master.get_digital_new_press(DIGITAL_LEFT)){
+        //    Bongo.Lift.toggleAutoLevel();
+        //}
+
+        if (master.get_digital_new_press(DIGITAL_DOWN)){
+            Lift.move_relative(-360, 50);
         }
 
         if(master.get_digital_new_press(DIGITAL_UP)){
@@ -76,6 +80,7 @@ void opcontrol()
         }
 
         //testODOM
+        /*
         if(master.get_digital_new_press(DIGITAL_UP)){
             Bongo.resetOdom();
             Bongo.testOdom2();
@@ -87,6 +92,7 @@ void opcontrol()
         if(master.get_digital_new_press(DIGITAL_DOWN)){
             Bongo.testOdom3();
         }
+        */
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();

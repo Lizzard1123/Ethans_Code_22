@@ -45,6 +45,13 @@ public:
         Claw.move_velocity(0);
     }
 
+    void stopArm(){
+        LarmLiftSpeed = 0;
+        RarmLiftSpeed = 0;
+        Larm.move_velocity(0);
+        Rarm.move_velocity(0);
+    }
+
     //void level(){
     //    double error = getRightMoved() - getLeftMoved();
     //    LarmLiftSpeed -= error * Pval;
@@ -67,11 +74,11 @@ public:
 
     void update(){
         //level();
-        if(autoLevel){
-            Claw.move_velocity(autoLevelClaw());
-        } else {
+        //if(autoLevel){
+        //    Claw.move_velocity(autoLevelClaw());
+        //} else {
             Claw.move_velocity(clawSpeed);
-        }
+        //}
 
         if(!rightSwitch.get_value() && RarmLiftSpeed < 0){
           Rarm.move_velocity(RarmLiftSpeed);  
@@ -93,6 +100,7 @@ public:
 
     void stopClaw()
     {
+        Claw.move_velocity(0);
         clawSpeed = 0;
     }
 
@@ -102,31 +110,31 @@ public:
 
     void liftUp(){
         
-        //LarmLiftSpeed = torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
-        //RarmLiftSpeed = torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        LarmLiftSpeed = torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        RarmLiftSpeed = torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
         
-       LarmLiftSpeed = liftSpeed;
-       RarmLiftSpeed = liftSpeed;
+       //LarmLiftSpeed = liftSpeed;
+       //RarmLiftSpeed = liftSpeed;
 
     }
 
     void liftDown(){
         
-        //LarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
-        //RarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        LarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Larm.get_torque(), minLiftSpeed, maxLiftSpeed);
+        RarmLiftSpeed = -1 * torqueLimiter(armMaxTorque, Rarm.get_torque(), minLiftSpeed, maxLiftSpeed);
 
-       LarmLiftSpeed = -liftSpeed;
-       RarmLiftSpeed = -liftSpeed;
+       //LarmLiftSpeed = -liftSpeed;
+       //RarmLiftSpeed = -liftSpeed;
     }
 
     void clawUp(){
-        //clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        clawSpeed = defaultClawSpeed;
+        clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //clawSpeed = defaultClawSpeed;
     }
 
     void clawDown(){
-        //clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        clawSpeed = -defaultClawSpeed;
+        clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //clawSpeed = -defaultClawSpeed;
     }
 
 

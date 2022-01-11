@@ -41,7 +41,7 @@ extern Controller partner;
 //#define EYES__CUSTOM_GREEN_NUM 1
 #define MOGO_CUSTOM_YELLOW_NUM 1
 //extern vision_signature_s_t  EYES__CUSTOM_GREEN;
-//extern vision_signature_s_t MOGO_CUSTOM_YELLOW;
+extern vision_signature_s_t MOGO_CUSTOM_YELLOW;
 
 //opical sensor
 //extern Optical Police;

@@ -661,7 +661,11 @@ public:
         moveForwardTimed(1.4);
         Pneumatics.clawGrab();
         //drop turn lift manuver
+        totalForwardMovement = 0;
         moveBackwardTimed(1.25);
+        while(totalForwardMovement > -20){
+            moveBackwardTimed(.25);
+        }
         Pneumatics.clawRelease();
         moveBackwardTimed(.15);
         //sus code
