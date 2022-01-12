@@ -10,6 +10,7 @@
 #define RarmPort 9
 #define ClawPort 15
 #define LiftPort 7
+#define EYESPort 4
 //other defines
 #define LeftSideNum 0
 #define RightSideNum 1
@@ -32,7 +33,7 @@ extern Controller master;
 extern Controller partner;
 
 //vision sensors
-//extern Vision EYES;
+extern Vision Eyes;
 //extern Vision leftEye;
 //extern Vision rightEye;
 //extern Vision backEye;

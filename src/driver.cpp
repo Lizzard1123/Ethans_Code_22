@@ -85,9 +85,21 @@ void opcontrol()
             Bongo.resetOdom();
             Bongo.testOdom2();
         }
-        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+        
+        if(master.get_digital(DIGITAL_RIGHT)){
             printf("starting");
-            Bongo.AutonomousOne(false, false);
+            //Bongo.moveForwardTimedLineUp(1.4);
+            //Bongo.AutonomousOne(false, false);
+            double turnPval = 1;
+            vision_object_s_t mogo = Eyes.get_by_sig(0, MOGO_CUSTOM_YELLOW_NUM);
+            double turnVal = (158 - mogo.x_middle_coord) * turnPval;
+            printf("Turn: %f\n", turnVal);
+            printf("mogo.x_middle_coord: %f\n", mogo.x_middle_coord);
+            Bongo.Movement.FLspeed += turnVal;
+            Bongo.Movement.BLspeed += turnVal;
+            Bongo.Movement.FRspeed -= turnVal;
+            Bongo.Movement.BRspeed -= turnVal;
+
         }
         if(master.get_digital_new_press(DIGITAL_DOWN)){
             Bongo.testOdom3();

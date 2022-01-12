@@ -15,16 +15,15 @@ private:
     //higher the number the slower the turn
     double rotationTune = 1.5;
 
-    // takes in inputs and makes final speed for all motors
-    double FLspeed;
-    double FRspeed;
-    double BLspeed;
-    double BRspeed;
-
     //deadzone : min num to be detected from joystick
     double deadZone = 5;
 
 public:
+// takes in inputs and makes final speed for all motors
+    double FLspeed;
+    double FRspeed;
+    double BLspeed;
+    double BRspeed;
     /*subsytem class declarions of the bot*/
     //custom math reference
     Math myMath;

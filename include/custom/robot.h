@@ -624,20 +624,30 @@ public:
     }
     */
     //AUTONS
+    void moveForwardTimedLineUp(double time, double speed = 100){
+        double interval = time / 10; //10 ms 
+        int count = 0;
+        double turnPval = 1;
+        while(count < interval){
+            vision_object_s_t mogo = Eyes.get_by_sig(0, MOGO_CUSTOM_YELLOW_NUM);
+            double turnVal = (158 - mogo.x_middle_coord) * turnPval;
+            Movement.moveLeft(speed + turnVal);
+            Movement.moveRight(speed - turnVal);
+        }
+        
+        Movement.stopAll();
+    }
+
     void moveForwardTimed(double time, double speed = 100){
-        Movement.moveFL(speed);
-        Movement.moveFR(speed);
-        Movement.moveBL(speed);
-        Movement.moveBR(speed);
+        Movement.moveLeft(speed);
+        Movement.moveRight(speed);
         delay(time*1000);
         Movement.stopAll();
     }
 
     void moveBackwardTimed(double time, double speed = 100){
-        Movement.moveFL(-speed);
-        Movement.moveFR(-speed);
-        Movement.moveBL(-speed);
-        Movement.moveBR(-speed);
+        Movement.moveLeft(-speed);
+        Movement.moveRight(-speed);
         delay(time*1000);
         Movement.stopAll();
     }
@@ -658,6 +668,7 @@ public:
         moveForwardTimed(.25);
         moveBackwardTimed(.25);
         Pneumatics.clawRelease();
+        //moveForwardTimedLineUp(1.4);
         moveForwardTimed(1.4);
         Pneumatics.clawGrab();
         //drop turn lift manuver
