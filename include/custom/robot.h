@@ -431,7 +431,7 @@ public:
     {
         //I derived the original formula and for the reiteration and added wheel i combined it with work done here
         //https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-186-mobile-autonomous-systems-laboratory-january-iap-2005/study-materials/odomtutorial.pdf
-        double wheelCircumfrence = 11.2; //10.19
+        double wheelCircumfrence = 10.2; //11.2
         double wheelSmallCircumfrence = 8.64;
         //bigger increases angle more
         double wheelSeperation = 6.45 * 2; //4.4
