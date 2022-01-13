@@ -28,9 +28,9 @@ void opcontrol()
         Bongo.debugPos();
 
         // tyler control
-        //Bongo.tylerControl();
+        Bongo.tylerControl();
         // catie control
-        Bongo.catieControl();
+        //Bongo.catieControl();
 
         //manual powering 
         if (master.get_digital(DIGITAL_L2)){
@@ -73,6 +73,7 @@ void opcontrol()
 
         if (master.get_digital_new_press(DIGITAL_DOWN)){
             Lift.move_relative(-360, 50);
+            //Bongo.testOdom2();
         }
 
         if(master.get_digital_new_press(DIGITAL_UP)){
@@ -83,13 +84,9 @@ void opcontrol()
             Bongo.setRotation(0);
         }
         
-        if(master.get_digital_new_press(DIGITAL_LEFT)){
-            Bongo.testOdom();
-        }
-        
-        if(master.get_digital_new_press(DIGITAL_DOWN)){
-            Bongo.testOdom2();
-        }
+        //if(master.get_digital_new_press(DIGITAL_LEFT)){
+        //    Bongo.testOdom();
+        //}
 
         //testODOM
         /*

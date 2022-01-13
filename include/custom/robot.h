@@ -434,7 +434,7 @@ public:
         double wheelCircumfrence = 10.2; //11.2
         double wheelSmallCircumfrence = 8.64;
         //bigger increases angle more
-        double wheelSeperation = 6.45 * 2; //4.4
+        double wheelSeperation = 5.5 * 2; //4.4 //6.45
         double wheelOffset = 5.5;
         double head = rotation;
         double rightOdomVal;
@@ -502,7 +502,7 @@ public:
     void testOdom()
     {
         //PIDTurn(180);
-        turnTimed(.6, false, 50); //right
+        turnTimed(1.15, false, 50); //right
     }
 
     void testOdom3(){
@@ -708,56 +708,59 @@ public:
         } else { //right small
             setRotation(0);
             Pneumatics.clawRelease();
-            Lift.liftUp();
-            Lift.clawDown();
-            delay(300);
-            Lift.liftDown();
-            Lift.clawUp();
-            moveForwardTimed(.3);
-            Lift.stopAll();
-            //moveForwardTimedLineUp(1.4);
-            moveForwardTimed(.8);
+            moveForwardTimed(.15);
+            moveBackwardTimed(.15);
+            //forward
+            moveForwardTimed(1.3);
             Pneumatics.clawGrab();
 
             totalForwardMovement = 0;
-            moveBackwardTimed(.6);
+            moveBackwardTimed(.3);
 
             //check for tugging
-            while(totalForwardMovement > -12){
+            while(totalForwardMovement > -4){
                 moveBackwardTimed(.25);
             }
             
-            delay(1000000); //check rotation
+            //delay(1000000); //check rotation
 
             //turn and drop
             //PIDTurn(-90);
-            turnTimed(turnTime,  false, 50); //turn right
+
+            //double turnTime = .6;
+            setRotation(0);
+            PIDTurn(-100);
+            //turnTimed(turnTime,  false, 50); //turn right
             Pneumatics.clawRelease();
             Lift.liftUp();
 
             //rotate and grab
             Pneumatics.toggletilt();
             Pneumatics.toggleRingles();
-            moveBackwardTimed(1, 50);
-            Lift.stopAll();
+            moveBackwardTimed(1.5, 50);
             Pneumatics.toggleBack();
             Pneumatics.toggletilt();
             
             //move to line up 
-            //PIDTurn(0);
-            turnTimed(turnTime,  true, 50); //turn left
+            setRotation(-90);
+            PIDTurn(0);
+            Lift.stopAll();
+            //turnTimed(turnTime,  true, 50); //turn left
             strafeTimed(1.4, true, 100); //right
             strafeTimed(1, false, 50); //left
 
             //lined up with the ringles
+            Pneumatics.setRingles(true);
             moveForwardTimed(2, 30);
 
             //point turn to get to home zone and slow for more rings
-            //PIDTurn(180);
-            turnTimed(2*turnTime,  false, 50); //turn right
+            setRotation(0);
+            PIDTurn(180);
+            //turnTimed(2*turnTime,  false, 50); //turn right
 
             moveForwardTimed(.5, 100);
-            moveForwardTimed(2, 30);
+            Pneumatics.setRingles(true);
+            moveForwardTimed(3, 30);
         }
     };
     void AutonomousTwo(bool isLeft, bool isBlue){

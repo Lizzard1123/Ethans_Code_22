@@ -80,5 +80,11 @@ public:
         ringlesToggled = !ringlesToggled;
     }
 
+    void setRingles(bool on){
+        if(on){
+            Lift.move_velocity(ringlesSpeed);
+        }
+    }
+
 };
 #endif // ifndef LIFT
