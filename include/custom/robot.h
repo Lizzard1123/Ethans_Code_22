@@ -117,7 +117,7 @@ public:
     }
 
     void autonomous(){
-        Autonomous(autonCodeNum = 1, left = true, teamIsBlue = true);
+        Autonomous(autonCodeNum = 1, left = false, teamIsBlue = true);
     }
 
     void catieControl(){
@@ -645,6 +645,13 @@ public:
         Movement.stopAll();
     }
 
+    void turnTimed(double time, bool left, double speed = 100){
+        Movement.moveLeft(-speed * (left ? -1 : 1));
+        Movement.moveRight(speed * (left ? -1 : 1));
+        delay(time*1000);
+        Movement.stopAll();
+    }
+
     void moveBackwardTimed(double time, double speed = 100){
         Movement.moveLeft(-speed);
         Movement.moveRight(-speed);
@@ -699,16 +706,21 @@ public:
             moveForwardTimed(2, 30);
             moveBackwardTimed(2, 30);
         } else { //right small
+            setRotation(0);
             Pneumatics.clawRelease();
-            moveForwardTimed(.25);
-            moveBackwardTimed(.25);
-            Pneumatics.clawRelease();
+            Lift.liftUp();
+            Lift.clawDown();
+            delay(300);
+            Lift.liftDown();
+            Lift.clawUp();
+            moveForwardTimed(.3);
+            Lift.stopAll();
             //moveForwardTimedLineUp(1.4);
-            moveForwardTimed(1.4);
+            moveForwardTimed(.8);
             Pneumatics.clawGrab();
 
             totalForwardMovement = 0;
-            moveBackwardTimed(.8);
+            moveBackwardTimed(.6);
 
             //check for tugging
             while(totalForwardMovement > -12){
@@ -716,9 +728,10 @@ public:
             }
 
             //turn and drop
-            Lift.liftUp();
-            PIDTurn(-90);
+            //PIDTurn(-90);
+            turnTimed(.6,  false); //turn right
             Pneumatics.clawRelease();
+            Lift.liftUp();
 
             //rotate and grab
             Pneumatics.toggletilt();
@@ -729,15 +742,18 @@ public:
             Pneumatics.toggletilt();
             
             //move to line up 
-            PIDTurn(0);
-            strafeTimed(1, true, 100); //right
+            //PIDTurn(0);
+            turnTimed(.6,  true); //turn left
+            strafeTimed(1.4, true, 100); //right
             strafeTimed(1, false, 50); //left
 
             //lined up with the ringles
             moveForwardTimed(2, 30);
 
             //point turn to get to home zone and slow for more rings
-            PIDTurn(180);
+            //PIDTurn(180);
+            turnTimed(1.2,  false); //turn right
+
             moveForwardTimed(.5, 100);
             moveForwardTimed(2, 30);
         }
