@@ -663,6 +663,7 @@ public:
 
     void AutonomousOne(bool isLeft, bool isBlue){
         if(isLeft){
+            setRotation(25);
             Pneumatics.clawRelease();
             moveForwardTimed(.25);
             moveBackwardTimed(.25);
@@ -742,6 +743,11 @@ public:
         }
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
+        if(isLeft){
+            setRotation(40);
+        } else {
+            setRotation(-40);
+        }
         //Pneumatics.toggleClaw();
         //delay(.25);
         Pneumatics.clawRelease();

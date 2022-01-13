@@ -79,6 +79,10 @@ void opcontrol()
             Bongo.Pneumatics.toggleRingles();
         }
 
+        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+            Bongo.setRotation(0);
+        }
+
         //testODOM
         /*
         if(master.get_digital_new_press(DIGITAL_UP)){
