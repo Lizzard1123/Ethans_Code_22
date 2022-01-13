@@ -502,7 +502,7 @@ public:
     void testOdom()
     {
         //PIDTurn(180);
-        PIDTurn(0);
+        turnTimed(.6, false, 50); //right
     }
 
     void testOdom3(){
@@ -726,10 +726,12 @@ public:
             while(totalForwardMovement > -12){
                 moveBackwardTimed(.25);
             }
+            
+            delay(1000000); //check rotation
 
             //turn and drop
             //PIDTurn(-90);
-            turnTimed(.6,  false); //turn right
+            turnTimed(turnTime,  false, 50); //turn right
             Pneumatics.clawRelease();
             Lift.liftUp();
 
@@ -743,7 +745,7 @@ public:
             
             //move to line up 
             //PIDTurn(0);
-            turnTimed(.6,  true); //turn left
+            turnTimed(turnTime,  true, 50); //turn left
             strafeTimed(1.4, true, 100); //right
             strafeTimed(1, false, 50); //left
 
@@ -752,7 +754,7 @@ public:
 
             //point turn to get to home zone and slow for more rings
             //PIDTurn(180);
-            turnTimed(1.2,  false); //turn right
+            turnTimed(2*turnTime,  false, 50); //turn right
 
             moveForwardTimed(.5, 100);
             moveForwardTimed(2, 30);

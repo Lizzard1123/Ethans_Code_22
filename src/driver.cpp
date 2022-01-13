@@ -82,6 +82,14 @@ void opcontrol()
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             Bongo.setRotation(0);
         }
+        
+        if(master.get_digital_new_press(DIGITAL_LEFT)){
+            Bongo.testOdom();
+        }
+        
+        if(master.get_digital_new_press(DIGITAL_DOWN)){
+            Bongo.testOdom2();
+        }
 
         //testODOM
         /*
