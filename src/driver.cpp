@@ -28,9 +28,9 @@ void opcontrol()
         Bongo.debugPos();
 
         // tyler control
-        Bongo.tylerControl();
+        //Bongo.tylerControl();
         // catie control
-        //Bongo.catieControl();
+        Bongo.catieControl();
 
         //manual powering 
         if (master.get_digital(DIGITAL_L2)){

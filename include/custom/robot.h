@@ -662,41 +662,84 @@ public:
     }
 
     void AutonomousOne(bool isLeft, bool isBlue){
-        //Pneumatics.toggleClaw();
-        //delay(.25);
-        Pneumatics.clawRelease();
-        moveForwardTimed(.25);
-        moveBackwardTimed(.25);
-        Pneumatics.clawRelease();
-        //moveForwardTimedLineUp(1.4);
-        moveForwardTimed(1.4);
-        Pneumatics.clawGrab();
-        //drop turn lift manuver
-        totalForwardMovement = 0;
-        moveBackwardTimed(1.25);
-        while(totalForwardMovement > -20){
+        if(isLeft){
+            Pneumatics.clawRelease();
+            moveForwardTimed(.25);
             moveBackwardTimed(.25);
+            Pneumatics.clawRelease();
+            //moveForwardTimedLineUp(1.4);
+            moveForwardTimed(1.4);
+            Pneumatics.clawGrab();
+            //drop turn lift manuver
+            totalForwardMovement = 0;
+            moveBackwardTimed(1.25);
+            //check for tugging
+            while(totalForwardMovement > -20){
+                moveBackwardTimed(.25);
+            }
+            Pneumatics.clawRelease();
+            moveBackwardTimed(.15);
+            //sus code
+            Lift.liftUp();
+            PIDTurn(rotation - 100);
+            //strafe left to wall
+            strafeTimed(1.4, false, 50);
+            //right
+            strafeTimed(.4, true, 50);
+            Lift.stopAll();
+            //rotate and grab
+            Pneumatics.toggletilt();
+            Pneumatics.toggleRingles();
+            moveBackwardTimed(.6, 50);
+            Pneumatics.toggleBack();
+            Pneumatics.toggletilt();
+            moveForwardTimed(2, 30);
+            moveBackwardTimed(2, 30);
+            moveForwardTimed(2, 30);
+            moveBackwardTimed(2, 30);
+        } else { //right small
+            Pneumatics.clawRelease();
+            moveForwardTimed(.25);
+            moveBackwardTimed(.25);
+            Pneumatics.clawRelease();
+            //moveForwardTimedLineUp(1.4);
+            moveForwardTimed(1.4);
+            Pneumatics.clawGrab();
+
+            totalForwardMovement = 0;
+            moveBackwardTimed(.8);
+
+            //check for tugging
+            while(totalForwardMovement > -12){
+                moveBackwardTimed(.25);
+            }
+
+            //turn and drop
+            Lift.liftUp();
+            PIDTurn(-90);
+            Pneumatics.clawRelease();
+
+            //rotate and grab
+            Pneumatics.toggletilt();
+            Pneumatics.toggleRingles();
+            moveBackwardTimed(1, 50);
+            Lift.stopAll();
+            Pneumatics.toggleBack();
+            Pneumatics.toggletilt();
+            
+            //move to line up 
+            PIDTurn(0);
+            strafeTimed(1, true, 100); //right
+            strafeTimed(1, false, 50); //left
+
+            //lined up with the ringles
+            moveForwardTimed(2, 30);
+
+            //point turn to get to home zone and slow for more rings
+            PIDTurn(180);
+            moveForwardTimed(.5, 100);
+            moveForwardTimed(2, 30);
         }
-        Pneumatics.clawRelease();
-        moveBackwardTimed(.15);
-        //sus code
-        Lift.liftUp();
-        PIDTurn(rotation - 100);
-        //strafe left to wall
-        strafeTimed(1.4, false, 50);
-        //right
-        strafeTimed(.4, true, 50);
-        Lift.stopAll();
-        //rotate and grab
-        Pneumatics.toggletilt();
-        Pneumatics.toggleRingles();
-        moveBackwardTimed(.6, 50);
-        Pneumatics.toggleBack();
-        Pneumatics.toggletilt();
-        moveForwardTimed(2, 30);
-        moveBackwardTimed(2, 30);
-        moveForwardTimed(2, 30);
-        moveBackwardTimed(2, 30);
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
         //Pneumatics.toggleClaw();
@@ -707,7 +750,13 @@ public:
         Pneumatics.clawRelease();
         moveForwardTimed(2.25);
         Pneumatics.clawGrab();
-        moveBackwardTimed(2.25);
+        //tug
+        totalForwardMovement = 0;
+        moveBackwardTimed(1.25);
+        //check for tugging
+        while(totalForwardMovement > -20){
+            moveBackwardTimed(.25);
+        }
     };
     void AutonomousThree(bool isLeft, bool isBlue){
         //TODO finish this auton pathing
