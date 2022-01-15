@@ -8,7 +8,7 @@
 #define BRPort 8 
 #define LarmPort 3
 #define RarmPort 9
-#define ClawPort 15
+#define ClawPort 14
 #define LiftPort 7
 #define EYESPort 4
 //other defines
@@ -85,4 +85,3 @@ extern lv_obj_t *debugYarmLabel;
 extern bool teamIsBlue;
 
 #endif
-
