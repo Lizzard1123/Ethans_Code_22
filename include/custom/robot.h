@@ -117,7 +117,7 @@ public:
     }
 
     void autonomous(){
-        Autonomous(autonCodeNum = 1, left = false, teamIsBlue = true);
+        Autonomous(autonCodeNum = 1, left = true, teamIsBlue = false);
     }
 
     void catieControl(){
@@ -672,34 +672,41 @@ public:
         if(isLeft){
             setRotation(25);
             Pneumatics.clawRelease();
-            moveForwardTimed(.25);
-            moveBackwardTimed(.25);
+            moveForwardTimed(.10);
+            moveBackwardTimed(.10);
             Pneumatics.clawRelease();
             //moveForwardTimedLineUp(1.4);
             moveForwardTimed(1.4);
             Pneumatics.clawGrab();
+            Lift.clawUp();
+            delay(100);
+            Lift.stopClaw();
             //drop turn lift manuver
             totalForwardMovement = 0;
-            moveBackwardTimed(1.25);
+            moveBackwardTimed(1.60);
             //check for tugging
             while(totalForwardMovement > -20){
                 moveBackwardTimed(.25);
             }
             Pneumatics.clawRelease();
             moveBackwardTimed(.15);
-            //sus code
             Lift.liftUp();
+            delay(1500);
+            Lift.stopAll();
+            //sus code
             PIDTurn(rotation - 100);
             //strafe left to wall
             strafeTimed(1.4, false, 50);
             //right
             strafeTimed(.4, true, 50);
-            Lift.stopAll();
+            
             //rotate and grab
             Pneumatics.toggletilt();
+            
+            moveBackwardTimed(1, 30);
             Pneumatics.toggleRingles();
-            moveBackwardTimed(.6, 50);
             Pneumatics.toggleBack();
+            delay(100);
             Pneumatics.toggletilt();
             moveForwardTimed(2, 30);
             moveBackwardTimed(2, 30);

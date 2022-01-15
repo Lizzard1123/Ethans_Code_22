@@ -131,7 +131,7 @@ public:
         clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
         //clawSpeed = defaultClawSpeed;
     }
-
+ 
     void clawDown(){
         clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
         //clawSpeed = -defaultClawSpeed;
