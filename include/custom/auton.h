@@ -34,4 +34,8 @@ extern void printData();
 extern void runSegment(int line);
 
 extern void executeSkillsData();
+
+extern bool isRecording();
+
+extern void setRecording(bool val);
 #endif

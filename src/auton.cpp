@@ -18,6 +18,7 @@ Robot Bongo;
 bool recording = true;
 bool ready = false;
 int dataSize = 0;
+//skills
 const int dataLength = 3500;
 const int segmentLength = 16;
 double replayData[dataLength][segmentLength]; //16 should stay 3500 should be a lil lower and = to dataSize
@@ -44,6 +45,7 @@ double replayData[dataLength][segmentLength]; //16 should stay 3500 should be a 
 */
 
 void fillEmpty(){ //set all to 0
+    printf("attempting to fill array \n");
     if(!ready){
         for(int i = 0; i < dataLength; i++){
             for(int j = 0; j < segmentLength; j++){
@@ -66,10 +68,12 @@ void setData(int num, double val){
 void finalizeData(){
     if(recording){
         dataSize++;
+        printf("Filling data line: %f\n", dataSize);
     }
 }
 
 void printData(){
+    printf("Printing Data\n");
     recording = false;
     printf("{");
     for(int i = 0; i < dataLength; i++){ //every segment
@@ -126,10 +130,19 @@ void runSegment(int line){
 }
 
 void executeSkillsData(){
+    printf("Executing Skills Data");
     for(int i = 0; i < dataLength; i++){
        runSegment(i); //similate inputs 
        delay(20); // NEEDS to be the same as driver collected replayData
     }
+}
+
+bool isRecording(){
+  return recording;
+}
+
+void setRecording(bool val){
+  recording = val;
 }
 
 void autonomous()

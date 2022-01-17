@@ -15,6 +15,13 @@
  */
  //test from phone
 
+ void endRecoringTask(void*) {
+     printf("starting end timer\n");
+     delay(60000);
+     printf("Triggering end\n");
+     printData();
+ }
+
 void opcontrol()
 {
     //space to run stuff once before begin driving
@@ -22,9 +29,19 @@ void opcontrol()
     //ADIDigitalOut tiltLock('G');
     //ADIDigitalOut backLock('H');
     master.print(0, 8, "Player 1");
-    fillEmpty();
+    
     while (true)
     {
+        if(master.get_digital(DIGITAL_L1) && master.get_digital(DIGITAL_R1)){
+            printf("Starting recording\n");
+            setRecording(true);
+            fillEmpty();
+            for(int i = 5; i > 0; i--){
+                master.print(1, 8, "start: " + i);
+            }
+            master.print(1, 8, "RECORDING");
+            Task countdown(endRecoringTask);
+        }
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();
 
