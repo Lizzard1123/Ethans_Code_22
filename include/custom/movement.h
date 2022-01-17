@@ -83,11 +83,13 @@ public:
 
     // upadate controller vars for bongo orientation
     //AKA tyler drive
-    void tylerControl()
+    void tylerControl(double LX = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X), 
+                        double LY = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),
+                        double RX = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X))
     {
-        LXaxis = (master.get_analog(E_CONTROLLER_ANALOG_LEFT_X));
-        LYaxis = (master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y));
-        RXaxis = (master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X)) / rotationTune;
+        LXaxis = LX;
+        LYaxis = LY;
+        RXaxis = RX / rotationTune;
         FLspeed = LYaxis + LXaxis + RXaxis;
         FRspeed = LYaxis - LXaxis - RXaxis;
         BLspeed = LYaxis - LXaxis + RXaxis;

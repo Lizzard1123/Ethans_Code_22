@@ -1,240 +1,129 @@
+#ifndef AUTON
+#define AUTON
+
+#include "global.h"
+#include "lift.h"
+#include "movement.h"
+#include "pneumatics.h"
+LiftClass skillsLift;
+// class handler for movement + other funtions
+RobotMovement skillsMovement;
+//custom static pneumatics class
+PneumaticsClass skillsPneumatics;
+bool recording = true;
+bool ready = false;
+int dataSize = 0;
+const int dataLength = 3500;
+const int segmentLength = 16;
+double replayData[dataLength][segmentLength]; //16 should stay 3500 should be a lil lower and = to dataSize
 /*
-void autonLineUpBall()
-    {
-        int val = 0;
-        int count = 3;
-        int tolerance = 3;
-        while (true)
-        {
-            val = lineUpBall(true);
-            if (val < tolerance && val > -tolerance)
-            {
-                count++;
-            }
+0 - LX joystick
+1 - LY joystick
+2 - RX joystick
+3 - RY joystick
 
-            if (count > 6)
-            {
-                break;
-            }
-            delay(10);
-        }
-    }
+4 - upArrow (0 nothing, 1 trigger)
+5 - rightArrow (0 nothing, 1 trigger)
+6 - downArrow (0 nothing, 1 trigger)
+7 - leftArrow (0 nothing, 1 trigger)
 
-    void autonLineUpTower()
-    {
-        int val = 0;
-        int count = 3;
-        int tolerance = 3;
-        while (true)
-        {
-            val = lineUpTower(true);
-            if (val < tolerance && val > -tolerance)
-            {
-                count++;
-            }
+8 - X (0 nothing, 1 trigger)
+9 - A (0 nothing, 1 trigger)
+10 - B (0 nothing, 1 trigger)
+11 - Y (0 nothing, 1 trigger)
 
-            if (count > 6)
-            {
-                break;
-            }
-            delay(10);
-        }
-    }
-
-    
-    void AutonomousOne()
-    {
-        Movement.flywheel.flywheelset(true);
-        Movement.flywheel.setSpeed(100);
-        // deploy da boi
-        Movement.intake.activate(true);
-        Movement.intake.open(true);
-        delay(1000);
-        //inward
-        Movement.intake.open(false);
-    }
-
-    void AutonomousTwo()
-    {
-        Movement.flywheel.flywheelset(true);
-        Movement.flywheel.setSpeed(50);
-        Movement.uptake.setToggle(true);
-        // deploy da boi
-        Movement.intake.activate(true);
-        Movement.intake.open(true);
-        delay(400);
-        Movement.intake.open(false);
-        //delay(400);
-        setPos(93, 12);
-        //Movement.intake.activate(false);
-        //Movement.intake.holdPos(true);
-        //Movement.intake.keepAtPos(Movement.intake.middle);
-        //go to right tower
-        PIDMove(114, 30);
-        PIDTurn(135);
-        Movement.autonLineUpBall();
-        //line up
-        //Movement.autonLineUpTower();
-        //go forward with stiff arms
-        //new power cycle
-        //wait until ball inside
-        //Movement.moveTimed(75, 1200);
-        Movement.moveLeft(30);
-        Movement.moveRight(30);
-        while (untilUptakePower())
-        {
-            delay(5);
-        }
-        Movement.moveLeft(0);
-        Movement.moveRight(0);
-        //Movement.intake.open(true);
-        while (untilFlyhweelPower())
-        {
-            delay(5);
-            Movement.lineUpTower(true);
-        }
-        //ball shoots
-        //delay(100);
-        //backout
-        Movement.moveTimed(-100, 900);
-        //go to opposite side and turn
-        //PIDTurn(180);
-        PIDMove(40, 30);
-        Movement.intake.open(false);
-        PIDTurn(225);
-        //line up
-        //Movement.autonLineUpTower();
-        Movement.autonLineUpBall();
-        //go forward and uptake
-        //Movement.moveTimed(75, 1375);
-        //uptake
-
-        Movement.flywheel.setSpeed(50);
-        Movement.moveLeft(20);
-        Movement.moveRight(20);
-        threshold = 7;
-        while (untilUptakePower())
-        {
-            delay(5);
-        }
-        Movement.moveLeft(0);
-        Movement.moveRight(0);
-        //Movement.intake.open(true);
-        while (untilFlyhweelPower())
-        {
-            delay(5);
-            Movement.lineUpTower(true);
-        }
-
-        Movement.flywheel.setSpeed(45);
-        //backout and turn to path
-        Movement.moveTimed(-100, 900);
-        Movement.intake.activate(true);
-        Movement.intake.holdPos(false);
-        PIDTurn(360);
-    }
-
-    void AutonomousThree()
-    {
-        Movement.flywheel.flywheelset(true);
-        Movement.flywheel.setSpeed(50);
-        Movement.uptake.setToggle(true);
-        // deploy da boi
-        Movement.intake.activate(true);
-        Movement.intake.open(true);
-        delay(400);
-        Movement.intake.open(false);
-        //delay(400);
-        setPos(93, 12);
-        //Movement.intake.activate(false);
-        //Movement.intake.holdPos(true);
-        //Movement.intake.keepAtPos(Movement.intake.middle);
-        //go to right tower
-        PIDMove(114, 30);
-        PIDTurn(135);
-        Movement.autonLineUpBall();
-        //line up
-        //Movement.autonLineUpTower();
-        //go forward with stiff arms
-        //new power cycle
-        //wait until ball inside
-        //Movement.moveTimed(75, 1200);
-        Movement.moveLeft(30);
-        Movement.moveRight(30);
-        while (untilUptakePower())
-        {
-            delay(5);
-        }
-        Movement.moveLeft(0);
-        Movement.moveRight(0);
-        //Movement.intake.open(true);
-        while (untilFlyhweelPower())
-        {
-            delay(5);
-            Movement.lineUpTower(true);
-        }
-        //ball shoots
-        //delay(100);
-        //backout
-        Movement.moveTimed(-100, 900);
-        //go to opposite side and turn
-        //PIDTurn(180);
-
-        //middle tower
-        PIDMove(74, 40);
-        //PIDTurn(135);
-        PIDMove(74, 54);
-
-        PIDMove(40, 30);
-        Movement.intake.open(false);
-        PIDTurn(225);
-        //line up
-        //Movement.autonLineUpTower();
-        Movement.autonLineUpBall();
-        //go forward and uptake
-        //Movement.moveTimed(75, 1375);
-        //uptake
-
-        Movement.flywheel.setSpeed(50);
-        Movement.moveLeft(30);
-        Movement.moveRight(30);
-        threshold = 7;
-        while (untilUptakePower())
-        {
-            delay(5);
-        }
-        Movement.moveLeft(0);
-        Movement.moveRight(0);
-        //Movement.intake.open(true);
-        while (untilFlyhweelPower())
-        {
-            delay(5);
-            Movement.lineUpTower(true);
-        }
-
-        Movement.flywheel.setSpeed(45);
-        //backout and turn to path
-        Movement.moveTimed(-100, 900);
-        Movement.intake.activate(true);
-        Movement.intake.holdPos(false);
-        PIDTurn(360);
-    }
-
-    void Autonomous()
-    {
-        switch (autonCodeNum)
-        {
-        case 1:
-            AutonomousOne();
-            break;
-
-        case 2:
-            AutonomousTwo();
-            break;
-
-        case 3:
-            AutonomousThree();
-            break;
-        }
-    }
+12 - L1 (0 nothing, 1 trigger)
+13 - L2 (0 nothing, 1 trigger)
+14 - R1 (0 nothing, 1 trigger)
+15 - R2 (0 nothing, 1 trigger)
 */
+
+void fillEmpty(){ //set all to 0
+    if(!ready){
+        for(int i = 0; i < dataLength; i++){
+            for(int j = 0; j < segmentLength; j++){
+                replayData[i][j] = 0;
+            }
+        }
+    }
+    ready = true;
+}
+
+void setData(int num, double val){
+    if(recording && !ready){
+        fillEmpty();
+    } 
+    if(recording){
+        replayData[dataSize][num] = val;
+    }
+}
+
+void finalizeData(){
+    if(recording){
+        dataSize++;
+    }
+}
+
+void printData(){
+    recording = false;
+    printf("{");
+    for(int i = 0; i < dataLength; i++){ //every segment
+    printf("{");
+        for(int j = 0; j < segmentLength; j++){ //every input
+            printf("%f,", replayData[i][j]);
+        }
+    printf("},\n");
+    }
+    printf("}\n");
+}
+
+void runSegment(int line){
+    //replayData[line] for segment
+
+    skillsMovement.tylerControl(replayData[line][0],replayData[line][1],replayData[line][2]);
+
+    //manual powering 
+    if (replayData[line][13]){
+        skillsLift.liftDown(); //manually pushes arm down at max torque
+    } else if (replayData[line][12]){
+        skillsLift.liftUp(); //manually lifts arm with max torque
+    } else {
+        skillsLift.stopArm(); //stops manual controll
+    }
+
+    if (replayData[line][15]){
+        skillsLift.clawDown(); //manually pushes claw down at max torque
+        //skillsLift.setAutoLevel(false);
+    } else if (replayData[line][14]){
+        skillsLift.clawUp(); //manually lifts claw with max torque
+        //skillsLift.setAutoLevel(false);
+    } else {
+        skillsLift.stopClaw(); //stops manual controll
+    }
+
+    if (replayData[line][9]){
+        skillsPneumatics.toggleClaw();
+    }
+    if (replayData[line][8]){
+        skillsPneumatics.toggletilt();
+    }
+    if (replayData[line][11]){
+        skillsPneumatics.toggleBack();
+    }
+    if (replayData[line][6]){
+        Lift.move_relative(-360, 50);
+    }
+    if(replayData[line][4]){
+        skillsPneumatics.toggleRingles();
+    }
+
+    skillsMovement.move();
+}
+
+void executeSkillsData(){
+    for(int i = 0; i < dataLength; i++){
+       runSegment(i); //similate inputs 
+       delay(20); // NEEDS to be the same as driver collected replayData
+    }
+}
+#endif

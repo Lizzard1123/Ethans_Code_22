@@ -3,6 +3,7 @@
 #include "lift.h"
 #include "movement.h"
 #include "pneumatics.h"
+#include "auton.h"
 #include <climits>
 
 class Robot
@@ -796,7 +797,8 @@ public:
         //TODO finish this auton pathing
     };
     void AutonomousFour(bool isLeft, bool isBlue){
-        //TODO finish this auton pathing
+        //This is skills!!!
+        executeSkillsData();
     };
 
     void Autonomous(int num, bool isLeft, bool isBlue)
