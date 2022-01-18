@@ -11,6 +11,16 @@ Motor Larm(LarmPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES); 
 Motor Claw(ClawPort, E_MOTOR_GEARSET_36, false, E_MOTOR_ENCODER_DEGREES); 
 Motor Lift(LiftPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
+/*
+motor FrontLeft = motor(PORT14, ratio18_1, false);
+motor FrontRight = motor(PORT15, ratio18_1, true);
+motor BackLeft1 = motor(PORT18, ratio18_1, false);
+motor BackLeft2 = motor(PORT20, ratio18_1, false);
+motor BackRight1 = motor(PORT17, ratio18_1, true);
+motor BackRight2 = motor(PORT19, ratio18_1, true);
+motor RightLift = motor(PORT2, ratio36_1, false);
+motor LeftLift = motor(PORT1, ratio36_1, true);
+*/
 
 
 // controllers

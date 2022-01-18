@@ -15,12 +15,6 @@
  */
  //test from phone
 
- void endRecoringTask(void*) {
-     printf("starting end timer\n");
-     delay(60000);
-     printf("Triggering end\n");
-     printData();
- }
 
 void opcontrol()
 {
@@ -32,15 +26,21 @@ void opcontrol()
     
     while (true)
     {
-        if(master.get_digital(DIGITAL_L1) && master.get_digital(DIGITAL_R1)){
-            printf("Starting recording\n");
-            setRecording(true);
-            fillEmpty();
-            for(int i = 5; i > 0; i--){
-                master.print(1, 8, "start: " + i);
+        if(master.get_digital_new_press(DIGITAL_LEFT)){
+            if(isRecording()){
+                printf("stopping");
+                printData();
+            } else {
+                printf("Starting recording\n");
+                setRecording(true);
+                fillEmpty();
+                printf("Done Filling");
+                for(int i = 5; i > 0; i--){
+                    master.print(1, 8, "start: " + i);
+                }
+                master.print(1, 8, "RECORDING");
             }
-            master.print(1, 8, "RECORDING");
-            Task countdown(endRecoringTask);
+           //executeSkillsData();
         }
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();
@@ -154,6 +154,6 @@ void opcontrol()
         master.set_text(2, 0, values);
         //delay between updates
         finalizeData();
-        delay(20);
+        delay(100);
     }
 }
