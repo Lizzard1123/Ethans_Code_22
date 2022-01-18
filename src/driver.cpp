@@ -26,21 +26,19 @@ void opcontrol()
     
     while (true)
     {
+        
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            if(isRecording()){
-                printf("stopping");
-                printData();
-            } else {
-                printf("Starting recording\n");
-                setRecording(true);
-                fillEmpty();
-                printf("Done Filling");
-                for(int i = 5; i > 0; i--){
-                    master.print(1, 8, "start: " + i);
-                }
-                master.print(1, 8, "RECORDING");
+            /*
+            printf("Starting recording\n");
+            setRecording(true);
+            fillEmpty();
+            printf("Done Filling");
+            for(int i = 5; i > 0; i--){
+                master.print(1, 8, "start: " + i);
             }
-           //executeSkillsData();
+            master.print(1, 8, "RECORDING");
+            */
+            //executeSkillsData();
         }
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();

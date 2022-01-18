@@ -118,7 +118,7 @@ public:
     }
 
     void autonomous(){
-        Autonomous(autonCodeNum = 1, left = true, teamIsBlue = false);
+        Autonomous(getAutonNum(), getSide(), getColor());
     }
 
     void catieControl(){
