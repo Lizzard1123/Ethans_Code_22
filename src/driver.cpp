@@ -28,7 +28,7 @@ void opcontrol()
     {
         
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            /*
+            
             printf("Starting recording\n");
             setRecording(true);
             fillEmpty();
@@ -37,7 +37,7 @@ void opcontrol()
                 master.print(1, 8, "start: " + i);
             }
             master.print(1, 8, "RECORDING");
-            */
+        
             //executeSkillsData();
         }
         //prints to screen the position and rotation of bongo
