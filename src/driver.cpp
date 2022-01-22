@@ -107,6 +107,10 @@ void opcontrol()
         std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
         master.set_text(2, 0, values);
         //delay between updates
-        delay(100);
+        
+        setData();
+        finalizeData();
+
+        delay(driverSpeed);
     }
 }

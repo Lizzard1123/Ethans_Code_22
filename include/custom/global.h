@@ -1,7 +1,6 @@
 #ifndef GLOBAL
 #define GLOBAL
 #include "main.h"
-#define driverSpeed 50
 //motor ports
 #define FLPort 1 
 #define FRPort 20
@@ -81,5 +80,6 @@ extern lv_obj_t *debugYarmLabel;
 
 //global teamcolor
 extern bool teamIsBlue;
-
+extern double maxSpeedMultiplier;
+extern double driverSpeed;
 #endif

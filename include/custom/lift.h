@@ -5,15 +5,10 @@ class LiftClass
 {
 private:
     double minLiftSpeed = 50;
-    double maxLiftSpeed = 100;
+    double maxLiftSpeed = 100 * maxSpeedMultiplier;
 
-    double minClawSpeed = 50; 
-    double maxClawSpeed = 80; 
-
-    double liftMaxPos = 54030;
-    double liftMinPos = 0;
-
-    double offset = 0;
+    double minClawSpeed = 40; 
+    double maxClawSpeed = 80 * maxSpeedMultiplier; 
 
     double defaultClawSpeed = 100;
     double liftSpeed = 50;
@@ -77,7 +72,7 @@ public:
         //if(autoLevel){
         //    Claw.move_velocity(autoLevelClaw());
         //} else {
-            Claw.move_velocity(clawSpeed);
+        Claw.move_velocity(clawSpeed);
         //}
 
         if(!rightSwitch.get_value() && RarmLiftSpeed < 0){

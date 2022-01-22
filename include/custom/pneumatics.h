@@ -13,7 +13,7 @@ public:
 
     //ringles
     bool ringlesToggled = false;
-    double ringlesSpeed = 110;
+    double ringlesSpeed = 110 * maxSpeedMultiplier;
 
     void clawGrab(){
         clawLock.set_value(HIGH);

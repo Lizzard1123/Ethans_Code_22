@@ -17,6 +17,9 @@ Robot Bongo;
 
 bool recording = false;
 bool ready = false;
+bool speedUp = false;
+
+
 int currentDataLine = 0;
 //skills
 const int recordTime = 120; // in seconds
@@ -254,11 +257,11 @@ int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
     return endIndex;
 }
 
-void executeSkillsData(double dataToBeReplayed[][3], int dataLength){
+void executeData(double dataToBeReplayed[][3], int dataLength){
     printf("Executing Skills Data");
     for(int i = 0; i < dataLength; i++){
        i = runSegment(dataToBeReplayed, dataLength, i); //similate inputs 
-       delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
+       delay(driverSpeed / speedUp ? 2 : 1); // NEEDS to be the same as driver collected dataLine
     }
 }
 
@@ -271,6 +274,13 @@ void setRecording(bool val){
   recording = val;
 }
 
+bool isSpeedUp(){
+  return speedUp;
+}
+
+void setSpeedUp(bool val){
+  speedUp = val;
+}
 
 
 void autonomous()

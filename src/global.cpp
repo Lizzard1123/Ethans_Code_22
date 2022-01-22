@@ -7,8 +7,8 @@ Motor FL(FLPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor FR(FRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor BL(BLPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor BR(BRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
-Motor Larm(LarmPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
-Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES); 
+Motor Larm(LarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES); 
+Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
 Motor Claw(ClawPort, E_MOTOR_GEARSET_36, false, E_MOTOR_ENCODER_DEGREES); 
 Motor RingleLift(LiftPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
 /*
@@ -80,3 +80,6 @@ double Robot::X = 0;
 double Robot::totalForwardMovement = 0;
 double Robot::Y = 0;
 double Robot::rotation = 0;
+
+double maxSpeedMultiplier = 1;
+double driverSpeed = 50;

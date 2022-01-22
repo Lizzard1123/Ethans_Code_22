@@ -101,10 +101,10 @@ public:
                                        fabs(BRspeed)) /
                        100;
 
-        FLspeed = (FLspeed / under);
-        FRspeed = (FRspeed / under);
-        BLspeed = (BLspeed / under);
-        BRspeed = (BRspeed / under);
+        FLspeed = (FLspeed / under) * maxSpeedMultiplier;
+        FRspeed = (FRspeed / under) * maxSpeedMultiplier;
+        BLspeed = (BLspeed / under) * maxSpeedMultiplier;
+        BRspeed = (BRspeed / under) * maxSpeedMultiplier;
     }
 
     // drives motors from private vars AKA refresh motor speeds
