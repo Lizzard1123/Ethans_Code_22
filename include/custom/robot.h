@@ -623,7 +623,7 @@ public:
         }
         return mt_error;
     }
-    */
+    
     //AUTONS
     void moveForwardTimedLineUp(double time, double speed = 100){
         double interval = time / 10; //10 ms 
@@ -638,7 +638,7 @@ public:
         
         Movement.stopAll();
     }
-
+*/
     void moveForwardTimed(double time, double speed = 100){
         Movement.moveLeft(speed);
         Movement.moveRight(speed);
@@ -798,7 +798,7 @@ public:
     };
     void AutonomousFour(bool isLeft, bool isBlue){
         //This is skills!!!
-        executeSkillsData();
+        //executeSkillsData();
     };
 
     void Autonomous(int num, bool isLeft, bool isBlue)

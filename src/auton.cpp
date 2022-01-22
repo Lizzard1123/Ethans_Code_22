@@ -19,10 +19,10 @@ bool recording = false;
 bool ready = false;
 int currentDataLine = 0;
 //skills
-const recordTime = 120; // in seconds
-const int maxdataLength = (recordTime * 1000) / driverSpeed;
+const int recordTime = 120; // in seconds
+const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
-double replayData[maxdataLength][maxSegmentLength]; 
+double replayData[maxDataLength][maxSegmentLength]; 
 
 void fillEmpty(){ //set all to 0
     printf("attempting to fill array \n");
@@ -75,7 +75,7 @@ void setData(){
         replayData[currentDataLine][FLActualVelocity] = FL.get_actual_velocity();
         replayData[currentDataLine][FRActualVelocity] = FR.get_actual_velocity();
         replayData[currentDataLine][BLActualVelocity] = BL.get_actual_velocity();
-        replayData[currentDataLine][FRActualVelocity] = BR.get_actual_velocity();
+        replayData[currentDataLine][BRActualVelocity] = BR.get_actual_velocity();
         replayData[currentDataLine][ClawActualVelocity] = Claw.get_actual_velocity();
         replayData[currentDataLine][RingleLiftActualVelocity] = RingleLift.get_actual_velocity();
         replayData[currentDataLine][LarmActualVelocity] = Larm.get_actual_velocity();
@@ -94,7 +94,7 @@ void finalizeData(){
     if(recording){
         currentDataLine++;
         //printf("Filling data line: %f\n", currentDataLine);
-        if(currentDataLine == maxdataLength){
+        if(currentDataLine == maxDataLength){
             printf("stopping");
             stopRecording();
         }
@@ -117,9 +117,9 @@ void printUnfilteredData(){
     printf("Printing Data\n");
     recording = false;
     printf("{");
-    for(int i = 0; i < maxdataLength; i++){ //every segment
+    for(int i = 0; i < maxDataLength; i++){ //every segment
         printf("{");
-        for(int j = 0; j < maxsegmentLength; j++){ //every input
+        for(int j = 0; j < maxSegmentLength; j++){ //every input
             if(j == 15){
                 printf("%f", replayData[i][j]);
             } else {
@@ -191,7 +191,7 @@ void printData(){
 }
 
 //returns last index, runs motor values 
-int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex){
+int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
     //dataLine for segment
     double dataLine[MaxRecords];
     int endIndex = dataLength;
@@ -205,7 +205,7 @@ int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex){
         if(dataToBeReplayed[startIndex + i][2] != currentTime){
             endIndex = startIndex + i;
         } else { //still on same time keep filling data
-            dataLine[dataToBeReplayed[startIndex + i][1]] = dataToBeReplayed[startIndex + i][0]
+            dataLine[(int)dataToBeReplayed[startIndex + i][1]] = dataToBeReplayed[startIndex + i][0];
         }
     }
 
@@ -243,7 +243,7 @@ int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex){
         Bongo.Pneumatics.toggleBack();
     }
     if (dataLine[downArrowPress]){
-        Lift.move_relative(-360, 50);
+        RingleLift.move_relative(-360, 50);
     }
     if(dataLine[upArrowPress]){
         Bongo.Pneumatics.toggleRingles();
@@ -254,7 +254,7 @@ int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex){
     return endIndex;
 }
 
-void executeSkillsData(double dataToBeReplayed[][], int dataLength){
+void executeSkillsData(double dataToBeReplayed[][3], int dataLength){
     printf("Executing Skills Data");
     for(int i = 0; i < dataLength; i++){
        i = runSegment(dataToBeReplayed, dataLength, i); //similate inputs 

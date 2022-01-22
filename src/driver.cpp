@@ -89,7 +89,7 @@ void opcontrol()
         //}
 
         if (master.get_digital_new_press(DIGITAL_DOWN)){
-            Lift.move_relative(-360, 50);
+            RingleLift.move_relative(-360, 50);
             //Bongo.testOdom2();
         }
 

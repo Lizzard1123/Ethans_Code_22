@@ -74,7 +74,7 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define FLActualVelocity 28
 #define FRActualVelocity 29
 #define BLActualVelocity 30
-#define FRActualVelocity 31
+#define BRActualVelocity 31
 #define ClawActualVelocity 32
 #define RingleLiftActualVelocity 33
 #define LarmActualVelocity 34
@@ -98,7 +98,7 @@ extern void finalizeData();
 
 extern void printData();
 
-extern int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex);
+extern int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex);
 
 extern void executeSkillsData();
 

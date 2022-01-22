@@ -1018,7 +1018,7 @@ void initialize()
     Larm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     Rarm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     Claw.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    Lift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    RingleLift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     
 
     //optical sensor led light level 100 high
