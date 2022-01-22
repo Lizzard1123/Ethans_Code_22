@@ -1,6 +1,7 @@
 #ifndef GLOBAL
 #define GLOBAL
 #include "main.h"
+#define driverSpeed 50
 //motor ports
 #define FLPort 1 
 #define FRPort 20
@@ -12,9 +13,6 @@
 #define LiftPort 7
 #define EYESPort 4
 //other defines
-#define LeftSideNum 0
-#define RightSideNum 1
-#define BackSideNum 2
 #define expanderPort 10
 
 
@@ -24,7 +22,7 @@ extern Motor FR;
 extern Motor BL;
 extern Motor BR;
 extern Motor Claw;
-extern Motor Lift;
+extern Motor RingleLift;
 extern Motor Larm;
 extern Motor Rarm;
 
@@ -33,16 +31,16 @@ extern Controller master;
 extern Controller partner;
 
 //vision sensors
-extern Vision Eyes;
+//extern Vision Eyes;
 //extern Vision leftEye;
 //extern Vision rightEye;
 //extern Vision backEye;
 
 //sigs
 //#define EYES__CUSTOM_GREEN_NUM 1
-#define MOGO_CUSTOM_YELLOW_NUM 1
+//#define MOGO_CUSTOM_YELLOW_NUM 1
 //extern vision_signature_s_t  EYES__CUSTOM_GREEN;
-extern vision_signature_s_t MOGO_CUSTOM_YELLOW;
+//extern vision_signature_s_t MOGO_CUSTOM_YELLOW;
 
 //opical sensor
 //extern Optical Police;

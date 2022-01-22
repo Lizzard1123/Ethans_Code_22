@@ -45,31 +45,23 @@ void opcontrol()
 
         // tyler control
         Bongo.tylerControl();
-  
-        setData(0, master.get_analog(E_CONTROLLER_ANALOG_LEFT_X));
-        setData(1, master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y));
-        setData(2, master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X));
 
         // catie control
         //Bongo.catieControl();
 
         //manual powering 
         if (master.get_digital(DIGITAL_L2)){
-            setData(13, 1);
             Bongo.Lift.liftDown(); //manually pushes arm down at max torque
         } else if (master.get_digital(DIGITAL_L1)){
-            setData(12, 1);
             Bongo.Lift.liftUp(); //manually lifts arm with max torque
         } else {
             Bongo.Lift.stopArm(); //stops manual controll
         }
 
         if (master.get_digital(DIGITAL_R2)){
-            setData(15, 1);
             Bongo.Lift.clawDown(); //manually pushes claw down at max torque
             //Bongo.Lift.setAutoLevel(false);
         } else if (master.get_digital(DIGITAL_R1)){
-            setData(14, 1);
             Bongo.Lift.clawUp(); //manually lifts claw with max torque
             //Bongo.Lift.setAutoLevel(false);
         } else {
@@ -78,19 +70,16 @@ void opcontrol()
 
         //Toggle claw
         if (master.get_digital_new_press(DIGITAL_A)){
-            setData(9, 1);
             Bongo.Pneumatics.toggleClaw();
         }
 
         //Toggle frpnt
         if (master.get_digital_new_press(DIGITAL_X)){
-            setData(8, 1);
             Bongo.Pneumatics.toggletilt();
         }
 
         //Toggle back
         if (master.get_digital_new_press(DIGITAL_Y)){
-            setData(11, 1);
             Bongo.Pneumatics.toggleBack();
         }
 
@@ -100,50 +89,17 @@ void opcontrol()
         //}
 
         if (master.get_digital_new_press(DIGITAL_DOWN)){
-            setData(6, 1);
             Lift.move_relative(-360, 50);
             //Bongo.testOdom2();
         }
 
         if(master.get_digital_new_press(DIGITAL_UP)){
-            setData(4, 1);
             Bongo.Pneumatics.toggleRingles();
         }
 
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             Bongo.setRotation(0);
         }
-        
-        //if(master.get_digital_new_press(DIGITAL_LEFT)){
-        //    Bongo.testOdom();
-        //}
-
-        //testODOM
-        /*
-        if(master.get_digital_new_press(DIGITAL_UP)){
-            Bongo.resetOdom();
-            Bongo.testOdom2();
-        }
-        
-        if(master.get_digital(DIGITAL_RIGHT)){
-            printf("starting");
-            //Bongo.moveForwardTimedLineUp(1.4);
-            //Bongo.AutonomousOne(false, false);
-            double turnPval = 1;
-            vision_object_s_t mogo = Eyes.get_by_sig(0, MOGO_CUSTOM_YELLOW_NUM);
-            double turnVal = (158 - mogo.x_middle_coord) * turnPval;
-            printf("Turn: %f\n", turnVal);
-            printf("mogo.x_middle_coord: %f\n", mogo.x_middle_coord);
-            Bongo.Movement.FLspeed += turnVal;
-            Bongo.Movement.BLspeed += turnVal;
-            Bongo.Movement.FRspeed -= turnVal;
-            Bongo.Movement.BRspeed -= turnVal;
-
-        }
-        if(master.get_digital_new_press(DIGITAL_DOWN)){
-            Bongo.testOdom3();
-        }
-        */
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
@@ -151,7 +107,6 @@ void opcontrol()
         std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
         master.set_text(2, 0, values);
         //delay between updates
-        finalizeData();
         delay(100);
     }
 }

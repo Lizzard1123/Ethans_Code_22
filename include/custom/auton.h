@@ -22,6 +22,73 @@
 14 - R1 (0 nothing, 1 trigger)
 15 - R2 (0 nothing, 1 trigger)
 */
+#define LXDataNum 0
+#define LYDataNum 1
+#define RXDataNum 2
+#define RYDataNum 3
+
+#define upArrowDigital 4
+#define rightArrowDigital 5
+#define downArrowDigital 6
+#define leftArrowDigital 7
+
+#define upArrowPress 8
+#define rightArrowPress 9
+#define downArrowPress 10
+#define leftArrowPress 11
+
+#define XButtonDigital 12
+#define AButtonDigital 13
+#define BButtonDigital 14
+#define YButtonDigital 15
+
+#define XButtonPress 16
+#define AButtonPress 17
+#define BButtonPress 18
+#define YButtonPress 19
+
+#define L1ButtonDigital 20
+#define L2ButtonDigital 21
+#define R1ButtonDigital 22
+#define R2ButtonDigital 23
+
+#define L1ButtonPress 24
+#define L2ButtonPress 25
+#define R1ButtonPress 26
+#define R2ButtonPress 27
+
+// sensors
+/*
+extern Motor FL;
+extern Motor FR;
+extern Motor BL;
+extern Motor BR;
+extern Motor Claw;
+extern Motor RingleLift;
+extern Motor Larm;
+extern Motor Rarm;
+extern okapi::ADIEncoder  rightOdom;
+extern pros::c::ext_adi_encoder_t  leftOdom;
+*/
+
+#define FLActualVelocity 28
+#define FRActualVelocity 29
+#define BLActualVelocity 30
+#define FRActualVelocity 31
+#define ClawActualVelocity 32
+#define RingleLiftActualVelocity 33
+#define LarmActualVelocity 34
+#define RarmActualVelocity 35
+
+#define ClawPosition 36
+#define RingleLiftPosition 37
+#define LarmPosition 38
+#define RarmPosition 39
+#define rightOdomPosition 40
+#define leftOdomPosition 41
+
+#define MaxRecords 42
+
 
 extern void fillEmpty();
 
@@ -31,11 +98,13 @@ extern void finalizeData();
 
 extern void printData();
 
-extern void runSegment(int line);
+extern int runSegment(double dataToBeReplayed[][], int dataLength, int startIndex);
 
 extern void executeSkillsData();
 
 extern bool isRecording();
 
 extern void setRecording(bool val);
+
+extern void stopRecording();
 #endif

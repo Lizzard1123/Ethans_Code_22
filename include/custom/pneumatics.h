@@ -73,16 +73,16 @@ public:
 
     void toggleRingles(){
         if(ringlesToggled){
-            Lift.move_velocity(0);
+            RingleLift.move_velocity(0);
         } else {
-            Lift.move_velocity(ringlesSpeed);
+            RingleLift.move_velocity(ringlesSpeed);
         }
         ringlesToggled = !ringlesToggled;
     }
 
     void setRingles(bool on){
         if(on){
-            Lift.move_velocity(ringlesSpeed);
+            RingleLift.move_velocity(ringlesSpeed);
         }
     }
 
