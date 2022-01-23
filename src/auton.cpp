@@ -212,7 +212,7 @@ void printData(){
             } else {
                 printf("%f,", (double) sparseArray[i][j]);
             }
-            delay(10);
+            delay(15);
         }
         /*
         //num represents how many segments before newline
@@ -231,30 +231,52 @@ void printData(){
 }
 
 //returns last index, runs motor values 
-int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
+int runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun){
     //dataLine for segment
     double dataLine[MaxRecords];
-    int endIndex = dataLength;
-    printf("start: %f\n", startIndex);
-    printf("End: %f\n", (double) endIndex);
     //fill to zeros
     for(int i = 0; i < MaxRecords; i++){
         dataLine[MaxRecords] = 0;
     }
+
+    //decompressing Algo that doesnt work
+    /*
+    int endIndex = dataLength;
+    printf("start: %f\n", (double) startIndex);
+    , int timeToRun, int startIndex
     //find data to fill
     double currentTime = dataToBeReplayed[startIndex][2];
-    printf("StartTime: %f\n", currentTime);
-    for(int i = 0; i < dataLength-startIndex; i++){
-        if(dataToBeReplayed[startIndex + i][2] != currentTime){
-            endIndex = startIndex + i;
-            printf("End: %f\n", (double) endIndex);
-            break;
-        } else { //still on same time keep filling data
-            dataLine[(int)dataToBeReplayed[startIndex + i][1]] = dataToBeReplayed[startIndex + i][0];
+    if(currentTime == timeToRun){ //this is the next time to update
+        printf("StartTime: %f\n", currentTime);
+        for(int i = startIndex; i < dataLength; i++){
+            if(dataToBeReplayed[i][2] != currentTime){
+                endIndex = i;
+                printf("new End: %f\n", (double) endIndex);
+                break;
+            } else { //still on same time keep filling data
+                dataLine[(int)dataToBeReplayed[i][1]] = dataToBeReplayed[i][0];
+            }
+        }
+    } else {//not the correct time, run zeros and break
+        printf("Running zeros for time: %f\n", (double) timeToRun);
+        endIndex = startIndex + 1;
+        printf("sending end index: %f\n", (double) endIndex);
+    } 
+    */
+    for(int i = 0; i < dataLength; i++){
+        if(dataToBeReplayed[i][2] == timeToRun){
+            dataLine[(int)dataToBeReplayed[i][1]] = dataToBeReplayed[i][0];
         }
     }
+    printf("{");
+    for(int i = 0; i < MaxRecords; i++){
+        printf("%f,", dataLine[MaxRecords]);
+        delay(15);
+    }
+    printf("}\n");
+    
 
-
+/*
     //DRIVE CODE
 
     Bongo.Movement.tylerControl(dataLine[LXDataNum],dataLine[LYDataNum],dataLine[RXDataNum]);
@@ -295,17 +317,20 @@ int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
     }
 
     Bongo.Movement.move();
-
+*/
     return endIndex;
 }
 
-void executeData(double dataToBeReplayed[][3], int dataLength){
+void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime){
     printf("Executing Data\n");
-    for(int i = 0; i < dataLength; i++){
-        printf("running line: %f\n", i);
+    int endLine = 0;
+    dataTime = (dataTime * 1000) / driverSpeed;
+    printf("Total Data time: %f\n", (double)dataTime);
+    for(int i = 0; i < dataTime; i++){
+        printf("running line: %f\n", (double)i);
         printf("total: %f\n", (double)dataLength);
-       i = runSegment(dataToBeReplayed, dataLength, i); //similate inputs 
-       delay(driverSpeed / speedUp ? 2 : 1); // NEEDS to be the same as driver collected dataLine
+        endLine = runSegment(dataToBeReplayed, dataLength, i, endLine); //similate inputs 
+        delay(driverSpeed / (speedUp ? 2 : 1)); // NEEDS to be the same as driver collected dataLine
     }
 }
 

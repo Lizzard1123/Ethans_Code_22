@@ -99,9 +99,9 @@ extern void printUnfilteredData();
 
 extern void printData();
 
-extern int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex);
+extern int runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun, int startIndex);
 
-extern void executeData(double dataToBeReplayed[][3], int dataLength);
+extern void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime);
 
 extern bool isRecording();
 
@@ -113,7 +113,11 @@ extern void stopRecording();
 
 extern bool hasRecorded();
 
-#define skills_dataLength 1134
+#define skills_dataLength 308
+
+#define skills_dataTime 300
+
+extern int skillsDataTime;
 
 extern double skills_Data[][3];
 
