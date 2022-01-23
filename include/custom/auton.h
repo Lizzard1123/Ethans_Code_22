@@ -1,6 +1,5 @@
 #ifndef AUTON
 #define AUTON
-
 /*
 0 - LX joystick
 1 - LY joystick
@@ -96,11 +95,13 @@ extern void setData();
 
 extern void finalizeData();
 
+extern void printUnfilteredData();
+
 extern void printData();
 
 extern int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex);
 
-extern void executeSkillsData();
+extern void executeData(double dataToBeReplayed[][3], int dataLength);
 
 extern bool isRecording();
 
@@ -109,4 +110,11 @@ extern void setRecording(bool val);
 extern void startRecording();
 
 extern void stopRecording();
+
+extern bool hasRecorded();
+
+#define skills_dataLength 1134
+
+extern double skills_Data[][3];
+
 #endif

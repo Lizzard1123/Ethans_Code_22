@@ -16,6 +16,7 @@ Robot Bongo;
 
 
 bool recording = false;
+bool hasItRecorded = false;
 bool ready = false;
 bool speedUp = false;
 
@@ -95,23 +96,23 @@ void setData(){
 //finishes recording for this itteration of data
 void finalizeData(){
     if(recording){
-        currentDataLine++;
+        currentDataLine = currentDataLine + 1;
         //printf("Filling data line: %f\n", currentDataLine);
         if(currentDataLine == maxDataLength){
-            printf("stopping");
+            printf("stopping \n");
             stopRecording();
         }
         if(currentDataLine == (int) (maxDataLength / 4)){
-            printf("25%");
+            printf("25%\n");
         }
         if(currentDataLine == (int) (maxDataLength / 2)){
-            printf("50%");
+            printf("50%\n");
         }
         if(currentDataLine == (int) (3 * maxDataLength / 4)){
-            printf("75%");
+            printf("75%\n");
         }
         if(currentDataLine == (int) (maxDataLength)){
-            printf("100%");
+            printf("100%\n");
         }
     }
 }
@@ -119,62 +120,79 @@ void finalizeData(){
 void startRecording(){
     printf("Starting recording\n");
     setRecording(true);
+    hasItRecorded = true;
     fillEmpty();
+}
+
+bool hasRecorded(){
+    return hasItRecorded;
 }
 //stop the recording + post Processing
 void stopRecording(){
     //post processing 
     //double speed half time
-    
-    //print the unfilterd array
-    printUnfilteredData();
-
-    //print filterd sparse array
-    printData();
+    printf("Done Recording -> plug into terminal for transfer \n");
+    recording = false;
+    Bongo.Lift.stopAll();
+    Bongo.Movement.stopAll();
+    Bongo.Pneumatics.setRingles(false);
 }
 
 void printUnfilteredData(){
-    printf("Printing Data\n");
+    printf("Printing Data -- Data Length: %f\n", (double) maxDataLength);
     recording = false;
     printf("{");
     for(int i = 0; i < maxDataLength; i++){ //every segment
         printf("{");
         for(int j = 0; j < maxSegmentLength; j++){ //every input
-            if(j == 15){
-                printf("%f", replayData[i][j]);
+            if(j == MaxRecords - 1){
+                printf("%f", (double) replayData[i][j]);
             } else {
-                printf("%f,", replayData[i][j]);
+                printf("%f,", (double) replayData[i][j]);
             }
-            delay(10);
+            delay(5);
         }
-        /*
+        
         //num represents how many segments before newline
-        if(i % 2 == 0){
-            printf("},\n");
+        double calcTime = ((((double)i+2)/maxDataLength)*recordTime);
+        if(i == maxDataLength){
+            printf("}");
+            printf("/*Time: %f */", calcTime);
+            printf("\n");
         } else {
-            printf("},");
+            if(i % 1 == 0){
+                printf("},");
+                printf("/*Time: %f */", calcTime);
+                printf("\n");
+            } else {
+                printf("},");
+                printf("/*Time: %f */", calcTime);
+            }
         }
-        */
-        printf("},\n");
     }
     printf("}\n");
+    printf("Printing Data Done\n");
+    printf("Data Length: %f\n", (double)maxDataLength);
 }
 
 void printData(){
     //Sparse Array algo
+    recording = false;
+    printf("Starting Sparse Data Algo\n");
     int dataLength = 0;
     for(int i = 0; i < maxDataLength; i++){
         for(int j = 0; j < maxSegmentLength; j++){
-            if(replayData[i][j] != 0){
+            if(fabs(replayData[i][j]) >= 1 && fabs(replayData[i][j]) <= 10000){
                 dataLength++;
             }
         }
     }
+    printf("dataLength: %f\n", (double)dataLength);
     int currentDataPoint = 0;
     double sparseArray[dataLength][3];
     for(int i = 0; i < maxDataLength; i++){
         for(int j = 0; j < maxSegmentLength; j++){
-            if(replayData[i][j] != 0){
+            if(fabs(replayData[i][j]) >= 1 && fabs(replayData[i][j]) <= 10000){
                 sparseArray[currentDataPoint][0] = replayData[i][j]; // first element is data
                 sparseArray[currentDataPoint][1] = j; // second is the encoded num
                 sparseArray[currentDataPoint][2] = i; //third is the time (line num)
@@ -190,9 +208,9 @@ void printData(){
         printf("{");
         for(int j = 0; j < 3; j++){ //every input
             if(j == 2){
-                printf("%f", replayData[i][j]);
+                printf("%f", (double) sparseArray[i][j]);
             } else {
-                printf("%f,", replayData[i][j]);
+                printf("%f,", (double) sparseArray[i][j]);
             }
             delay(10);
         }
@@ -204,10 +222,12 @@ void printData(){
             printf("},");
         }
         */
-        printf("},\n");
+        printf("},");
+        printf("/*Time: %f */", (((double)sparseArray[i][2]+1)/maxDataLength)*recordTime);
+        printf("\n");
     }
     printf("}\n");
-    printf("Sparse Data length: %f\n", dataLength);
+    printf("Sparse Data length: %f\n", (double)dataLength);
 }
 
 //returns last index, runs motor values 
@@ -215,15 +235,20 @@ int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
     //dataLine for segment
     double dataLine[MaxRecords];
     int endIndex = dataLength;
+    printf("start: %f\n", startIndex);
+    printf("End: %f\n", (double) endIndex);
     //fill to zeros
     for(int i = 0; i < MaxRecords; i++){
         dataLine[MaxRecords] = 0;
     }
     //find data to fill
     double currentTime = dataToBeReplayed[startIndex][2];
+    printf("StartTime: %f\n", currentTime);
     for(int i = 0; i < dataLength-startIndex; i++){
         if(dataToBeReplayed[startIndex + i][2] != currentTime){
             endIndex = startIndex + i;
+            printf("End: %f\n", (double) endIndex);
+            break;
         } else { //still on same time keep filling data
             dataLine[(int)dataToBeReplayed[startIndex + i][1]] = dataToBeReplayed[startIndex + i][0];
         }
@@ -275,8 +300,10 @@ int runSegment(double dataToBeReplayed[][3], int dataLength, int startIndex){
 }
 
 void executeData(double dataToBeReplayed[][3], int dataLength){
-    printf("Executing Skills Data");
+    printf("Executing Data\n");
     for(int i = 0; i < dataLength; i++){
+        printf("running line: %f\n", i);
+        printf("total: %f\n", (double)dataLength);
        i = runSegment(dataToBeReplayed, dataLength, i); //similate inputs 
        delay(driverSpeed / speedUp ? 2 : 1); // NEEDS to be the same as driver collected dataLine
     }

@@ -28,7 +28,18 @@ void opcontrol()
     {
         
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            startRecording();
+            if(!hasRecorded()){
+                startRecording();
+            } else {
+                //print the unfilterd array
+                //printUnfilteredData(); DOESNT WORK, BLOCKS NEXT FUNC
+                //print filterd sparse array
+                printData();
+            }
+        }
+        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+            printf("Triggered\n");
+            Bongo.autonomous();
         }
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();
@@ -87,9 +98,9 @@ void opcontrol()
             Bongo.Pneumatics.toggleRingles();
         }
 
-        if(master.get_digital_new_press(DIGITAL_RIGHT)){
-            Bongo.setRotation(0);
-        }
+        //if(master.get_digital_new_press(DIGITAL_RIGHT)){
+        //    Bongo.setRotation(0);
+        //}
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
