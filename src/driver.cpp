@@ -28,17 +28,7 @@ void opcontrol()
     {
         
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            
-            printf("Starting recording\n");
-            setRecording(true);
-            fillEmpty();
-            printf("Done Filling");
-            for(int i = 5; i > 0; i--){
-                master.print(1, 8, "start: " + i);
-            }
-            master.print(1, 8, "RECORDING");
-        
-            //executeSkillsData();
+            startRecording();
         }
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();
@@ -107,7 +97,7 @@ void opcontrol()
         std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
         master.set_text(2, 0, values);
         //delay between updates
-        
+
         setData();
         finalizeData();
 

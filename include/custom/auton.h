@@ -92,7 +92,7 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 
 extern void fillEmpty();
 
-extern void setData(int num, double val);
+extern void setData();
 
 extern void finalizeData();
 
@@ -105,6 +105,8 @@ extern void executeSkillsData();
 extern bool isRecording();
 
 extern void setRecording(bool val);
+
+extern void startRecording();
 
 extern void stopRecording();
 #endif

@@ -82,4 +82,3 @@ double Robot::Y = 0;
 double Robot::rotation = 0;
 
 double maxSpeedMultiplier = 1;
-double driverSpeed = 50;

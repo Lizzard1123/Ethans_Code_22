@@ -1,18 +1,19 @@
 #ifndef GLOBAL
 #define GLOBAL
 #include "main.h"
+#define driverSpeed 50 //in ms
 //motor ports
-#define FLPort 1 
-#define FRPort 20
-#define BLPort 2
-#define BRPort 8 
-#define LarmPort 3
-#define RarmPort 9
-#define ClawPort 14
-#define LiftPort 7
-#define EYESPort 4
+#define FLPort 20
+#define FRPort 13
+#define BLPort 19
+#define BRPort 11
+#define LarmPort 18
+#define RarmPort 16
+#define ClawPort 12
+#define LiftPort 17
+//#define EYESPort 4
 //other defines
-#define expanderPort 10
+#define expanderPort 14
 
 
 //motors
@@ -81,5 +82,4 @@ extern lv_obj_t *debugYarmLabel;
 //global teamcolor
 extern bool teamIsBlue;
 extern double maxSpeedMultiplier;
-extern double driverSpeed;
 #endif

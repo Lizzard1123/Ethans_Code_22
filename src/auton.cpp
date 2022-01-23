@@ -22,7 +22,7 @@ bool speedUp = false;
 
 int currentDataLine = 0;
 //skills
-const int recordTime = 120; // in seconds
+const int recordTime = 15; // in seconds
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
 double replayData[maxDataLength][maxSegmentLength]; 
@@ -37,7 +37,7 @@ void fillEmpty(){ //set all to 0
         }
     }
     ready = true;
-    printf("Done filling");
+    printf("Done filling\n");
 }
 
 void setData(){
@@ -101,16 +101,33 @@ void finalizeData(){
             printf("stopping");
             stopRecording();
         }
+        if(currentDataLine == (int) (maxDataLength / 4)){
+            printf("25%");
+        }
+        if(currentDataLine == (int) (maxDataLength / 2)){
+            printf("50%");
+        }
+        if(currentDataLine == (int) (3 * maxDataLength / 4)){
+            printf("75%");
+        }
+        if(currentDataLine == (int) (maxDataLength)){
+            printf("100%");
+        }
     }
 }
 
+void startRecording(){
+    printf("Starting recording\n");
+    setRecording(true);
+    fillEmpty();
+}
 //stop the recording + post Processing
 void stopRecording(){
     //post processing 
     //double speed half time
     
     //print the unfilterd array
-    //printUnfilteredData();
+    printUnfilteredData();
 
     //print filterd sparse array
     printData();

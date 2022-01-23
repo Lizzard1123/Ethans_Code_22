@@ -60,12 +60,13 @@ public:
     void setAutoLevel(bool val){
         autoLevel = val;
     }
-
+    /*
     double autoLevelClaw(){
         double target = (Rarm.get_position() - liftMinPos) * ratio + clawOffset;
         double error = target - Claw.get_position();
         return error * CPval;
     }
+    */
 
     void update(){
         //level();
