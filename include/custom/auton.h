@@ -99,7 +99,7 @@ extern void printUnfilteredData();
 
 extern void printData();
 
-extern int runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun, int startIndex);
+extern void runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun);
 
 extern void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime);
 

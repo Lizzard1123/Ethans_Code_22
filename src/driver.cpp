@@ -31,9 +31,7 @@ void opcontrol()
             if(!hasRecorded()){
                 startRecording();
             } else {
-                //print the unfilterd array
-                //printUnfilteredData(); DOESNT WORK, BLOCKS NEXT FUNC
-                //print filterd sparse array
+                printf("triggered print\n");
                 printData();
             }
         }

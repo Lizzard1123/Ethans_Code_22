@@ -98,10 +98,6 @@ void finalizeData(){
     if(recording){
         currentDataLine = currentDataLine + 1;
         //printf("Filling data line: %f\n", currentDataLine);
-        if(currentDataLine == maxDataLength){
-            printf("stopping \n");
-            stopRecording();
-        }
         if(currentDataLine == (int) (maxDataLength / 4)){
             printf("25%\n");
         }
@@ -113,6 +109,8 @@ void finalizeData(){
         }
         if(currentDataLine == (int) (maxDataLength)){
             printf("100%\n");
+            printf("stopping \n");
+            stopRecording();
         }
     }
 }
@@ -178,6 +176,8 @@ void printUnfilteredData(){
 void printData(){
     //Sparse Array algo
     recording = false;
+    printf("Starting in 3s\n");
+    delay(3000);
     printf("Starting Sparse Data Algo\n");
     int dataLength = 0;
     for(int i = 0; i < maxDataLength; i++){
@@ -212,18 +212,10 @@ void printData(){
             } else {
                 printf("%f,", (double) sparseArray[i][j]);
             }
-            delay(15);
+            delay(20);
         }
-        /*
-        //num represents how many segments before newline
-        if(i % 10 == 0){
-            printf("},\n");
-        } else {
-            printf("},");
-        }
-        */
         printf("},");
-        printf("/*Time: %f */", (((double)sparseArray[i][2]+1)/maxDataLength)*recordTime);
+        //printf("/*Time: %f */", (((double)sparseArray[i][2]+1)/maxDataLength)*recordTime);
         printf("\n");
     }
     printf("}\n");
@@ -231,105 +223,74 @@ void printData(){
 }
 
 //returns last index, runs motor values 
-int runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun){
+void runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun){
     //dataLine for segment
     double dataLine[MaxRecords];
     //fill to zeros
     for(int i = 0; i < MaxRecords; i++){
         dataLine[MaxRecords] = 0;
     }
-
-    //decompressing Algo that doesnt work
-    /*
-    int endIndex = dataLength;
-    printf("start: %f\n", (double) startIndex);
-    , int timeToRun, int startIndex
-    //find data to fill
-    double currentTime = dataToBeReplayed[startIndex][2];
-    if(currentTime == timeToRun){ //this is the next time to update
-        printf("StartTime: %f\n", currentTime);
-        for(int i = startIndex; i < dataLength; i++){
-            if(dataToBeReplayed[i][2] != currentTime){
-                endIndex = i;
-                printf("new End: %f\n", (double) endIndex);
-                break;
-            } else { //still on same time keep filling data
-                dataLine[(int)dataToBeReplayed[i][1]] = dataToBeReplayed[i][0];
-            }
-        }
-    } else {//not the correct time, run zeros and break
-        printf("Running zeros for time: %f\n", (double) timeToRun);
-        endIndex = startIndex + 1;
-        printf("sending end index: %f\n", (double) endIndex);
-    } 
-    */
     for(int i = 0; i < dataLength; i++){
-        if(dataToBeReplayed[i][2] == timeToRun){
+        if((int)dataToBeReplayed[i][2] == timeToRun){
+            printf("found on line: %i\n", i);
+            printf("number: %i\n", (int)dataToBeReplayed[i][1]);
+            printf("val: %f\n", dataToBeReplayed[i][0]);
             dataLine[(int)dataToBeReplayed[i][1]] = dataToBeReplayed[i][0];
+            printf("check: %f\n", dataLine[(int)dataToBeReplayed[i][1]]);
         }
     }
-    printf("{");
-    for(int i = 0; i < MaxRecords; i++){
-        printf("%f,", dataLine[MaxRecords]);
-        delay(15);
-    }
-    printf("}\n");
-    
 
-/*
     //DRIVE CODE
 
     Bongo.Movement.tylerControl(dataLine[LXDataNum],dataLine[LYDataNum],dataLine[RXDataNum]);
 
     //manual powering 
-    if (dataLine[L2ButtonDigital]){
+    if ((int)dataLine[L2ButtonDigital]){
         Bongo.Lift.liftDown(); //manually pushes arm down at max torque
-    } else if (dataLine[L1ButtonDigital]){
+    } else if ((int)dataLine[L1ButtonDigital]){
         Bongo.Lift.liftUp(); //manually lifts arm with max torque
     } else {
         Bongo.Lift.stopArm(); //stops manual controll
     }
 
-    if (dataLine[R2ButtonDigital]){
+    if ((int)dataLine[R2ButtonDigital]){
         Bongo.Lift.clawDown(); //manually pushes claw down at max torque
         //skillsLift.setAutoLevel(false);
-    } else if (dataLine[R1ButtonDigital]){
+    } else if ((int)dataLine[R1ButtonDigital]){
         Bongo.Lift.clawUp(); //manually lifts claw with max torque
         //skillsLift.setAutoLevel(false);
     } else {
         Bongo.Lift.stopClaw(); //stops manual controll
     }
 
-    if (dataLine[AButtonPress]){
+    if ((int)dataLine[AButtonPress]){
         Bongo.Pneumatics.toggleClaw();
     }
-    if (dataLine[XButtonPress]){
+    if ((int)dataLine[XButtonPress]){
         Bongo.Pneumatics.toggletilt();
     }
-    if (dataLine[YButtonPress]){
+    if ((int)dataLine[YButtonPress]){
         Bongo.Pneumatics.toggleBack();
     }
-    if (dataLine[downArrowPress]){
+    if ((int)dataLine[downArrowPress]){
         RingleLift.move_relative(-360, 50);
     }
-    if(dataLine[upArrowPress]){
+    if((int)dataLine[upArrowPress]){
         Bongo.Pneumatics.toggleRingles();
     }
 
     Bongo.Movement.move();
-*/
-    return endIndex;
+
 }
 
 void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime){
     printf("Executing Data\n");
-    int endLine = 0;
     dataTime = (dataTime * 1000) / driverSpeed;
     printf("Total Data time: %f\n", (double)dataTime);
     for(int i = 0; i < dataTime; i++){
         printf("running line: %f\n", (double)i);
         printf("total: %f\n", (double)dataLength);
-        endLine = runSegment(dataToBeReplayed, dataLength, i, endLine); //similate inputs 
+        runSegment(dataToBeReplayed, dataLength, i); //similate inputs 
         delay(driverSpeed / (speedUp ? 2 : 1)); // NEEDS to be the same as driver collected dataLine
     }
 }
