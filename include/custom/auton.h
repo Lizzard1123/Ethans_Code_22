@@ -99,6 +99,8 @@ extern void printUnfilteredData();
 
 extern void printData();
 
+extern void printDataToSD();
+
 extern void runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun);
 
 extern void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime);
@@ -113,7 +115,7 @@ extern void stopRecording();
 
 extern bool hasRecorded();
 
-#define skills_dataLength 308
+#define skills_dataLength 1242
 
 #define skills_dataTime 300
 

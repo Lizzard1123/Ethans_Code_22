@@ -23,7 +23,7 @@ bool speedUp = false;
 
 int currentDataLine = 0;
 //skills
-const int recordTime = 15; // in seconds
+const int recordTime = 60; // in seconds
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
 double replayData[maxDataLength][maxSegmentLength]; 
@@ -220,6 +220,61 @@ void printData(){
     }
     printf("}\n");
     printf("Sparse Data length: %f\n", (double)dataLength);
+}
+
+void printDataToSD(){
+    //Sparse Array algo
+    recording = false;
+    printf("Printing to SD in 3s\n");
+    delay(3000);
+    printf("Starting Sparse Data Algo\n");
+    int dataLength = 0;
+    for(int i = 0; i < maxDataLength; i++){
+        for(int j = 0; j < maxSegmentLength; j++){
+            if(fabs(replayData[i][j]) >= 1 && fabs(replayData[i][j]) <= 10000){
+                dataLength++;
+            }
+        }
+    }
+    printf("dataLength: %f\n", (double)dataLength);
+    int currentDataPoint = 0;
+    double sparseArray[dataLength][3];
+    for(int i = 0; i < maxDataLength; i++){
+        for(int j = 0; j < maxSegmentLength; j++){
+            if(fabs(replayData[i][j]) >= 1 && fabs(replayData[i][j]) <= 10000){
+                sparseArray[currentDataPoint][0] = replayData[i][j]; // first element is data
+                sparseArray[currentDataPoint][1] = j; // second is the encoded num
+                sparseArray[currentDataPoint][2] = i; //third is the time (line num)
+                currentDataPoint++;
+            }
+        }
+    }
+
+    FILE* sd = fopen("/usd/RecordedData.txt", "w");
+    if(sd == NULL){
+        printf("Error opening SD\n");
+    } else {
+        printf("Printing Sparse Data to SD\n");
+        fprintf(sd, "{");
+        for(int i = 0; i < dataLength; i++){ //every segment
+            fprintf(sd, "{");
+            for(int j = 0; j < 3; j++){ //every input
+                if(j == 2){
+                    fprintf(sd, "%f", (double) sparseArray[i][j]);
+                } else {
+                    fprintf(sd, "%f,", (double) sparseArray[i][j]);
+                }
+                //delay(5);
+            }
+            fprintf(sd, "},");
+             //printf("/*Time: %f */", (((double)sparseArray[i][2]+1)/maxDataLength)*recordTime);
+            fprintf(sd, "\n");
+        }
+        fprintf(sd, "}\n");
+        fprintf(sd, "Sparse Data length: %f\n", (double)dataLength);
+        printf("Done with SD; closing\n");
+        fclose(sd);
+    }
 }
 
 //returns last index, runs motor values 

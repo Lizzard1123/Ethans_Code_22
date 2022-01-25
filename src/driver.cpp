@@ -31,8 +31,13 @@ void opcontrol()
             if(!hasRecorded()){
                 startRecording();
             } else {
+                if(isRecording()){
+                    printf("Stopping recording early\n");
+                    stopRecording();
+                }
                 printf("triggered print\n");
-                printData();
+                //printData();
+                printDataToSD();
             }
         }
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
