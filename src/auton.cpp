@@ -15,20 +15,21 @@ Robot Bongo;
  */
 
 
-bool recording = false;
+bool recording = false; // if the robot is recording data
 bool hasItRecorded = false;
-bool ready = false;
-bool speedUp = false;
+bool ready = false; // storage array ready ( full of zeros )
 
+FILE* sd;
 
 int currentDataLine = 0;
-//skills
+
 const int recordTime = 60; // in seconds
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
 double replayData[maxDataLength][maxSegmentLength]; 
 
-void fillEmpty(){ //set all to 0
+//set all in replayData to 0
+void fillEmpty(){ 
     printf("attempting to fill array \n");
     if(!ready){
         for(int i = 0; i < maxDataLength; i++){
@@ -41,7 +42,8 @@ void fillEmpty(){ //set all to 0
     printf("Done filling\n");
 }
 
-void setData(){
+//sets current recording line of replayData to controller inputs + others
+void setData(bool toSd = false){
     if(recording && !ready){ // check to make sure that it is empty
         fillEmpty();
         printf("Had to catch itself bc it wasnt ready");
@@ -90,6 +92,60 @@ void setData(){
         replayData[currentDataLine][RarmPosition] = Rarm.get_position();
         replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
         replayData[currentDataLine][leftOdomPosition] = pros::c::ext_adi_encoder_get(leftOdom);
+    }
+}
+
+void setDataToSd(){
+    if(toSd){
+        if(sd == NULL){
+            printf("Error opening sd");
+        } else {
+                double lineData[maxRecords] = {0};
+                //TODO replace below with lineData and get rid of [currentDataLine]
+                replayData[currentDataLine][LXDataNum] = master.get_analog(ANALOG_LEFT_X);
+        replayData[currentDataLine][LYDataNum] = master.get_analog(ANALOG_LEFT_Y);
+        replayData[currentDataLine][RXDataNum] = master.get_analog(ANALOG_RIGHT_X);
+        replayData[currentDataLine][RYDataNum] = master.get_analog(ANALOG_RIGHT_Y);
+        replayData[currentDataLine][upArrowDigital] = master.get_digital(DIGITAL_UP);
+        replayData[currentDataLine][rightArrowDigital] = master.get_digital(DIGITAL_RIGHT);
+        replayData[currentDataLine][downArrowDigital] = master.get_digital(DIGITAL_DOWN);
+        replayData[currentDataLine][leftArrowDigital] = master.get_digital(DIGITAL_LEFT);
+        replayData[currentDataLine][upArrowPress] = master.get_digital_new_press(DIGITAL_UP);
+        replayData[currentDataLine][rightArrowPress] = master.get_digital_new_press(DIGITAL_RIGHT);
+        replayData[currentDataLine][downArrowPress] = master.get_digital_new_press(DIGITAL_DOWN);
+        replayData[currentDataLine][leftArrowPress] = master.get_digital_new_press(DIGITAL_LEFT);
+        replayData[currentDataLine][XButtonDigital] = master.get_digital(DIGITAL_X);
+        replayData[currentDataLine][AButtonDigital] = master.get_digital(DIGITAL_A);
+        replayData[currentDataLine][BButtonDigital] = master.get_digital(DIGITAL_B);
+        replayData[currentDataLine][YButtonDigital] = master.get_digital(DIGITAL_Y);
+        replayData[currentDataLine][XButtonPress] = master.get_digital_new_press(DIGITAL_X);
+        replayData[currentDataLine][AButtonPress] = master.get_digital_new_press(DIGITAL_A);
+        replayData[currentDataLine][BButtonPress] = master.get_digital_new_press(DIGITAL_B);
+        replayData[currentDataLine][YButtonPress] = master.get_digital_new_press(DIGITAL_Y);
+        replayData[currentDataLine][L1ButtonDigital] = master.get_digital(DIGITAL_L1);
+        replayData[currentDataLine][L2ButtonDigital] = master.get_digital(DIGITAL_L2);
+        replayData[currentDataLine][R1ButtonDigital] = master.get_digital(DIGITAL_R1);
+        replayData[currentDataLine][R2ButtonDigital] = master.get_digital(DIGITAL_R2);
+        replayData[currentDataLine][L1ButtonPress] = master.get_digital_new_press(DIGITAL_L1);
+        replayData[currentDataLine][L2ButtonPress] = master.get_digital_new_press(DIGITAL_L2);
+        replayData[currentDataLine][R1ButtonPress] = master.get_digital_new_press(DIGITAL_R1);
+        replayData[currentDataLine][R2ButtonPress] = master.get_digital_new_press(DIGITAL_R2);
+        //custom
+        replayData[currentDataLine][FLActualVelocity] = FL.get_actual_velocity();
+        replayData[currentDataLine][FRActualVelocity] = FR.get_actual_velocity();
+        replayData[currentDataLine][BLActualVelocity] = BL.get_actual_velocity();
+        replayData[currentDataLine][BRActualVelocity] = BR.get_actual_velocity();
+        replayData[currentDataLine][ClawActualVelocity] = Claw.get_actual_velocity();
+        replayData[currentDataLine][RingleLiftActualVelocity] = RingleLift.get_actual_velocity();
+        replayData[currentDataLine][LarmActualVelocity] = Larm.get_actual_velocity();
+        replayData[currentDataLine][RarmActualVelocity] = Rarm.get_actual_velocity();
+        replayData[currentDataLine][ClawPosition] = Claw.get_position();
+        replayData[currentDataLine][RingleLiftPosition] = RingleLift.get_position();
+        replayData[currentDataLine][LarmPosition] = Larm.get_position();
+        replayData[currentDataLine][RarmPosition] = Rarm.get_position();
+        replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
+        replayData[currentDataLine][leftOdomPosition] = pros::c::ext_adi_encoder_get(leftOdom);
+        }
     }
 }
 
@@ -349,7 +405,6 @@ void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime){
         delay(driverSpeed / (speedUp ? 2 : 1)); // NEEDS to be the same as driver collected dataLine
     }
 }
-
 
 bool isRecording(){
   return recording;
