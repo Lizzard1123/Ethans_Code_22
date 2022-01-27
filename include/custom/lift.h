@@ -75,20 +75,16 @@ public:
         //} else {
         Claw.move_velocity(clawSpeed);
         //}
-
-        if(!rightSwitch.get_value() && RarmLiftSpeed < 0){
-          Rarm.move_velocity(RarmLiftSpeed);  
-        } else if(RarmLiftSpeed > 0){
-          Rarm.move_velocity(RarmLiftSpeed);  
-        }else {
-            Rarm.move_velocity(0);
-        }
+        
         if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
             Larm.move_velocity(LarmLiftSpeed);
+            Rarm.move_velocity(RarmLiftSpeed);
         } else if (RarmLiftSpeed > 0){
             Larm.move_velocity(LarmLiftSpeed);
+            Rarm.move_velocity(RarmLiftSpeed); 
         } else {
             Larm.move_velocity(0);
+            Rarm.move_velocity(0);
         }
         //std::string firstLine = "L:" + std::__cxx11::to_string(int(Larm.get_position())) + "_R:" + std::__cxx11::to_string(int(Rarm.get_position())) + "_C:" + std::__cxx11::to_string(int(Claw.get_position()));
         //master.set_text(1, 1, firstLine);

@@ -456,7 +456,7 @@ public:
             
             
             //find isolated forward and sideways movement
-            double leftDist = myMath.toInch(pros::c::ext_adi_encoder_get(leftOdom), wheelCircumfrence);
+            double leftDist = myMath.toInch(leftOdom.get(), wheelCircumfrence);
             double rightDist = myMath.toInch(rightOdom.get(), wheelCircumfrence);
             double forwardMovement = (rightDist + leftDist) / 2;
             totalForwardMovement += forwardMovement;
@@ -495,7 +495,7 @@ public:
             //printf("\n");
             // reset
             rightOdom.reset();
-            pros::c::ext_adi_encoder_reset(leftOdom);
+            leftOdom.reset();
             //middleOdom.reset();
             c::task_delay(posDelay);
         }

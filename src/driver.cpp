@@ -106,8 +106,8 @@ void opcontrol()
 
         setDataToSd();
         finalizeData();
-        std::string values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(pros::c::ext_adi_encoder_get(leftOdom)));
+        std::string values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
         master.set_text(2, 0, values);
-        delay(200);
+        delay(driverSpeed);
     }
 }

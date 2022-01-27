@@ -91,7 +91,7 @@ void setData(){
         replayData[currentDataLine][LarmPosition] = Larm.get_position();
         replayData[currentDataLine][RarmPosition] = Rarm.get_position();
         replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
-        replayData[currentDataLine][leftOdomPosition] = pros::c::ext_adi_encoder_get(leftOdom);
+        replayData[currentDataLine][leftOdomPosition] = leftOdom.get();
     }
 }
 
@@ -144,7 +144,7 @@ void setDataToSd(){
             lineData[LarmPosition] = Larm.get_position();
             lineData[RarmPosition] = Rarm.get_position();
             lineData[rightOdomPosition] = rightOdom.get();
-            lineData[leftOdomPosition] = pros::c::ext_adi_encoder_get(leftOdom);
+            lineData[leftOdomPosition] = leftOdom.get();
             fprintf(sd, "{");
             for(int i = 0; i < MaxRecords; i++){ //every segment
                 if(i == MaxRecords - 1){
