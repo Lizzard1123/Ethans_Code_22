@@ -343,6 +343,62 @@ void printDataToSD(){
     }
 }
 
+void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
+    //DRIVE CODE
+    if(useDrive){
+        Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
+    }
+    //manual powering 
+    if ((int)dataToBeReplayed[L2ButtonDigital]){
+        Bongo.Lift.liftDown(); //manually pushes arm down at max torque
+    } else if ((int)dataToBeReplayed[L1ButtonDigital]){
+        Bongo.Lift.liftUp(); //manually lifts arm with max torque
+    } else {
+        Bongo.Lift.stopArm(); //stops manual controll
+    }
+
+    if ((int)dataToBeReplayed[R2ButtonDigital]){
+        Bongo.Lift.clawDown(); //manually pushes claw down at max torque
+        //skillsLift.setAutoLevel(false);
+    } else if ((int)dataToBeReplayed[R1ButtonDigital]){
+        Bongo.Lift.clawUp(); //manually lifts claw with max torque
+        //skillsLift.setAutoLevel(false);
+    } else {
+        Bongo.Lift.stopClaw(); //stops manual controll
+    }
+
+    if ((int)dataToBeReplayed[AButtonPress]){
+        Bongo.Pneumatics.toggleClaw();
+    }
+    if ((int)dataToBeReplayed[XButtonPress]){
+        Bongo.Pneumatics.toggletilt();
+    }
+    if ((int)dataToBeReplayed[YButtonPress]){
+        Bongo.Pneumatics.toggleBack();
+    }
+    if ((int)dataToBeReplayed[downArrowPress]){
+        RingleLift.move_relative(-360, 50);
+    }
+    if((int)dataToBeReplayed[upArrowPress]){
+        Bongo.Pneumatics.toggleRingles();
+    }
+
+    Bongo.Movement.move();
+}
+
+void encoderVals(double dataToBeReplayed[MaxRecords]){
+    double pVal = 0;
+    double dVal = 0;
+    //errors
+    double leftError = leftOdom.get() - dataToBeReplayed[leftOdomPosition];
+    double rightError = rightOdom.get() - dataToBeReplayed[rightOdomPosition];
+
+
+
+    controllerVals(dataToBeReplayed,false);
+
+}
+
 //returns last index, runs motor values 
 void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun){
     //dataLine for segment
@@ -362,93 +418,15 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
     }
 
     //DRIVE CODE
-
-    Bongo.Movement.tylerControl(dataLine[LXDataNum],dataLine[LYDataNum],dataLine[RXDataNum]);
-
-    //manual powering 
-    if ((int)dataLine[L2ButtonDigital]){
-        Bongo.Lift.liftDown(); //manually pushes arm down at max torque
-    } else if ((int)dataLine[L1ButtonDigital]){
-        Bongo.Lift.liftUp(); //manually lifts arm with max torque
-    } else {
-        Bongo.Lift.stopArm(); //stops manual controll
-    }
-
-    if ((int)dataLine[R2ButtonDigital]){
-        Bongo.Lift.clawDown(); //manually pushes claw down at max torque
-        //skillsLift.setAutoLevel(false);
-    } else if ((int)dataLine[R1ButtonDigital]){
-        Bongo.Lift.clawUp(); //manually lifts claw with max torque
-        //skillsLift.setAutoLevel(false);
-    } else {
-        Bongo.Lift.stopClaw(); //stops manual controll
-    }
-
-    if ((int)dataLine[AButtonPress]){
-        Bongo.Pneumatics.toggleClaw();
-    }
-    if ((int)dataLine[XButtonPress]){
-        Bongo.Pneumatics.toggletilt();
-    }
-    if ((int)dataLine[YButtonPress]){
-        Bongo.Pneumatics.toggleBack();
-    }
-    if ((int)dataLine[downArrowPress]){
-        RingleLift.move_relative(-360, 50);
-    }
-    if((int)dataLine[upArrowPress]){
-        Bongo.Pneumatics.toggleRingles();
-    }
-
-    Bongo.Movement.move();
-
+    controllerVals(dataLine);
 }
-
 
 //returns last index, runs motor values 
 void runSegment(double dataToBeReplayed[][MaxRecords], int timeToRun){
-
-    //DRIVE CODE
-
-    Bongo.Movement.tylerControl(dataToBeReplayed[timeToRun][LXDataNum],dataToBeReplayed[timeToRun][LYDataNum],dataToBeReplayed[timeToRun][RXDataNum]);
-
-    //manual powering 
-    if ((int)dataToBeReplayed[timeToRun][L2ButtonDigital]){
-        Bongo.Lift.liftDown(); //manually pushes arm down at max torque
-    } else if ((int)dataToBeReplayed[timeToRun][L1ButtonDigital]){
-        Bongo.Lift.liftUp(); //manually lifts arm with max torque
-    } else {
-        Bongo.Lift.stopArm(); //stops manual controll
-    }
-
-    if ((int)dataToBeReplayed[timeToRun][R2ButtonDigital]){
-        Bongo.Lift.clawDown(); //manually pushes claw down at max torque
-        //skillsLift.setAutoLevel(false);
-    } else if ((int)dataToBeReplayed[timeToRun][R1ButtonDigital]){
-        Bongo.Lift.clawUp(); //manually lifts claw with max torque
-        //skillsLift.setAutoLevel(false);
-    } else {
-        Bongo.Lift.stopClaw(); //stops manual controll
-    }
-
-    if ((int)dataToBeReplayed[timeToRun][AButtonPress]){
-        Bongo.Pneumatics.toggleClaw();
-    }
-    if ((int)dataToBeReplayed[timeToRun][XButtonPress]){
-        Bongo.Pneumatics.toggletilt();
-    }
-    if ((int)dataToBeReplayed[timeToRun][YButtonPress]){
-        Bongo.Pneumatics.toggleBack();
-    }
-    if ((int)dataToBeReplayed[timeToRun][downArrowPress]){
-        RingleLift.move_relative(-360, 50);
-    }
-    if((int)dataToBeReplayed[timeToRun][upArrowPress]){
-        Bongo.Pneumatics.toggleRingles();
-    }
-
-    Bongo.Movement.move();
-
+    //run off of controller values
+    //controllerVals(dataToBeReplayed[timeToRun]);
+    //run off of encoderPID
+    encoderVals(dataToBeReplayed[timeToRun]);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){

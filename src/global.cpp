@@ -66,7 +66,7 @@ ADIDigitalIn rightSwitch({{expanderPort, 'E'}});
 
 // Odom 
 okapi::ADIEncoder  rightOdom('A', 'B', true); //true
-pros::c::ext_adi_encoder_t leftOdom = pros::c::ext_adi_encoder_init(expanderPort, 'D', 'E', false); //false
+okapi::ADIEncoder  leftOdom('C', 'D', true); //true
 //okapi::ADIEncoder  middleOdom('a', 'b', false);
 
 // Staic defines
