@@ -101,9 +101,9 @@ extern void printData();
 
 extern void printDataToSD();
 
-extern void runSegment(double dataToBeReplayed[][3], int dataLength, int timeToRun);
+extern void runSegment(double dataToBeReplayed[][MaxRecords], int timeToRun);
 
-extern void executeData(double dataToBeReplayed[][3], int dataLength, int dataTime);
+extern void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime);
 
 extern bool isRecording();
 
@@ -115,12 +115,12 @@ extern void stopRecording();
 
 extern bool hasRecorded();
 
-#define skills_dataLength 1242
+extern void setDataToSd();
 
-#define skills_dataTime 300
+#define skills_dataLength 1200
 
 extern int skillsDataTime;
 
-extern double skills_Data[][3];
+extern double skills_Data[][MaxRecords];
 
 #endif

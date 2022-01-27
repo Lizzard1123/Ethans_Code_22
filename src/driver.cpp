@@ -30,14 +30,6 @@ void opcontrol()
         if(master.get_digital_new_press(DIGITAL_LEFT)){
             if(!hasRecorded()){
                 startRecording();
-            } else {
-                if(isRecording()){
-                    printf("Stopping recording early\n");
-                    stopRecording();
-                }
-                printf("triggered print\n");
-                //printData();
-                printDataToSD();
             }
         }
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
@@ -45,7 +37,7 @@ void opcontrol()
             Bongo.autonomous();
         }
         //prints to screen the position and rotation of bongo
-        Bongo.debugPos();
+        //Bongo.debugPos();
 
         // tyler control
         Bongo.tylerControl();
@@ -108,13 +100,14 @@ void opcontrol()
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
         //FL:FR:BL:BR:Rarm:Larm:Claw
-        std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
-        master.set_text(2, 0, values);
+        //std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+        //master.set_text(2, 0, values);
         //delay between updates
 
-        setData();
+        setDataToSd();
         finalizeData();
-
-        delay(driverSpeed);
+        std::string values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(pros::c::ext_adi_encoder_get(leftOdom)));
+        master.set_text(2, 0, values);
+        delay(200);
     }
 }

@@ -48,16 +48,16 @@ vision::signature SIG_1 (1, 189, 1879, 1034, -3857, -2845, -3352, 0.700, 0);
 //ADIDigitalOut led('F', 1);
 //ADIDigitalOut  leftLock ({{expanderPort, leftLockPort}});
 //ADIDigitalOut  rightLock ({{expanderPort, rightLockPort}});
-ADIDigitalOut clawLock('E');
-ADIDigitalOut tiltLock('G');
-ADIDigitalOut backLock('H');
+ADIDigitalOut clawLock({{expanderPort, 'A'}});
+ADIDigitalOut tiltLock({{expanderPort, 'B'}});
+ADIDigitalOut backLock({{expanderPort, 'C'}});
 
 
 
 //button / limit switch
 //ADIDigitalIn tailSensor(tailSensorPort);
-ADIDigitalIn leftSwitch('D');
-ADIDigitalIn rightSwitch('C');
+ADIDigitalIn leftSwitch({{expanderPort, 'F'}});
+ADIDigitalIn rightSwitch({{expanderPort, 'E'}});
 
 //pots
 //ADIAnalogIn liftPot('c');
@@ -66,7 +66,7 @@ ADIDigitalIn rightSwitch('C');
 
 // Odom 
 okapi::ADIEncoder  rightOdom('A', 'B', true); //true
-pros::c::ext_adi_encoder_t leftOdom = pros::c::ext_adi_encoder_init(expanderPort, 'G', 'H', false); //false
+pros::c::ext_adi_encoder_t leftOdom = pros::c::ext_adi_encoder_init(expanderPort, 'D', 'E', false); //false
 //okapi::ADIEncoder  middleOdom('a', 'b', false);
 
 // Staic defines
