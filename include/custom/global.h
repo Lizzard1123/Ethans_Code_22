@@ -9,7 +9,7 @@
 #define BRPort 11
 #define LarmPort 18
 #define RarmPort 16
-#define ClawPort 12
+#define ClawPort 10
 #define LiftPort 17
 //#define EYESPort 4
 //other defines

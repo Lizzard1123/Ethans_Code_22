@@ -23,10 +23,19 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 60; // in seconds
+const int recordTime = 15; // in seconds
+int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
 double replayData[maxDataLength][maxSegmentLength]; 
+
+//PID movement
+double lastLeftError = 0;
+double lastRightError = 0;
+
+double leftErrorScore = 0;
+double rightErrorScore = 0;
+
 
 //set all in replayData to 0
 void fillEmpty(){ 
@@ -154,6 +163,7 @@ void setDataToSd(){
                 }
             }
             fprintf(sd, "},\n");
+            recordLength++;
         }
     }
 }
@@ -196,6 +206,7 @@ void stopRecording(){
     //post processing 
     //double speed half time
     printf("Done Recording -> plug into terminal for transfer \n");
+    fprintf(sd, "Total data Length: %i", recordLength);
     fclose(sd);
     recording = false;
     Bongo.Lift.stopAll();
@@ -386,16 +397,36 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
     Bongo.Movement.move();
 }
 
+void checkLeftError(double setPoint){
+    leftErrorScore += setPoint - leftOdom.get();
+}
+
+void checkRightError(double setPoint){
+    rightErrorScore += setPoint - rightOdom.get();
+}
+
 void encoderVals(double dataToBeReplayed[MaxRecords]){
-    double pVal = 0;
+    double pVal = 1;
     double dVal = 0;
+    double v_Pval = 0; // to input what the motor should be around
     //errors
     double leftError = leftOdom.get() - dataToBeReplayed[leftOdomPosition];
     double rightError = rightOdom.get() - dataToBeReplayed[rightOdomPosition];
 
+    double leftactV = dataToBeReplayed[FLActualVelocity] + dataToBeReplayed[BLActualVelocity];
+    double rightactV = dataToBeReplayed[FRActualVelocity] + dataToBeReplayed[BRActualVelocity];
 
+
+    double leftSpeed = leftError * pVal + (leftError - lastLeftError) * dVal + leftactV * v_Pval;
+    double rightSpeed = rightError * pVal + (rightError - lastRightError) * dVal + rightactV * v_Pval;
+
+    Bongo.Movement.moveLeft(leftSpeed);
+    Bongo.Movement.moveRight(rightSpeed);
 
     controllerVals(dataToBeReplayed,false);
+
+    checkLeftError(dataToBeReplayed[leftOdomPosition]);
+    checkRightError(dataToBeReplayed[rightOdomPosition]);
 
 }
 
@@ -434,11 +465,14 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
     dataTime = (dataTime * 1000) / driverSpeed;
     printf("Total Data time: %f\n", (double)dataTime);
     for(int i = 0; i < dataTime; i++){
-        printf("running line: %f\n", (double)i);
-        printf("total: %f\n", (double)dataLength);
+        //printf("running line: %f\n", (double)i);
+        //printf("total: %f\n", (double)dataLength);
         runSegment(dataToBeReplayed, i); //similate inputs 
         delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
     }
+    printf("Total leftError: %f", leftErrorScore);
+    printf("Total rightError: %f", rightErrorScore);
+
 }
 
 bool isRecording(){
