@@ -358,6 +358,7 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
     //DRIVE CODE
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
+        Bongo.Movement.move();
     }
     //manual powering 
     if ((int)dataToBeReplayed[L2ButtonDigital]){
@@ -394,7 +395,6 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
         Bongo.Pneumatics.toggleRingles();
     }
 
-    Bongo.Movement.move();
 }
 
 void checkLeftError(double setPoint){
@@ -406,12 +406,12 @@ void checkRightError(double setPoint){
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords]){
-    double pVal = 1;
+    double pVal = 5;
     double dVal = 0;
     double v_Pval = 0; // to input what the motor should be around
     //errors
-    double leftError = leftOdom.get() - dataToBeReplayed[leftOdomPosition];
-    double rightError = rightOdom.get() - dataToBeReplayed[rightOdomPosition];
+    double leftError = dataToBeReplayed[leftOdomPosition] - leftOdom.get();
+    double rightError = dataToBeReplayed[rightOdomPosition] - rightOdom.get();
 
     double leftactV = dataToBeReplayed[FLActualVelocity] + dataToBeReplayed[BLActualVelocity];
     double rightactV = dataToBeReplayed[FRActualVelocity] + dataToBeReplayed[BRActualVelocity];
@@ -420,8 +420,15 @@ void encoderVals(double dataToBeReplayed[MaxRecords]){
     double leftSpeed = leftError * pVal + (leftError - lastLeftError) * dVal + leftactV * v_Pval;
     double rightSpeed = rightError * pVal + (rightError - lastRightError) * dVal + rightactV * v_Pval;
 
+    lastLeftError = leftError;
+    lastRightError = rightError;
+
     Bongo.Movement.moveLeft(leftSpeed);
     Bongo.Movement.moveRight(rightSpeed);
+
+    printf("leftSpeed: %f\n", leftSpeed);
+    printf("rightSpeed: %f\n", rightSpeed);
+
 
     controllerVals(dataToBeReplayed,false);
 
@@ -453,11 +460,11 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
 }
 
 //returns last index, runs motor values 
-void runSegment(double dataToBeReplayed[][MaxRecords], int timeToRun){
+void runSegment(double dataToBeReplayed[MaxRecords]){
     //run off of controller values
     //controllerVals(dataToBeReplayed[timeToRun]);
     //run off of encoderPID
-    encoderVals(dataToBeReplayed[timeToRun]);
+    encoderVals(dataToBeReplayed);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){
@@ -467,11 +474,11 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
     for(int i = 0; i < dataTime; i++){
         //printf("running line: %f\n", (double)i);
         //printf("total: %f\n", (double)dataLength);
-        runSegment(dataToBeReplayed, i); //similate inputs 
+        runSegment(dataToBeReplayed[i]); //similate inputs 
         delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
     }
-    printf("Total leftError: %f", leftErrorScore);
-    printf("Total rightError: %f", rightErrorScore);
+    printf("Total leftError: %f\n", leftErrorScore);
+    printf("Total rightError: %f\n", rightErrorScore);
 
 }
 

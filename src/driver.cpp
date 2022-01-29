@@ -37,7 +37,7 @@ void opcontrol()
             Bongo.autonomous();
         }
         //prints to screen the position and rotation of bongo
-        //Bongo.debugPos();
+        Bongo.debugPos();
 
         // tyler control
         Bongo.tylerControl();

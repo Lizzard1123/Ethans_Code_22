@@ -573,8 +573,8 @@ public:
         Task updateLift(updateLiftSpeed, nullptr, TASK_PRIORITY_DEFAULT,
                             TASK_STACK_DEPTH_DEFAULT, "updateLift");
         // track locationFty
-        //Task updatePosition(updatePos, nullptr, TASK_PRIORITY_DEFAULT,
-        //                    TASK_STACK_DEPTH_DEFAULT, "updatePos");
+        Task updatePosition(updatePos, nullptr, TASK_PRIORITY_DEFAULT,
+                            TASK_STACK_DEPTH_DEFAULT, "updatePos");
         
         initz = true;
     }
