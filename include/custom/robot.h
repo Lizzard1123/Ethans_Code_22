@@ -118,8 +118,8 @@ public:
     }
 
     void autonomous(){
-        //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(4, false, false);
+        Autonomous(getAutonNum(), getSide(), getColor());
+        //Autonomous(4, false, false);
     }
 
     void catieControl(){
@@ -672,10 +672,7 @@ public:
 
     void AutonomousOne(bool isLeft, bool isBlue){
         if(isLeft){
-            setRotation(25);
-            Pneumatics.clawRelease();
-            moveForwardTimed(.10);
-            moveBackwardTimed(.10);
+            Claw.move_relative(-400, 100);
             Pneumatics.clawRelease();
             //moveForwardTimedLineUp(1.4);
             moveForwardTimed(1.4);
@@ -715,10 +712,8 @@ public:
             moveForwardTimed(2, 30);
             moveBackwardTimed(2, 30);
         } else { //right small
-            setRotation(0);
+            Claw.move_relative(-400, 100);
             Pneumatics.clawRelease();
-            moveForwardTimed(.15);
-            moveBackwardTimed(.15);
             //forward
             moveForwardTimed(1.3);
             Pneumatics.clawGrab();
@@ -780,9 +775,7 @@ public:
         }
         //Pneumatics.toggleClaw();
         //delay(.25);
-        Pneumatics.clawRelease();
-        moveForwardTimed(.25);
-        moveBackwardTimed(.25);
+        Claw.move_relative(-400, 100);
         Pneumatics.clawRelease();
         moveForwardTimed(2.25);
         Pneumatics.clawGrab();

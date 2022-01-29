@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 15; // in seconds
+const int recordTime = 60; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;

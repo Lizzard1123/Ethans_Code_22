@@ -73,9 +73,9 @@ public:
         //if(autoLevel){
         //    Claw.move_velocity(autoLevelClaw());
         //} else {
-        Claw.move_velocity(clawSpeed);
+        //Claw.move_velocity(clawSpeed);
         //}
-        
+
         if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
             Larm.move_velocity(LarmLiftSpeed);
             Rarm.move_velocity(RarmLiftSpeed);
@@ -121,11 +121,13 @@ public:
 
     void clawUp(){
         clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        Claw.move_velocity(clawSpeed);
         //clawSpeed = defaultClawSpeed;
     }
  
     void clawDown(){
         clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        Claw.move_velocity(clawSpeed);
         //clawSpeed = -defaultClawSpeed;
     }
 

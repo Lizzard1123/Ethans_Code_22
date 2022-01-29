@@ -32,10 +32,12 @@ void opcontrol()
                 startRecording();
             }
         }
+        /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             printf("Triggered\n");
             Bongo.autonomous();
         }
+        */
         //prints to screen the position and rotation of bongo
         Bongo.debugPos();
 
