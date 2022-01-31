@@ -16,12 +16,12 @@ public:
     double ringlesSpeed = 110 * maxSpeedMultiplier;
 
     void clawGrab(){
-        clawLock.set_value(HIGH);
+        clawLock.set_value(LOW);
         clawToggled = true;
     }
 
     void clawRelease(){
-        clawLock.set_value(LOW);
+        clawLock.set_value(HIGH);
         clawToggled = false;
     }
 
