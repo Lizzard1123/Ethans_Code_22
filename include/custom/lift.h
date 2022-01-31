@@ -10,6 +10,8 @@ private:
     double minClawSpeed = 40; 
     double maxClawSpeed = 80 * maxSpeedMultiplier; 
 
+
+
     double defaultClawSpeed = 100;
     double liftSpeed = 50;
 
@@ -27,6 +29,7 @@ private:
     bool autoLevel = false;
     double CPval = 2;
     double clawOffset = 0;
+    double clawIncrease = 5;
 public:
     Math myMath;
     //stops motor
@@ -54,27 +57,25 @@ public:
     //} 1134 degrees / 3951 analog vals
 
     void toggleAutoLevel(){
-        autoLevel = !autoLevel;
+        clawOffset = 0;
     }
 
     void setAutoLevel(bool val){
         autoLevel = val;
     }
-    /*
+    
     double autoLevelClaw(){
-        double target = (Rarm.get_position() - liftMinPos) * ratio + clawOffset;
+        double target = ((Rarm.get_position() + Larm.get_position()) / 2) * ratio + clawOffset;
         double error = target - Claw.get_position();
         return error * CPval;
     }
-    */
+    
 
     void update(){
         //level();
-        //if(autoLevel){
-        //    Claw.move_velocity(autoLevelClaw());
-        //} else {
-        //Claw.move_velocity(clawSpeed);
-        //}
+        if(autoLevel && !competition::is_autonomous()){
+            Claw.move_velocity(autoLevelClaw());
+        }
 
         if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
             Larm.move_velocity(LarmLiftSpeed);
@@ -120,14 +121,16 @@ public:
     }
 
     void clawUp(){
-        clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        Claw.move_velocity(clawSpeed);
+        //clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //Claw.move_velocity(clawSpeed);
+        clawOffset+=clawIncrease;
         //clawSpeed = defaultClawSpeed;
     }
  
     void clawDown(){
-        clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        Claw.move_velocity(clawSpeed);
+        //clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        //Claw.move_velocity(clawSpeed);
+        clawOffset-=clawIncrease;
         //clawSpeed = -defaultClawSpeed;
     }
 

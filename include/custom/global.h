@@ -11,6 +11,7 @@
 #define RarmPort 16
 #define ClawPort 10
 #define LiftPort 17
+#define VincentPORT 1
 //#define EYESPort 4
 //other defines
 #define expanderPort 14
@@ -35,6 +36,8 @@ extern Controller partner;
 //extern Vision leftEye;
 //extern Vision rightEye;
 //extern Vision backEye;
+
+extern Imu Vincent;
 
 //sigs
 //#define EYES__CUSTOM_GREEN_NUM 1

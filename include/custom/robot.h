@@ -47,7 +47,7 @@ private:
     int PIDspeed = 50;// in ms
     double m_tolerance = .2;// tolerance in inches
     double m_Pval = 8; //13
-    double m_Ival = .25; //0
+    double m_Ival = 0; //0
     double m_Dval = 0; //0
 
     static double totalForwardMovement;
@@ -131,7 +131,7 @@ public:
     }
 
     // PID syncronous movement from current location to target X , Y set speed along the way
-    int PIDMove(double targetX, double targetY, double maxspeed = 100)
+    int PIDMove(double targetX, double targetY, bool backwards, double maxspeed = 100)
     {
         bool reachedGoal;
         double speed = 0;
@@ -144,53 +144,12 @@ public:
         {
             // find the error distance bertween current and target point
             error = myMath.TwoPointsDistance(X, Y, targetX, targetY);
-
-            // find the intergral part for I
-            if ((speed != 0) && (speed <= 15) && (integral < 1000) && (error < 1000))
-            {
-                integral += error;
-            }
-
-            // find the derivative part for D
-            //this should be change of error 
-            derivative =  error / PIDspeed;
-
-            // PID ALGO
-            speed = (error * m_Pval) + (integral * m_Ival) + (derivative * m_Dval);
-
-            // get current angle
-            double Dangle = myMath.angleBetween(X, Y, targetX, targetY);
-
-            // fancy algo
-            double FLAuton = myMath.sRound(
-                myMath.multiplier(FLnum, rotation, Dangle) * speed, 3);
-            double FRAuton = myMath.sRound(
-                myMath.multiplier(FRnum, rotation, Dangle) * speed, 3);
-            double BLAuton = myMath.sRound(
-                myMath.multiplier(BLnum, rotation, Dangle) * speed, 3);
-            double BRAuton = myMath.sRound(
-                myMath.multiplier(BRnum, rotation, Dangle) * speed, 3);
-            double under = myMath.greatest(fabs(FLAuton), fabs(FRAuton),
-                                           fabs(BLAuton), fabs(BRAuton)) /
-                           100;
-            FLAuton = (FLAuton / under);
-            FRAuton = (FRAuton / under);
-            BLAuton = (BLAuton / under);
-            BRAuton = (BRAuton / under);
-            //printf("FLAuton %f \n", FLAuton);
-            //printf("FRAuton %f \n", FRAuton);
-            //printf("BLAuton %f \n", BLAuton);
-            //printf("BRAuton %f  \n", BRAuton);
-            //printf("rotation %f  \n", rotation);
-            //printf("Dangle %f \n", Dangle);
-            //printf("error %f \n", error);
-            //printf("X:  %f \n", X);
-            //printf("Y:  %f \n", Y);
-            // Drive Bongo
-            Movement.moveFL(myMath.maxSpeed(FLAuton, maxspeed));
-            Movement.moveFR(myMath.maxSpeed(FRAuton, maxspeed));
-            Movement.moveBL(myMath.maxSpeed(BLAuton, maxspeed));
-            Movement.moveBR(myMath.maxSpeed(BRAuton, maxspeed));
+            double PIDval = (error * m_Pval + (error - prevError) * m_Dval) * backwards?-1:1;
+            double turnCorrection = (rotation - myMath.angleBetween(X, Y, targetX, targetY) + backwards?180:0) * t_Pval;
+            Movement.moveFL(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
+            Movement.moveFR(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
+            Movement.moveBL(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
+            Movement.moveBR(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
 
             // if the pid loop has reached target
             if (fabs(error) <= m_tolerance)
@@ -316,109 +275,10 @@ public:
     }
 
     //PID turnMove turns and moves
-    int PIDMoveTurn(double targetX, double targetY, double target, double maxspeed = 100)
+    int PIDMoveTurn(double targetX, double targetY, double target, bool backwards, double maxspeed = 100)
     {
-        //move PID info
-        bool m_reachedGoal;
-        double m_speed = 0;
-        double m_prevError;
-        double m_error;
-        double m_derivative;
-        double m_integral = 0;
-
-        //turn PID info
-        double t_speed = 0;
-        bool t_reachedGoal;
-        double t_error;
-        double t_derivative = 0;
-        double t_integral = 0;
-
-        while (true)
-        {
-            // find the error distance bertween current and target point
-            m_error = myMath.TwoPointsDistance(X, Y, targetX, targetY);
-            // find the error of both sides for P
-            t_error = target - rotation;
-
-            // find the intergral part for I
-            if ((m_speed != 0) && (m_speed <= 15) && (m_integral < 1000) && (m_error < 1000))
-            {
-                m_integral += m_error;
-            }
-
-            // find the derivative part for D
-            //this should be change of error 
-            m_derivative =  m_error / PIDspeed;
-
-            // PID ALGO
-            m_speed = (m_error * m_Pval) + (m_integral * m_Ival) + (m_derivative * m_Dval);
-            // PID ALGO
-            t_speed = (t_error * t_Pval) + (t_integral * t_Ival) + (t_derivative * t_Dval);
-
-            // get current angle
-            double Dangle = myMath.angleBetween(X, Y, targetX, targetY);
-
-            // fancy algo
-            double FLAuton = myMath.sRound(
-                myMath.multiplier(FLnum, rotation, Dangle) * m_speed + t_speed, 3);
-            double FRAuton = myMath.sRound(
-                myMath.multiplier(FRnum, rotation, Dangle) * m_speed - t_speed, 3);
-            double BLAuton = myMath.sRound(
-                myMath.multiplier(BLnum, rotation, Dangle) * m_speed + t_speed, 3);
-            double BRAuton = myMath.sRound(
-                myMath.multiplier(BRnum, rotation, Dangle) * m_speed - t_speed, 3);
-            double under = myMath.greatest(fabs(FLAuton + t_speed), fabs(FRAuton + t_speed),
-                                           fabs(BLAuton + t_speed), fabs(BRAuton + t_speed)) /
-                           100;
-            FLAuton = (FLAuton / under);
-            FRAuton = (FRAuton / under);
-            BLAuton = (BLAuton / under);
-            BRAuton = (BRAuton / under);
-            //printf("FLAuton %f \n", FLAuton);
-            //printf("FRAuton %f \n", FRAuton);
-            //printf("BLAuton %f \n", BLAuton);
-            //printf("BRAuton %f  \n", BRAuton);
-            printf("Heading: %f", rotation);
-            printf("Dangle %f \n", Dangle);
-            printf("target %f \n", target);
-            printf("error %f \n", m_error);
-            printf("error %f \n", t_error);
-            printf("X:  %f \n", X);
-            printf("Y:  %f \n", Y);
-            // Drive Bongo
-            Movement.moveFL(myMath.maxSpeed(FLAuton, maxspeed));
-            Movement.moveFR(myMath.maxSpeed(FRAuton, maxspeed));
-            Movement.moveBL(myMath.maxSpeed(BLAuton, maxspeed));
-            Movement.moveBR(myMath.maxSpeed(BRAuton, maxspeed));
-
-            // if the pid loop has reached target
-            if (fabs(m_error) <= m_tolerance)
-            {
-                m_reachedGoal = true;
-            }
-            else
-            {
-                m_reachedGoal = false;
-            }
-
-            if (fabs(t_error) <= t_tolerance)
-            {
-                t_reachedGoal = true;
-            }
-            else
-            {
-                t_reachedGoal = false;
-            }
-
-            if (m_reachedGoal && t_reachedGoal)
-            {
-                Movement.moveLeft(0);
-                Movement.moveRight(0);
-                break;
-            }
-            //delay
-            delay(PIDspeed);
-        }
+        PIDTurn(myMath.angleBetween(X, Y, targetX, targetY) + backwards?180:0);
+        PIDMove(targetX, targetY, backwards);
         return 1;
     }
 
@@ -434,88 +294,69 @@ public:
         //I derived the original formula and for the reiteration and added wheel i combined it with work done here
         //https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-186-mobile-autonomous-systems-laboratory-january-iap-2005/study-materials/odomtutorial.pdf
         double wheelCircumfrence = 10.2; //11.2
-        double wheelSmallCircumfrence = 8.64;
-        //bigger increases angle more
-        double wheelSeperation = 5.5 * 2; //4.4 //6.45
-        double wheelOffset = 5.5;
         double head = rotation;
         double rightOdomVal;
         double leftOdomVal;
-        double middleOdomVal;
         while (true)
         {
-            //just in case i forget to code properly
-            if (std::isnan(X) || fabs(X) > 144)
+            if (isnan(X))
             {
                 X = 0;
             }
-            if (std::isnan(Y) || fabs(Y) > 144)
+            if (isnan(Y))
             {
                 Y = 0;
             }
-            
-            
-            //find isolated forward and sideways movement
-            double leftDist = myMath.toInch(leftOdom.get(), wheelCircumfrence);
-            double rightDist = myMath.toInch(rightOdom.get(), wheelCircumfrence);
-            double forwardMovement = (rightDist + leftDist) / 2;
-            totalForwardMovement += forwardMovement;
-            double sidewaysMovement = 0;// myMath.toInch(middleOdom.get(), wheelSmallCircumfrence);
-            double changeOfHeading = ((leftDist - rightDist) / wheelSeperation) * 180 / M_PI;
-            //to distance
-            //sidewaysMovement += wheelOffset * (changeOfHeading  * M_PI / 180);
+            double initialVal = rightOdom.get();
+            rightOdomVal = myMath.toInch(initialVal, wheelCircumfrence);
+            totalForwardMovement += rightOdomVal;
+            printf("h %f \n", head);
+            printf("i %f  \n", initialVal);
+            printf("v %f \n", rightOdomVal);
+            leftOdomVal = leftOdom.get();
+                // YWhee
+            Y += rightOdomVal * cos(head * M_PI / 180);
+            X += rightOdomVal * sin(head * M_PI / 180);
 
-            // forward wheels in relation to coordinates
-            //HEY YOU
-            //mit student says switch cos and sin on these here if your code breaks its bc hes smarter than you and you need to fix this
-            Y += forwardMovement * cos(head * M_PI / 180);
-            X += forwardMovement * sin(head * M_PI / 180);
-            //crackhead
-            // sideways wheel in relation to cooridantes
-            //Y -= sidewaysMovement * sin(head * M_PI / 180);
-            //X += sidewaysMovement * cos(head * M_PI / 180);
-            //heading//update heading part
+                // X wheel
+            Y -= myMath.toInch(leftOdomVal * sin(head * M_PI / 180),
+                                   wheelCircumfrence);
+            X += myMath.toInch(leftOdomVal * cos(head * M_PI / 180),
+                                wheelCircumfrence);
             
-            rotation += changeOfHeading;
-            //set new
-            //TODO i thought this went before but try accuracy when its after computed distance moved idk i think its right
-            head = rotation;// TODO fix heading
+
             //debug
-            //printf("right: %f\n", rightDist);
-            //printf("left: %f\n", leftDist);
-            //printf("heading %f\n", head);
-            //printf("Rotation %f\n", rotation);
-            //printf("Current X %f\n", X);
-            //printf("Current Y %f\n", Y);
-            //printf("forward movement %f\n", forwardMovement);
-            //printf("\n");
-            //printf("heading change %f\n", changeOfHeading);
-            //printf("sideways movement %f \n", sidewaysMovement);
-            //printf("Back wheel rotation %f\n", myMath.toInch(sidewaysMovement, wheelSmallCircumfrence));
-            //printf("\n");
+            printf("X: %f\n", X);
+            printf("Y: %f\n", Y);
             // reset
+            //prev = head;
             rightOdom.reset();
             leftOdom.reset();
-            //middleOdom.reset();
+            head = Vincent.get_rotation();
             c::task_delay(posDelay);
         }
     }
 
     void testOdom()
     {
-        //PIDTurn(180);
-        turnTimed(1.15, false, 50); //right
+        PIDMove(0, 24, false);
+        PIDMove(12, 12, false);        
     }
 
     void testOdom3(){
-        PIDTurn(360);
-        //PIDMoveTurn(0, 72, 0, 100);
+        PIDMove(0, 24, true);
+        PIDMove(12, 12, true);        
     }
 
     void testOdom2()
     {
         PIDTurn(90);
-        //PIDMoveTurn(72, 0, 0, 100);
+        delay(1000);
+        PIDTurn(180);
+        delay(1000);
+        PIDTurn(270);
+        delay(1000);
+        PIDTurn(720);
     }
 
     // set current position of bongo
@@ -526,7 +367,8 @@ public:
     }
 
     void setRotation(double r){
-        rotation = r;
+        //rotation = r;
+        Vincent.set_rotation(r);
     }
 
     // prints to debug screen current position of bongo
@@ -674,12 +516,9 @@ public:
         if(isLeft){
             Claw.move_relative(-400, 100);
             Pneumatics.clawRelease();
-            //moveForwardTimedLineUp(1.4);
+            //race
             moveForwardTimed(1.4);
             Pneumatics.clawGrab();
-            Lift.clawUp();
-            delay(100);
-            Lift.stopClaw();
             //drop turn lift manuver
             totalForwardMovement = 0;
             moveBackwardTimed(1.60);

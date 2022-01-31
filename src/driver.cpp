@@ -82,22 +82,24 @@ void opcontrol()
         }
 
         //Toggle level
-        //if (master.get_digital_new_press(DIGITAL_LEFT)){
-        //    Bongo.Lift.toggleAutoLevel();
-        //}
+        if (master.get_digital_new_press(DIGITAL_LEFT)){
+            Bongo.Lift.toggleAutoLevel();
+        }
 
         if (master.get_digital_new_press(DIGITAL_DOWN)){
-            RingleLift.move_relative(-360, 50);
-            //Bongo.testOdom2();
+            //RingleLift.move_relative(-360, 50);
+            Bongo.testOdom();
         }
 
         if(master.get_digital_new_press(DIGITAL_UP)){
-            Bongo.Pneumatics.toggleRingles();
+            //Bongo.Pneumatics.toggleRingles();
+            Bongo.testOdom2();
         }
 
-        //if(master.get_digital_new_press(DIGITAL_RIGHT)){
-        //    Bongo.setRotation(0);
-        //}
+        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+            //Bongo.setRotation(0);
+            Bongo.testOdom3();
+        }
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
