@@ -12,6 +12,8 @@
 #define ClawPort 10
 #define LiftPort 17
 #define VincentPORT 1
+#define WristPORT 2
+
 //#define EYESPort 4
 //other defines
 #define expanderPort 14
@@ -38,6 +40,7 @@ extern Controller partner;
 //extern Vision backEye;
 
 extern Imu Vincent;
+extern Imu Wrist;
 
 //sigs
 //#define EYES__CUSTOM_GREEN_NUM 1

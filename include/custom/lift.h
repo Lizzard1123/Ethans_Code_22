@@ -65,8 +65,7 @@ public:
     }
     
     double autoLevelClaw(){
-        double target = ((Rarm.get_position() + Larm.get_position()) / 2) * ratio + clawOffset;
-        double error = target - Claw.get_position();
+        double error = clawOffset - Wrist.get_rotation();
         return error * CPval;
     }
     

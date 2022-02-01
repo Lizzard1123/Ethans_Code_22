@@ -28,6 +28,8 @@ Controller master(E_CONTROLLER_MASTER);
 Controller partner(E_CONTROLLER_PARTNER);
 
 Imu Vincent(VincentPORT);
+Imu Wrist(WristPORT);
+
 
 // vision sensors
 //Vision Eyes(EYESPort);

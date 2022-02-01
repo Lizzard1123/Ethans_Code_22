@@ -1021,6 +1021,9 @@ void initialize()
     RingleLift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     
 
+    Vincent.reset();
+    Wrist.reset();
+
     //optical sensor led light level 100 high
     //outtakeSense.set_led_pwm(100);
 
