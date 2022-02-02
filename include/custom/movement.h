@@ -107,6 +107,29 @@ public:
         BRspeed = (BRspeed / under) * maxSpeedMultiplier;
     }
 
+    void arcadeControl(double LX = master.get_analog(E_CONTROLLER_ANALOG_LEFT_X), 
+                        double LY = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),
+                        double RX = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X)){
+        LXaxis = LX;
+        LYaxis = LY;
+        RXaxis = RX / rotationTune;
+        FLspeed = LYaxis + RXaxis;
+        FRspeed = LYaxis - RXaxis;
+        BLspeed = LYaxis + RXaxis;
+        BRspeed = LYaxis - RXaxis;
+
+        //under is the number in the denominator of the largest number when it equals 100
+        //scales down other numbers relative to it
+        double under = myMath.greatest(fabs(FLspeed), fabs(FRspeed), fabs(BLspeed),
+                                       fabs(BRspeed)) /
+                       100;
+
+        FLspeed = (FLspeed / under) * maxSpeedMultiplier;
+        FRspeed = (FRspeed / under) * maxSpeedMultiplier;
+        BLspeed = (BLspeed / under) * maxSpeedMultiplier;
+        BRspeed = (BRspeed / under) * maxSpeedMultiplier;
+    }
+
     // drives motors from private vars AKA refresh motor speeds
     void move()
     {

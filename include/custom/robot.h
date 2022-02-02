@@ -130,6 +130,27 @@ public:
         Movement.tylerControl();
     }
 
+    void arcadeControl(){
+        Movement.arcadeControl();
+    }
+
+    void PIDClimb(){
+        double k_Pval = .75;
+        double k_Dval = 20;
+        double error;
+        double lastError;
+        double target = Vincent.get_pitch();
+        moveForwardTimed(1,50);
+        while(true){
+            error = target - Vincent.get_pitch();
+            double speed = error * k_Pval + (error - lastError) * k_Dval;
+            Movement.moveLeft(speed);
+            Movement.moveRight(speed);
+            lastError = error;
+            delay(10);
+        }
+    }
+
     // PID syncronous movement from current location to target X , Y set speed along the way
     int PIDMove(double targetX, double targetY, bool backwards, double maxspeed = 100)
     {
@@ -297,6 +318,11 @@ public:
         double head = rotation;
         double rightOdomVal;
         double leftOdomVal;
+        double lastRightOdomVal;
+        double lastLeftOdomVal;
+
+        double rightOdomDist;
+        double leftOdomDist;
         while (true)
         {
             if (isnan(X))
@@ -307,32 +333,30 @@ public:
             {
                 Y = 0;
             }
-            double initialVal = rightOdom.get();
-            rightOdomVal = myMath.toInch(initialVal, wheelCircumfrence);
-            totalForwardMovement += rightOdomVal;
-            printf("h %f \n", head);
-            printf("i %f  \n", initialVal);
-            printf("v %f \n", rightOdomVal);
+            rightOdomVal = rightOdom.get();
             leftOdomVal = leftOdom.get();
-                // YWhee
-            Y += rightOdomVal * cos(head * M_PI / 180);
-            X += rightOdomVal * sin(head * M_PI / 180);
+            rightOdomDist = myMath.toInch(rightOdomVal - lastRightOdomVal, wheelCircumfrence);
+            leftOdomDist = myMath.toInch(leftOdomVal - lastLeftOdomVal, wheelCircumfrence);
+            double moveDist = (rightOdomDist + leftOdomDist) / 2;
+            totalForwardMovement += rightOdomVal;
 
-                // X wheel
-            Y -= myMath.toInch(leftOdomVal * sin(head * M_PI / 180),
-                                   wheelCircumfrence);
-            X += myMath.toInch(leftOdomVal * cos(head * M_PI / 180),
-                                wheelCircumfrence);
-            
+            //printf("h %f \n", head);
+            //printf("v %f \n", rightOdomVal);
+                // YWhee
+            Y += moveDist * cos(head * M_PI / 180);
+            X += moveDist * sin(head * M_PI / 180);
 
             //debug
-            printf("X: %f\n", X);
-            printf("Y: %f\n", Y);
+            //printf("X: %f\n", X);
+            //printf("Y: %f\n", Y);
             // reset
             //prev = head;
-            rightOdom.reset();
-            leftOdom.reset();
+            //rightOdom.reset();
+            //leftOdom.reset();
+            lastRightOdomVal = rightOdomVal;
+            lastLeftOdomVal = leftOdomVal;
             head = Vincent.get_rotation();
+            rotation = head;
             c::task_delay(posDelay);
         }
     }

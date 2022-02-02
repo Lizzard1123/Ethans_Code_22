@@ -25,11 +25,10 @@ private:
     double armMaxTorque = 1.05;
     double clawMaxTorque = 2.1;
 
-    double ratio = -0.26; //1134 / 3951;
     bool autoLevel = false;
-    double CPval = 2;
+    double CPval = 3;
     double clawOffset = 0;
-    double clawIncrease = 5;
+    double clawIncrease = 2;
 public:
     Math myMath;
     //stops motor
@@ -57,6 +56,7 @@ public:
     //} 1134 degrees / 3951 analog vals
 
     void toggleAutoLevel(){
+        autoLevel = !autoLevel;
         clawOffset = 0;
     }
 
@@ -65,15 +65,17 @@ public:
     }
     
     double autoLevelClaw(){
-        double error = clawOffset - Wrist.get_rotation();
+        double error = clawOffset - Wrist.get_pitch();
         return error * CPval;
     }
     
 
     void update(){
         //level();
-        if(autoLevel && !competition::is_autonomous()){
+        if(autoLevel){
             Claw.move_velocity(autoLevelClaw());
+        } else {
+            Claw.move_velocity(clawSpeed);
         }
 
         if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
@@ -123,14 +125,14 @@ public:
         //clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
         //Claw.move_velocity(clawSpeed);
         clawOffset+=clawIncrease;
-        //clawSpeed = defaultClawSpeed;
+        clawSpeed = defaultClawSpeed;
     }
  
     void clawDown(){
         //clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
         //Claw.move_velocity(clawSpeed);
         clawOffset-=clawIncrease;
-        //clawSpeed = -defaultClawSpeed;
+        clawSpeed = -defaultClawSpeed;
     }
 
 

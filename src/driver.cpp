@@ -27,11 +27,11 @@ void opcontrol()
     while (true)
     {
         
-        if(master.get_digital_new_press(DIGITAL_LEFT)){
-            if(!hasRecorded()){
-                startRecording();
-            }
-        }
+        //if(master.get_digital_new_press(DIGITAL_LEFT)){
+        //    if(!hasRecorded()){
+        //        startRecording();
+        //    }
+        //}
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             printf("Triggered\n");
@@ -42,7 +42,10 @@ void opcontrol()
         Bongo.debugPos();
 
         // tyler control
-        Bongo.tylerControl();
+        //Bongo.tylerControl();
+
+        Bongo.arcadeControl();
+
 
         // catie control
         //Bongo.catieControl();
@@ -98,7 +101,8 @@ void opcontrol()
 
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             //Bongo.setRotation(0);
-            Bongo.testOdom3();
+            //Bongo.testOdom3();
+            Bongo.PIDClimb();
         }
 
         // starts the spin on motors or cuts power
