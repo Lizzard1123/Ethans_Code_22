@@ -135,18 +135,28 @@ public:
     }
 
     void PIDClimb(){
-        double k_Pval = .75;
-        double k_Dval = 20;
+        double k_Pval = 3;
+        double k_Dval = 45;
         double error;
         double lastError;
         double target = Vincent.get_pitch();
-        moveForwardTimed(1,50);
+        //lineup and push down
+        Lift.moveArmToPos(Lift.leftMin, Lift.rightMin);
+        delay(1500);
+        moveForwardTimed(.5,50);
+        Lift.moveArmToPos(Lift.leftMax, Lift.rightMax);
+        delay(500);
         while(true){
             error = target - Vincent.get_pitch();
             double speed = error * k_Pval + (error - lastError) * k_Dval;
             Movement.moveLeft(speed);
             Movement.moveRight(speed);
             lastError = error;
+            if(error <= 2){
+                Movement.moveLeft(0);
+                Movement.moveRight(0);
+                break;
+            }
             delay(10);
         }
     }

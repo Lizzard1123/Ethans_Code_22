@@ -29,8 +29,14 @@ private:
     double CPval = 3;
     double clawOffset = 0;
     double clawIncrease = 2;
+    bool autonMoving = false;
+    
 public:
     Math myMath;
+    double leftMax = -1651;
+    double rightMax = -1643;
+    double leftMin = -214;
+    double rightMin = -203;
     //stops motor
     void stopAll()
     {
@@ -68,6 +74,12 @@ public:
         double error = clawOffset - Wrist.get_pitch();
         return error * CPval;
     }
+
+    void moveArmToPos(double left, double right){
+        autonMoving = true;
+        Larm.move_absolute(left, 50);
+        Rarm.move_absolute(right, 50);
+    }
     
 
     void update(){
@@ -77,17 +89,19 @@ public:
         } else {
             Claw.move_velocity(clawSpeed);
         }
-
-        if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
-            Larm.move_velocity(LarmLiftSpeed);
-            Rarm.move_velocity(RarmLiftSpeed);
-        } else if (RarmLiftSpeed > 0){
-            Larm.move_velocity(LarmLiftSpeed);
-            Rarm.move_velocity(RarmLiftSpeed); 
-        } else {
-            Larm.move_velocity(0);
-            Rarm.move_velocity(0);
+        if(!autonMoving){
+            if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
+                Larm.move_velocity(LarmLiftSpeed);
+                Rarm.move_velocity(RarmLiftSpeed);
+            } else if (RarmLiftSpeed > 0){
+                Larm.move_velocity(LarmLiftSpeed);
+                Rarm.move_velocity(RarmLiftSpeed); 
+            } else {
+                Larm.move_velocity(0);
+                Rarm.move_velocity(0);
+            }
         }
+       
         //std::string firstLine = "L:" + std::__cxx11::to_string(int(Larm.get_position())) + "_R:" + std::__cxx11::to_string(int(Rarm.get_position())) + "_C:" + std::__cxx11::to_string(int(Claw.get_position()));
         //master.set_text(1, 1, firstLine);
     }
