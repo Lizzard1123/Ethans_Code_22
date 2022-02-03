@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 60; // in seconds
+const int recordTime = 30; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -393,6 +393,11 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
         Bongo.Movement.move();
+    } else {
+        FL.move_voltage(dataToBeReplayed[FLVolt]);
+        FR.move_voltage(dataToBeReplayed[FRVolt]);
+        BL.move_voltage(dataToBeReplayed[BLVolt]);
+        BR.move_voltage(dataToBeReplayed[BRVolt]);
     }
     //manual powering 
     if ((int)dataToBeReplayed[L2ButtonDigital]){
@@ -496,9 +501,9 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
 //returns last index, runs motor values 
 void runSegment(double dataToBeReplayed[MaxRecords]){
     //run off of controller values
-    //controllerVals(dataToBeReplayed[timeToRun]);
+    controllerVals(dataToBeReplayed, false);
     //run off of encoderPID
-    encoderVals(dataToBeReplayed);
+    //encoderVals(dataToBeReplayed);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){

@@ -130,7 +130,7 @@ extern bool hasRecorded();
 
 extern void setDataToSd();
 
-#define skills_dataLength 300
+#define skills_dataLength 600
 
 extern int skillsDataTime;
 

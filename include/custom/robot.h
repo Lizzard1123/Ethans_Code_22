@@ -35,20 +35,20 @@ private:
     double mt_CX;
     double mt_width;
     double mt_error_past = 0;
-    double mt_Dval = 0;
+    double mt_Dval = 1;
     double mt_Pval = .2;
     double mt_widthLimit = 20;
 
-    double t_tolerance = .5;
-    double t_Pval = 2; //2.5
+    double t_tolerance = 1;
+    double t_Pval = 1.5; //2.5
     double t_Ival = 0;//double Ival = .1;// double Ival = 0;
-    double t_Dval = 1;//double Dval = .7;// double Dval = 0;
+    double t_Dval = 4;//double Dval = .7;// double Dval = 0;
 
     int PIDspeed = 50;// in ms
     double m_tolerance = .2;// tolerance in inches
     double m_Pval = 8; //13
     double m_Ival = 0; //0
-    double m_Dval = 0; //0
+    double m_Dval = 1; //0
 
     static double totalForwardMovement;
 
@@ -118,8 +118,8 @@ public:
     }
 
     void autonomous(){
-        Autonomous(getAutonNum(), getSide(), getColor());
-        //Autonomous(4, false, false);
+        //Autonomous(getAutonNum(), getSide(), getColor());
+        Autonomous(4, false, false);
     }
 
     void catieControl(){
@@ -145,6 +145,7 @@ public:
         delay(1500);
         moveForwardTimed(.5,50);
         Lift.moveArmToPos(Lift.leftMax, Lift.rightMax);
+        delay(600000);
         delay(500);
         while(true){
             error = target - Vincent.get_pitch();
@@ -174,13 +175,24 @@ public:
         while (true)
         {
             // find the error distance bertween current and target point
+            double angle = myMath.angleBetween(X, Y, targetX, targetY);
+            if(angle >= fabs(90)){
+                backwards =  true;
+            }
             error = myMath.TwoPointsDistance(X, Y, targetX, targetY);
-            double PIDval = (error * m_Pval + (error - prevError) * m_Dval) * backwards?-1:1;
-            double turnCorrection = (rotation - myMath.angleBetween(X, Y, targetX, targetY) + backwards?180:0) * t_Pval;
-            Movement.moveFL(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
-            Movement.moveFR(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
-            Movement.moveBL(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
-            Movement.moveBR(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
+            double PIDval = (error * m_Pval + (error - prevError) * m_Dval) * (backwards?-1:1);
+            prevError = error;
+            double turnCorrection = (Vincent.get_rotation() - angle + (backwards?180:0)) * t_Pval/2;
+            Movement.moveFL(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
+            Movement.moveFR(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
+            Movement.moveBL(myMath.maxSpeed(PIDval + turnCorrection, maxspeed));
+            Movement.moveBR(myMath.maxSpeed(PIDval - turnCorrection, maxspeed));
+
+            printf("error: %f\n", error);
+            printf("PIDval: %f\n", PIDval);
+            printf("turnCorrection: %f\n", turnCorrection);
+            printf("angle: %f\n", myMath.angleBetween(X, Y, targetX, targetY));
+            printf("back?: %i\n", backwards?180:0);
 
             // if the pid loop has reached target
             if (fabs(error) <= m_tolerance)
@@ -255,7 +267,7 @@ public:
         {
             //printf("Heading: %f", headingVal);
             // find the error of both sides  for P
-            error = turnTarget - rotation;
+            error =  turnTarget - Vincent.get_rotation();
             printf("Error: %f \n", error);
             printf("rotation: %f \n", rotation);
 
@@ -273,7 +285,7 @@ public:
             //}
 
             // find the derivative part for D
-            Derivative = (error - lastError) / PIDspeed;
+            Derivative = (error - lastError);
             lastError = error;
 
             // PID ALGO
@@ -347,7 +359,8 @@ public:
             leftOdomVal = leftOdom.get();
             rightOdomDist = myMath.toInch(rightOdomVal - lastRightOdomVal, wheelCircumfrence);
             leftOdomDist = myMath.toInch(leftOdomVal - lastLeftOdomVal, wheelCircumfrence);
-            double moveDist = (rightOdomDist + leftOdomDist) / 2;
+            double changeHeading = head - Vincent.get_rotation();
+            double moveDist = leftOdomDist - (leftOdomDist * (changeHeading * M_PI / 180)); //(rightOdomDist + leftOdomDist) / 2;
             totalForwardMovement += rightOdomVal;
 
             //printf("h %f \n", head);
@@ -367,6 +380,10 @@ public:
             lastLeftOdomVal = leftOdomVal;
             head = Vincent.get_rotation();
             rotation = head;
+            std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+            master.set_text(1, 0, values);
+            values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
+            master.set_text(2, 0, values);
             c::task_delay(posDelay);
         }
     }
