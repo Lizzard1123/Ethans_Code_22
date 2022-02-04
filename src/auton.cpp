@@ -393,12 +393,12 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
         Bongo.Movement.move();
-    } else {
+    }/* else {
         FL.move_voltage(dataToBeReplayed[FLVolt]);
         FR.move_voltage(dataToBeReplayed[FRVolt]);
         BL.move_voltage(dataToBeReplayed[BLVolt]);
         BR.move_voltage(dataToBeReplayed[BRVolt]);
-    }
+    }*/
     //manual powering 
     if ((int)dataToBeReplayed[L2ButtonDigital]){
         Bongo.Lift.liftDown(); //manually pushes arm down at max torque
@@ -445,15 +445,15 @@ void checkRightError(double setPoint){
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords]){
-    double pVal = 5;
+    double pVal = 15;
     double dVal = 0;
-    double v_Pval = 0; // to input what the motor should be around
+    double v_Pval = .5; // to input what the motor should be around
     //errors
     double leftError = dataToBeReplayed[leftOdomPosition] - leftOdom.get();
     double rightError = dataToBeReplayed[rightOdomPosition] - rightOdom.get();
 
-    double leftactV = dataToBeReplayed[FLActualVelocity] + dataToBeReplayed[BLActualVelocity];
-    double rightactV = dataToBeReplayed[FRActualVelocity] + dataToBeReplayed[BRActualVelocity];
+    double leftactV = dataToBeReplayed[FLVolt] + dataToBeReplayed[BLVolt];
+    double rightactV = dataToBeReplayed[FRVolt] + dataToBeReplayed[BRVolt];
 
 
     double leftSpeed = leftError * pVal + (leftError - lastLeftError) * dVal + leftactV * v_Pval;
@@ -462,8 +462,8 @@ void encoderVals(double dataToBeReplayed[MaxRecords]){
     lastLeftError = leftError;
     lastRightError = rightError;
 
-    Bongo.Movement.moveLeft(leftSpeed);
-    Bongo.Movement.moveRight(rightSpeed);
+    Bongo.Movement.moveLeftVolt(leftSpeed);
+    Bongo.Movement.moveRightVolt(rightSpeed);
 
     printf("leftSpeed: %f\n", leftSpeed);
     printf("rightSpeed: %f\n", rightSpeed);
@@ -501,9 +501,9 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
 //returns last index, runs motor values 
 void runSegment(double dataToBeReplayed[MaxRecords]){
     //run off of controller values
-    controllerVals(dataToBeReplayed, false);
+    //controllerVals(dataToBeReplayed, false);
     //run off of encoderPID
-    //encoderVals(dataToBeReplayed);
+    encoderVals(dataToBeReplayed);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){

@@ -191,6 +191,20 @@ public:
         BR.move_velocity(myMath.toRPM(false, speed, BR.get_gearing()));
     }
 
+    //update left motor side of bongo
+    void moveLeftVolt(double speed)
+    {
+        FL.move_voltage(speed);
+        BL.move_voltage(speed);
+    }
+
+    //update right motor side of bongo
+    void moveRightVolt(double speed)
+    {
+        FR.move_voltage(speed);
+        BR.move_voltage(speed);
+    }
+
     //individually set FL motor speed;
     void moveFL(double speed)
     {
