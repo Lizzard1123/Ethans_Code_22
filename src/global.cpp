@@ -27,6 +27,10 @@ motor LeftLift = motor(PORT1, ratio36_1, true);
 Controller master(E_CONTROLLER_MASTER);
 Controller partner(E_CONTROLLER_PARTNER);
 
+Imu Vincent(VincentPORT);
+Imu Wrist(WristPORT);
+
+
 // vision sensors
 //Vision Eyes(EYESPort);
 //Vision leftEye(leftEyePort);

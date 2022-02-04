@@ -86,7 +86,20 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define rightOdomPosition 40
 #define leftOdomPosition 41
 
-#define MaxRecords 42
+
+#define FLVolt 42
+#define FRVolt 43
+#define BLVolt 44
+#define BRVolt 45
+
+#define VincentRotation 46
+#define WristPitch 47
+#define VincentPitch 48
+
+#define recordedX 49
+#define recordedY 50
+
+#define MaxRecords 51
 
 
 extern void fillEmpty();
@@ -117,7 +130,7 @@ extern bool hasRecorded();
 
 extern void setDataToSd();
 
-#define skills_dataLength 300
+#define skills_dataLength 600
 
 extern int skillsDataTime;
 

@@ -28,9 +28,10 @@ void opcontrol()
     {
         
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            if(!hasRecorded()){
-                startRecording();
-            }
+            //if(!hasRecorded()){
+            //    startRecording();
+            //}
+            Bongo.autonomous();
         }
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
@@ -42,7 +43,10 @@ void opcontrol()
         Bongo.debugPos();
 
         // tyler control
-        Bongo.tylerControl();
+        //Bongo.tylerControl();
+
+        Bongo.arcadeControl();
+
 
         // catie control
         //Bongo.catieControl();
@@ -82,33 +86,37 @@ void opcontrol()
         }
 
         //Toggle level
-        //if (master.get_digital_new_press(DIGITAL_LEFT)){
-        //    Bongo.Lift.toggleAutoLevel();
-        //}
+        if (master.get_digital_new_press(DIGITAL_LEFT)){
+            Bongo.Lift.toggleAutoLevel();
+        }
 
         if (master.get_digital_new_press(DIGITAL_DOWN)){
-            RingleLift.move_relative(-360, 50);
-            //Bongo.testOdom2();
+            //RingleLift.move_relative(-360, 50);
+            Bongo.testOdom();
         }
 
         if(master.get_digital_new_press(DIGITAL_UP)){
-            Bongo.Pneumatics.toggleRingles();
+            //Bongo.Pneumatics.toggleRingles();
+            Bongo.testOdom2();
         }
 
-        //if(master.get_digital_new_press(DIGITAL_RIGHT)){
-        //    Bongo.setRotation(0);
-        //}
+        if(master.get_digital_new_press(DIGITAL_RIGHT)){
+            //Bongo.setRotation(0);
+            //Bongo.testOdom3();
+            Bongo.PIDClimb();
+        }
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
-        //FL:FR:BL:BR:Rarm:Larm:Claw
-        //std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
-        //master.set_text(2, 0, values);
+        
         //delay between updates
 
         setDataToSd();
         finalizeData();
-        std::string values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
+        //FL:FR:BL:BR:Rarm:Larm:Claw
+        std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+        master.set_text(1, 0, values);
+        values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
         master.set_text(2, 0, values);
         delay(driverSpeed);
     }

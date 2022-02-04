@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 60; // in seconds
+const int recordTime = 30; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -100,9 +100,34 @@ void setData(){
         replayData[currentDataLine][LarmPosition] = Larm.get_position();
         replayData[currentDataLine][RarmPosition] = Rarm.get_position();
         replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
-        replayData[currentDataLine][leftOdomPosition] = leftOdom.get();
+
+        replayData[currentDataLine][FLVolt] = FL.get_voltage();
+        replayData[currentDataLine][FRVolt] = FR.get_voltage();
+        replayData[currentDataLine][BLVolt] = BL.get_voltage();
+        replayData[currentDataLine][BRVolt] = BR.get_voltage();
+        replayData[currentDataLine][VincentRotation] = Vincent.get_rotation();
+        replayData[currentDataLine][WristPitch] = Wrist.get_pitch();
+        replayData[currentDataLine][VincentPitch] = Vincent.get_pitch();
+        replayData[currentDataLine][recordedX] = Bongo.getX();
+        replayData[currentDataLine][recordedY] = Bongo.getY();
+
     }
 }
+/*
+
+#define FLVolt 42
+#define FRVolt 43
+#define BLVolt 44
+#define BRVolt 45
+
+#define VincentRotation 46
+#define WristPitch 47
+#define VincentYaw 48
+
+#define recordedX 49
+#define recordedY 50
+
+*/
 
 void setDataToSd(){
     if(recording){
@@ -154,6 +179,15 @@ void setDataToSd(){
             lineData[RarmPosition] = Rarm.get_position();
             lineData[rightOdomPosition] = rightOdom.get();
             lineData[leftOdomPosition] = leftOdom.get();
+            lineData[FLVolt] = FL.get_voltage();
+            lineData[FRVolt] = FR.get_voltage();
+            lineData[BLVolt] = BL.get_voltage();
+            lineData[BRVolt] = BR.get_voltage();
+            lineData[VincentRotation] = Vincent.get_rotation();
+            lineData[WristPitch] = Wrist.get_pitch();
+            lineData[VincentPitch] = Vincent.get_pitch();
+            lineData[recordedX] = Bongo.getX();
+            lineData[recordedY] = Bongo.getY();
             fprintf(sd, "{");
             for(int i = 0; i < MaxRecords; i++){ //every segment
                 if(i == MaxRecords - 1){
@@ -359,6 +393,11 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
         Bongo.Movement.move();
+    } else {
+        FL.move_voltage(dataToBeReplayed[FLVolt]);
+        FR.move_voltage(dataToBeReplayed[FRVolt]);
+        BL.move_voltage(dataToBeReplayed[BLVolt]);
+        BR.move_voltage(dataToBeReplayed[BRVolt]);
     }
     //manual powering 
     if ((int)dataToBeReplayed[L2ButtonDigital]){
@@ -462,9 +501,9 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
 //returns last index, runs motor values 
 void runSegment(double dataToBeReplayed[MaxRecords]){
     //run off of controller values
-    //controllerVals(dataToBeReplayed[timeToRun]);
+    controllerVals(dataToBeReplayed, false);
     //run off of encoderPID
-    encoderVals(dataToBeReplayed);
+    //encoderVals(dataToBeReplayed);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){
