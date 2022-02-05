@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 30; // in seconds
+const int recordTime = 15; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -457,13 +457,16 @@ void checkLeftError(double setPoint){
 }
 
 void checkRightError(double setPoint){
-    rightErrorScore += setPoint - rightOdom.get();
+    rightErrorScore += setPoint + rightOdom.get();
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
-    double pVal = learnPval;
+    double pVal = 60;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
+
+    double headingPval = 45;
+
     //errors
     double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();
     double rightError = futureDataToBeReplayed[rightOdomPosition] - rightOdom.get();
@@ -471,9 +474,10 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     double leftactV = dataToBeReplayed[FLVolt] + dataToBeReplayed[BLVolt];
     double rightactV = dataToBeReplayed[FRVolt] + dataToBeReplayed[BRVolt];
 
-
-    double leftSpeed = leftError * pVal + (leftError - lastLeftError) * dVal + leftactV * v_Pval;
-    double rightSpeed = rightError * pVal + (rightError - lastRightError) * dVal + rightactV * v_Pval;
+    double headingError = futureDataToBeReplayed[VincentRotation] - Vincent.get_rotation();
+    
+    double leftSpeed = leftError * pVal + (leftError - lastLeftError) * dVal + leftactV * v_Pval + headingError * headingPval;
+    double rightSpeed = rightError * pVal + (rightError - lastRightError) * dVal + rightactV * v_Pval - headingError * headingPval;
 
     lastLeftError = leftError;
     lastRightError = rightError;
@@ -481,8 +485,8 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     Bongo.Movement.moveLeftVolt(leftSpeed);
     Bongo.Movement.moveRightVolt(rightSpeed);
 
-    printf("leftSpeed: %f\n", leftSpeed);
-    printf("rightSpeed: %f\n", rightSpeed);
+    //printf("leftSpeed: %f\n", leftSpeed);
+    //printf("rightSpeed: %f\n", rightSpeed);
 
 
     controllerVals(dataToBeReplayed, futureDataToBeReplayed, false, true);
@@ -534,12 +538,30 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
     }
     printf("Total leftError: %f\n", leftErrorScore);
     printf("Total rightError: %f\n", rightErrorScore);
+    printf("Total LarmError: %f\n", Bongo.Lift.LarmError);
+    printf("Total RarmError: %f\n", Bongo.Lift.RarmError);
+    printf("Total ClawError: %f\n", Bongo.Lift.ClawError);
+
 
 }
 
 void resetErrors(){
+    printf("Reseting all values\n");
     leftErrorScore = 0;
     rightErrorScore = 0;
+    FL.tare_position();
+    FR.tare_position();
+    BL.tare_position();
+    BR.tare_position();
+    Larm.tare_position();
+    Rarm.tare_position();
+    Claw.tare_position();
+    leftOdom.reset();
+    rightOdom.reset();
+    Vincent.tare_rotation();
+    Wrist.tare_rotation();
+
+
 }
 
 void learnEncoder(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){

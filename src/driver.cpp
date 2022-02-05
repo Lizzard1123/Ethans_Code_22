@@ -31,7 +31,8 @@ void opcontrol()
             //if(!hasRecorded()){
             //    startRecording();
             //}
-            Bongo.autonomous();
+            //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
+            //Bongo.autonomous();
         }
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
@@ -85,26 +86,26 @@ void opcontrol()
             Bongo.Pneumatics.toggleBack();
         }
 
-        //Toggle level
-        if (master.get_digital_new_press(DIGITAL_LEFT)){
-            Bongo.Lift.toggleAutoLevel();
-        }
-
-        if (master.get_digital_new_press(DIGITAL_DOWN)){
-            //RingleLift.move_relative(-360, 50);
-            Bongo.testOdom();
-        }
-
-        if(master.get_digital_new_press(DIGITAL_UP)){
-            //Bongo.Pneumatics.toggleRingles();
-            Bongo.testOdom2();
-        }
-
-        if(master.get_digital_new_press(DIGITAL_RIGHT)){
-            //Bongo.setRotation(0);
-            //Bongo.testOdom3();
-            Bongo.PIDClimb();
-        }
+        ////Toggle level
+        //if (master.get_digital_new_press(DIGITAL_LEFT)){
+        //    //Bongo.Lift.toggleAutoLevel();
+        //}
+//
+        //if (master.get_digital_new_press(DIGITAL_DOWN)){
+        //    //RingleLift.move_relative(-360, 50);
+        //    Bongo.testOdom();
+        //}
+//
+        //if(master.get_digital_new_press(DIGITAL_UP)){
+        //    //Bongo.Pneumatics.toggleRingles();
+        //    Bongo.testOdom2();
+        //}
+//
+        //if(master.get_digital_new_press(DIGITAL_RIGHT)){
+        //    //Bongo.setRotation(0);
+        //    //Bongo.testOdom3();
+        //    Bongo.PIDClimb();
+        //}
 
         // starts the spin on motors or cuts power
         Bongo.Movement.move();
