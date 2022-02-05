@@ -24,16 +24,20 @@ void opcontrol()
     //ADIDigitalOut backLock('H');
     master.print(0, 8, "Player 1");
     Bongo.Lift.stopPIDArm();
+    startRecording();
+    Bongo.Pneumatics.tiltRelease();
+    Bongo.Pneumatics.backRelease();
+    Bongo.Pneumatics.clawRelease();
     while (true)
-    {
-        
-        if(master.get_digital_new_press(DIGITAL_LEFT)){
-            //if(!hasRecorded()){
-            //    startRecording();
-            //}
-            //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
-            //Bongo.autonomous();
-        }
+    {//
+        //
+        //if(master.get_digital_new_press(DIGITAL_LEFT)){
+        //    //if(!hasRecorded()){
+        //    //    startRecording();
+        //    //}
+        //    //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
+        //    //Bongo.autonomous();
+        //}
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             printf("Triggered\n");

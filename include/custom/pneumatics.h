@@ -34,12 +34,12 @@ public:
     }
 
     void tiltGrab(){
-        tiltLock.set_value(LOW);
+        tiltLock.set_value(HIGH);
         tiltToggled = true;
     }
 
     void tiltRelease(){
-        tiltLock.set_value(HIGH);
+        tiltLock.set_value(LOW);
         tiltToggled = false;
     }
 
