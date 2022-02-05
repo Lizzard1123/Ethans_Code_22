@@ -36,6 +36,7 @@ double lastRightError = 0;
 double leftErrorScore = 0;
 double rightErrorScore = 0;
 
+double learnPval = 15;
 
 //set all in replayData to 0
 void fillEmpty(){ 
@@ -460,7 +461,7 @@ void checkRightError(double setPoint){
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
-    double pVal = 15;
+    double pVal = learnPval;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
     //errors
@@ -534,6 +535,38 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
     printf("Total leftError: %f\n", leftErrorScore);
     printf("Total rightError: %f\n", rightErrorScore);
 
+}
+
+void resetErrors(){
+    leftErrorScore = 0;
+    rightErrorScore = 0;
+}
+
+void learnEncoder(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){
+    double incriment  = .5;
+    bool increase = true;
+    double lastLeftError = 0;
+    double lastRightError = 0;
+    while(true){
+        executeData(dataToBeReplayed, dataLength, dataTime);
+        double totalError = leftErrorScore + rightErrorScore;
+        double lastTotalError = lastLeftError + lastRightError;
+        if(totalError > lastTotalError){
+            printf("Higher Error, switching increase/decrease \n");
+            increase = !increase;
+        } else if (totalError < lastTotalError){
+            printf("Lower Error\n");
+        } else {
+            printf("Somehow it was perfect\n");
+            printf("Pval: %f", learnPval);
+            break;
+        }
+        learnPval += incriment * (increase?1:-1);
+        printf("New Pval: %f\n", learnPval);
+        lastLeftError = leftErrorScore;
+        lastRightError = rightErrorScore;
+        resetErrors();
+    }
 }
 
 bool isRecording(){
