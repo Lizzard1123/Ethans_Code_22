@@ -91,15 +91,18 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define FRVolt 43
 #define BLVolt 44
 #define BRVolt 45
+#define LarmVolt 46
+#define RarmVolt 47
+#define ClawVolt 48
 
-#define VincentRotation 46
-#define WristPitch 47
-#define VincentPitch 48
+#define VincentRotation 49
+#define WristPitch 50
+#define VincentPitch 51
 
-#define recordedX 49
-#define recordedY 50
+#define recordedX 52
+#define recordedY 53
 
-#define MaxRecords 51
+#define MaxRecords 54
 
 
 extern void fillEmpty();

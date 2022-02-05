@@ -141,10 +141,8 @@ public:
         double lastError;
         double target = Vincent.get_pitch();
         //lineup and push down
-        Lift.moveArmToPos(Lift.leftMin, Lift.rightMin);
         delay(1500);
         moveForwardTimed(.5,50);
-        Lift.moveArmToPos(Lift.leftMax, Lift.rightMax);
         delay(600000);
         delay(500);
         while(true){

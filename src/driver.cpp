@@ -23,7 +23,7 @@ void opcontrol()
     //ADIDigitalOut tiltLock('G');
     //ADIDigitalOut backLock('H');
     master.print(0, 8, "Player 1");
-    
+    Bongo.Lift.stopPIDArm();
     while (true)
     {
         

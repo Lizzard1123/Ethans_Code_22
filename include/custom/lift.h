@@ -1,6 +1,7 @@
 #ifndef LIFT
 #define LIFT
 #include "math.h"
+#include "auton.h"
 class LiftClass
 {
 private:
@@ -29,7 +30,11 @@ private:
     double CPval = 3;
     double clawOffset = 0;
     double clawIncrease = 2;
-    bool autonMoving = false;
+
+    double moveClawPval = 15;
+    double moveArmPval = 15;
+
+    bool PIDControl = true;
     
 public:
     Math myMath;
@@ -75,12 +80,19 @@ public:
         return error * CPval;
     }
 
-    void moveArmToPos(double left, double right){
-        autonMoving = true;
-        Larm.move_absolute(left, 50);
-        Rarm.move_absolute(right, 50);
+    void setPID(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
+        PIDControl = true;
+        //left Arm
+        Larm.move_voltage(dataToBeReplayed[LarmVolt] + (futureDataToBeReplayed[LarmPosition] - Larm.get_position()) * moveArmPval);
+        //right Arm
+        Rarm.move_voltage(dataToBeReplayed[RarmVolt] + (futureDataToBeReplayed[RarmPosition] - Rarm.get_position()) * moveArmPval);
+        //Claw
+        Claw.move_voltage(dataToBeReplayed[ClawVolt] + (futureDataToBeReplayed[ClawPosition] - Claw.get_position()) * moveClawPval);
     }
     
+    void stopPIDArm(){
+        PIDControl = false;
+    }
 
     void update(){
         //level();
@@ -89,15 +101,19 @@ public:
         } else {
             Claw.move_velocity(clawSpeed);
         }
-        if(!autonMoving){
-            if(!leftSwitch.get_value() && LarmLiftSpeed < 0){
+        if(!PIDControl){
+            if(Larm.get_position() <= 0 && LarmLiftSpeed < 0){
                 Larm.move_velocity(LarmLiftSpeed);
-                Rarm.move_velocity(RarmLiftSpeed);
-            } else if (RarmLiftSpeed > 0){
+            } else if (RarmLiftSpeed >= 0){
                 Larm.move_velocity(LarmLiftSpeed);
-                Rarm.move_velocity(RarmLiftSpeed); 
             } else {
                 Larm.move_velocity(0);
+            }
+            if(Rarm.get_position() <= 0 && RarmLiftSpeed < 0){
+                Rarm.move_velocity(RarmLiftSpeed);
+            } else if (RarmLiftSpeed >= 0){
+                Rarm.move_velocity(RarmLiftSpeed); 
+            } else {
                 Rarm.move_velocity(0);
             }
         }

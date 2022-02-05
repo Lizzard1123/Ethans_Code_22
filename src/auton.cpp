@@ -105,6 +105,9 @@ void setData(){
         replayData[currentDataLine][FRVolt] = FR.get_voltage();
         replayData[currentDataLine][BLVolt] = BL.get_voltage();
         replayData[currentDataLine][BRVolt] = BR.get_voltage();
+        replayData[currentDataLine][LarmVolt] = Larm.get_voltage();
+        replayData[currentDataLine][RarmVolt] = Rarm.get_voltage();
+        replayData[currentDataLine][ClawVolt] = Claw.get_voltage();
         replayData[currentDataLine][VincentRotation] = Vincent.get_rotation();
         replayData[currentDataLine][WristPitch] = Wrist.get_pitch();
         replayData[currentDataLine][VincentPitch] = Vincent.get_pitch();
@@ -183,6 +186,9 @@ void setDataToSd(){
             lineData[FRVolt] = FR.get_voltage();
             lineData[BLVolt] = BL.get_voltage();
             lineData[BRVolt] = BR.get_voltage();
+            lineData[LarmVolt] = Larm.get_voltage();
+            lineData[RarmVolt] = Rarm.get_voltage();
+            lineData[ClawVolt] = Claw.get_voltage();
             lineData[VincentRotation] = Vincent.get_rotation();
             lineData[WristPitch] = Wrist.get_pitch();
             lineData[VincentPitch] = Vincent.get_pitch();
@@ -388,7 +394,12 @@ void printDataToSD(){
     }
 }
 
-void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
+void setPIDSForSubs(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
+    Bongo.Lift.setPID(dataToBeReplayed, futureDataToBeReplayed);
+
+}
+
+void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords], bool useDrive, bool usePos){
     //DRIVE CODE
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
@@ -399,23 +410,27 @@ void controllerVals(double dataToBeReplayed[MaxRecords], bool useDrive = true){
         BL.move_voltage(dataToBeReplayed[BLVolt]);
         BR.move_voltage(dataToBeReplayed[BRVolt]);
     }*/
-    //manual powering 
-    if ((int)dataToBeReplayed[L2ButtonDigital]){
-        Bongo.Lift.liftDown(); //manually pushes arm down at max torque
-    } else if ((int)dataToBeReplayed[L1ButtonDigital]){
-        Bongo.Lift.liftUp(); //manually lifts arm with max torque
-    } else {
-        Bongo.Lift.stopArm(); //stops manual controll
-    }
+    if(!usePos){
+        //manual powering 
+        if ((int)dataToBeReplayed[L2ButtonDigital]){
+            Bongo.Lift.liftDown(); //manually pushes arm down at max torque
+        } else if ((int)dataToBeReplayed[L1ButtonDigital]){
+            Bongo.Lift.liftUp(); //manually lifts arm with max torque
+        } else {
+            Bongo.Lift.stopArm(); //stops manual controll
+        }
 
-    if ((int)dataToBeReplayed[R2ButtonDigital]){
-        Bongo.Lift.clawDown(); //manually pushes claw down at max torque
-        //skillsLift.setAutoLevel(false);
-    } else if ((int)dataToBeReplayed[R1ButtonDigital]){
-        Bongo.Lift.clawUp(); //manually lifts claw with max torque
-        //skillsLift.setAutoLevel(false);
+        if ((int)dataToBeReplayed[R2ButtonDigital]){
+            Bongo.Lift.clawDown(); //manually pushes claw down at max torque
+            //skillsLift.setAutoLevel(false);
+        } else if ((int)dataToBeReplayed[R1ButtonDigital]){
+            Bongo.Lift.clawUp(); //manually lifts claw with max torque
+            //skillsLift.setAutoLevel(false);
+        } else {
+            Bongo.Lift.stopClaw(); //stops manual controll
+        }
     } else {
-        Bongo.Lift.stopClaw(); //stops manual controll
+        setPIDSForSubs(dataToBeReplayed, futureDataToBeReplayed);
     }
 
     if ((int)dataToBeReplayed[AButtonPress]){
@@ -444,13 +459,13 @@ void checkRightError(double setPoint){
     rightErrorScore += setPoint - rightOdom.get();
 }
 
-void encoderVals(double dataToBeReplayed[MaxRecords]){
+void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
     double pVal = 15;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
     //errors
-    double leftError = dataToBeReplayed[leftOdomPosition] - leftOdom.get();
-    double rightError = dataToBeReplayed[rightOdomPosition] - rightOdom.get();
+    double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();
+    double rightError = futureDataToBeReplayed[rightOdomPosition] - rightOdom.get();
 
     double leftactV = dataToBeReplayed[FLVolt] + dataToBeReplayed[BLVolt];
     double rightactV = dataToBeReplayed[FRVolt] + dataToBeReplayed[BRVolt];
@@ -469,7 +484,7 @@ void encoderVals(double dataToBeReplayed[MaxRecords]){
     printf("rightSpeed: %f\n", rightSpeed);
 
 
-    controllerVals(dataToBeReplayed,false);
+    controllerVals(dataToBeReplayed, futureDataToBeReplayed, false, true);
 
     checkLeftError(dataToBeReplayed[leftOdomPosition]);
     checkRightError(dataToBeReplayed[rightOdomPosition]);
@@ -495,15 +510,15 @@ void runSparseSegment(double dataToBeReplayed[][3], int dataLength, int timeToRu
     }
 
     //DRIVE CODE
-    controllerVals(dataLine);
+    //controllerVals(dataLine, true); fix with encoders
 }
 
 //returns last index, runs motor values 
-void runSegment(double dataToBeReplayed[MaxRecords]){
+void runSegment(double dataToBeReplayed[][MaxRecords], int index){
     //run off of controller values
     //controllerVals(dataToBeReplayed, false);
     //run off of encoderPID
-    encoderVals(dataToBeReplayed);
+    encoderVals(dataToBeReplayed[index], dataToBeReplayed[index+1]);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){
@@ -513,7 +528,7 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
     for(int i = 0; i < dataTime; i++){
         //printf("running line: %f\n", (double)i);
         //printf("total: %f\n", (double)dataLength);
-        runSegment(dataToBeReplayed[i]); //similate inputs 
+        runSegment(dataToBeReplayed, i); //similate inputs 
         delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
     }
     printf("Total leftError: %f\n", leftErrorScore);
