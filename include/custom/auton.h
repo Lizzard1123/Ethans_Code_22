@@ -133,7 +133,9 @@ extern bool hasRecorded();
 
 extern void setDataToSd();
 
-#define skills_dataLength 600
+extern void learnEncoder(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime);
+
+#define skills_dataLength 300
 
 extern int skillsDataTime;
 

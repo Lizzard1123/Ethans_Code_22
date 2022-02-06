@@ -26,15 +26,15 @@ private:
     double armMaxTorque = 1.05;
     double clawMaxTorque = 2.1;
 
-    bool autoLevel = false;
+    bool autoLevel = true;
     double CPval = 3;
     double clawOffset = 0;
-    double clawIncrease = 2;
+    double clawIncrease = 6;
 
     double moveClawPval = 15;
     double moveArmPval = 15;
 
-    bool PIDControl = true;
+    bool PIDControl = false;
     
 public:
     Math myMath;
@@ -42,6 +42,11 @@ public:
     double rightMax = -1643;
     double leftMin = -214;
     double rightMin = -203;
+
+    double ClawError = 0;
+    double LarmError = 0;
+    double RarmError = 0;
+
     //stops motor
     void stopAll()
     {
@@ -67,7 +72,7 @@ public:
     //} 1134 degrees / 3951 analog vals
 
     void toggleAutoLevel(){
-        autoLevel = !autoLevel;
+        //autoLevel = !autoLevel;
         clawOffset = 0;
     }
 
@@ -88,6 +93,10 @@ public:
         Rarm.move_voltage(dataToBeReplayed[RarmVolt] + (futureDataToBeReplayed[RarmPosition] - Rarm.get_position()) * moveArmPval);
         //Claw
         Claw.move_voltage(dataToBeReplayed[ClawVolt] + (futureDataToBeReplayed[ClawPosition] - Claw.get_position()) * moveClawPval);
+
+        LarmError += dataToBeReplayed[LarmPosition] - Larm.get_position();
+        RarmError += dataToBeReplayed[RarmPosition] - Rarm.get_position();
+        ClawError += dataToBeReplayed[ClawPosition] + Claw.get_position();
     }
     
     void stopPIDArm(){
@@ -96,22 +105,22 @@ public:
 
     void update(){
         //level();
-        if(autoLevel){
-            Claw.move_velocity(autoLevelClaw());
-        } else {
-            Claw.move_velocity(clawSpeed);
-        }
+        //if(autoLevel){
+        //    Claw.move_velocity(autoLevelClaw());
+        //} else {
+        //    Claw.move_velocity(clawSpeed);
+        //}
         if(!PIDControl){
-            if(Larm.get_position() <= 0 && LarmLiftSpeed < 0){
+            if(Larm.get_position() >= 0 && LarmLiftSpeed < 0){
                 Larm.move_velocity(LarmLiftSpeed);
-            } else if (RarmLiftSpeed >= 0){
+            } else if (RarmLiftSpeed > 0){
                 Larm.move_velocity(LarmLiftSpeed);
             } else {
                 Larm.move_velocity(0);
             }
-            if(Rarm.get_position() <= 0 && RarmLiftSpeed < 0){
+            if(Rarm.get_position() >= 0 && RarmLiftSpeed < 0){
                 Rarm.move_velocity(RarmLiftSpeed);
-            } else if (RarmLiftSpeed >= 0){
+            } else if (RarmLiftSpeed > 0){
                 Rarm.move_velocity(RarmLiftSpeed); 
             } else {
                 Rarm.move_velocity(0);
@@ -152,17 +161,21 @@ public:
     }
 
     void clawUp(){
-        //clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        //Claw.move_velocity(clawSpeed);
-        clawOffset+=clawIncrease;
-        clawSpeed = defaultClawSpeed;
+        clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        Claw.move_velocity(clawSpeed);
+        //if(clawOffset <= 70){
+        //    clawOffset+=clawIncrease;
+        //}
+        //clawSpeed = defaultClawSpeed;
     }
  
     void clawDown(){
-        //clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        //Claw.move_velocity(clawSpeed);
-        clawOffset-=clawIncrease;
-        clawSpeed = -defaultClawSpeed;
+        clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        Claw.move_velocity(clawSpeed);
+        //if(clawOffset >= -80){
+        //    clawOffset-=clawIncrease;
+        //}
+        //clawSpeed = -defaultClawSpeed;
     }
 
 
