@@ -101,6 +101,8 @@ void setData(){
         replayData[currentDataLine][LarmPosition] = Larm.get_position();
         replayData[currentDataLine][RarmPosition] = Rarm.get_position();
         replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
+        replayData[currentDataLine][leftOdomPosition] = leftOdom.get();
+
 
         replayData[currentDataLine][FLVolt] = FL.get_voltage();
         replayData[currentDataLine][FRVolt] = FR.get_voltage();
