@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 60; // in seconds
+const int recordTime = 15; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -146,30 +146,30 @@ void setDataToSd(){
             lineData[LYDataNum] = master.get_analog(ANALOG_LEFT_Y);
             lineData[RXDataNum] = master.get_analog(ANALOG_RIGHT_X);
             lineData[RYDataNum] = master.get_analog(ANALOG_RIGHT_Y);
-            lineData[upArrowDigital] = master.get_digital(DIGITAL_UP);
-            lineData[rightArrowDigital] = master.get_digital(DIGITAL_RIGHT);
-            lineData[downArrowDigital] = master.get_digital(DIGITAL_DOWN);
-            lineData[leftArrowDigital] = master.get_digital(DIGITAL_LEFT);
-            lineData[upArrowPress] = master.get_digital_new_press(DIGITAL_UP);
-            lineData[rightArrowPress] = master.get_digital_new_press(DIGITAL_RIGHT);
-            lineData[downArrowPress] = master.get_digital_new_press(DIGITAL_DOWN);
-            lineData[leftArrowPress] = master.get_digital_new_press(DIGITAL_LEFT);
-            lineData[XButtonDigital] = master.get_digital(DIGITAL_X);
-            lineData[AButtonDigital] = master.get_digital(DIGITAL_A);
-            lineData[BButtonDigital] = master.get_digital(DIGITAL_B);
-            lineData[YButtonDigital] = master.get_digital(DIGITAL_Y);
-            lineData[XButtonPress] = master.get_digital_new_press(DIGITAL_X);
-            lineData[AButtonPress] = master.get_digital_new_press(DIGITAL_A);
-            lineData[BButtonPress] = master.get_digital_new_press(DIGITAL_B);
-            lineData[YButtonPress] = master.get_digital_new_press(DIGITAL_Y);
-            lineData[L1ButtonDigital] = master.get_digital(DIGITAL_L1);
-            lineData[L2ButtonDigital] = master.get_digital(DIGITAL_L2);
-            lineData[R1ButtonDigital] = master.get_digital(DIGITAL_R1);
-            lineData[R2ButtonDigital] = master.get_digital(DIGITAL_R2);
-            lineData[L1ButtonPress] = master.get_digital_new_press(DIGITAL_L1);
-            lineData[L2ButtonPress] = master.get_digital_new_press(DIGITAL_L2);
-            lineData[R1ButtonPress] = master.get_digital_new_press(DIGITAL_R1);
-            lineData[R2ButtonPress] = master.get_digital_new_press(DIGITAL_R2);
+            lineData[upArrowDigital] = (double)master.get_digital(DIGITAL_UP);
+            lineData[rightArrowDigital] = (double)master.get_digital(DIGITAL_RIGHT);
+            lineData[downArrowDigital] = (double)master.get_digital(DIGITAL_DOWN);
+            lineData[leftArrowDigital] = (double)master.get_digital(DIGITAL_LEFT);
+            lineData[upArrowPress] = (double)master.get_digital_new_press(DIGITAL_UP);
+            lineData[rightArrowPress] = (double)master.get_digital_new_press(DIGITAL_RIGHT);
+            lineData[downArrowPress] = (double)master.get_digital_new_press(DIGITAL_DOWN);
+            lineData[leftArrowPress] = (double)master.get_digital_new_press(DIGITAL_LEFT);
+            lineData[XButtonDigital] = (double)master.get_digital(DIGITAL_X);
+            lineData[AButtonDigital] = (double)master.get_digital(DIGITAL_A);
+            lineData[BButtonDigital] = (double)master.get_digital(DIGITAL_B);
+            lineData[YButtonDigital] = (double)master.get_digital(DIGITAL_Y);
+            lineData[XButtonPress] = (double)master.get_digital_new_press(DIGITAL_X);
+            lineData[AButtonPress] = (double)master.get_digital_new_press(DIGITAL_A);
+            lineData[BButtonPress] = (double)master.get_digital_new_press(DIGITAL_B);
+            lineData[YButtonPress] = (double)master.get_digital_new_press(DIGITAL_Y);
+            lineData[L1ButtonDigital] = (double)master.get_digital(DIGITAL_L1);
+            lineData[L2ButtonDigital] = (double)master.get_digital(DIGITAL_L2);
+            lineData[R1ButtonDigital] = (double)master.get_digital(DIGITAL_R1);
+            lineData[R2ButtonDigital] = (double)master.get_digital(DIGITAL_R2);
+            lineData[L1ButtonPress] = (double)master.get_digital_new_press(DIGITAL_L1);
+            lineData[L2ButtonPress] = (double)master.get_digital_new_press(DIGITAL_L2);
+            lineData[R1ButtonPress] = (double)master.get_digital_new_press(DIGITAL_R1);
+            lineData[R2ButtonPress] = (double)master.get_digital_new_press(DIGITAL_R2);
             //custom
             lineData[FLActualVelocity] = FL.get_actual_velocity();
             lineData[FRActualVelocity] = FR.get_actual_velocity();
@@ -435,21 +435,50 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
     } else {
         setPIDSForSubs(dataToBeReplayed, futureDataToBeReplayed);
     }
-
-    if ((int)dataToBeReplayed[AButtonPress]){
+    /*
+    printf("Clawe val: %i\n", (int)dataToBeReplayed[AButtonPress]);
+    if ((int)dataToBeReplayed[AButtonPress] == 1){
+        printf("Triggered claw\n");
         Bongo.Pneumatics.toggleClaw();
     }
-    if ((int)dataToBeReplayed[XButtonPress]){
+    if ((int)dataToBeReplayed[XButtonPress] == 1){
         Bongo.Pneumatics.toggletilt();
     }
-    if ((int)dataToBeReplayed[YButtonPress]){
+    if ((int)dataToBeReplayed[YButtonPress] == 1){
         Bongo.Pneumatics.toggleBack();
     }
-    if ((int)dataToBeReplayed[downArrowPress]){
+    if ((int)dataToBeReplayed[downArrowPress] == 1){
         RingleLift.move_relative(-360, 50);
     }
-    if((int)dataToBeReplayed[upArrowPress]){
+    if((int)dataToBeReplayed[upArrowPress] == 1){
         Bongo.Pneumatics.toggleRingles();
+    }
+    */
+
+    if ((int)dataToBeReplayed[AButtonDigital] == 1){
+        //printf("Triggered claw\n");
+        //Bongo.Pneumatics.toggleClaw();
+        Bongo.Pneumatics.clawGrab();
+    } else {
+        Bongo.Pneumatics.clawRelease();
+    }
+    if ((int)dataToBeReplayed[XButtonDigital] == 1){
+        //Bongo.Pneumatics.toggletilt();
+        Bongo.Pneumatics.tiltGrab();
+    } else {
+        Bongo.Pneumatics.tiltRelease();
+    }
+    if ((int)dataToBeReplayed[YButtonDigital] == 1){
+        //Bongo.Pneumatics.toggleBack();
+        Bongo.Pneumatics.backGrab();
+    } else {
+        Bongo.Pneumatics.backGrab();
+    }
+    if ((int)dataToBeReplayed[downArrowDigital] == 1){
+        //RingleLift.move_relative(-360, 50);
+    }
+    if((int)dataToBeReplayed[upArrowDigital] == 1){
+        //Bongo.Pneumatics.toggleRingles();
     }
 
 }
@@ -472,11 +501,11 @@ double maxVoltage(double checkVolt){
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
-    double pVal = 100;
+    double pVal = 60;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
 
-    double headingPval = 1000;
+    double headingPval = 150;
 
     //errors
     double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();
@@ -494,8 +523,8 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     lastRightError = rightError;
 
 
-    Bongo.Movement.moveLeftVolt(maxVoltage(leftSpeed));
-    Bongo.Movement.moveRightVolt(maxVoltage(rightSpeed));
+    Bongo.Movement.moveLeftVolt(leftSpeed);
+    Bongo.Movement.moveRightVolt(rightSpeed);
 
     //printf("leftSpeed: %f\n", leftSpeed);
     //printf("rightSpeed: %f\n", rightSpeed);
