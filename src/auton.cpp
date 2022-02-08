@@ -462,12 +462,21 @@ void checkRightError(double setPoint){
     rightErrorScore += setPoint + rightOdom.get();
 }
 
+double maxVoltage(double checkVolt){
+    if(checkVolt > 12000){
+        return 12000;
+    } else if (checkVolt < 12000){
+        return -12000;
+    }
+    return checkVolt;
+}
+
 void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
-    double pVal = 60;
+    double pVal = 100;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
 
-    double headingPval = 150;
+    double headingPval = 1000;
 
     //errors
     double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();
@@ -484,8 +493,9 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     lastLeftError = leftError;
     lastRightError = rightError;
 
-    Bongo.Movement.moveLeftVolt(leftSpeed);
-    Bongo.Movement.moveRightVolt(rightSpeed);
+
+    Bongo.Movement.moveLeftVolt(maxVoltage(leftSpeed));
+    Bongo.Movement.moveRightVolt(maxVoltage(rightSpeed));
 
     //printf("leftSpeed: %f\n", leftSpeed);
     //printf("rightSpeed: %f\n", rightSpeed);

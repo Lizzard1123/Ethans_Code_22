@@ -29,6 +29,12 @@ public:
     }
     return check * (speed / 100) * gearRatio;
   }
+  
+  double toVolt(bool reverse, bool speed){
+  int check = (reverse) ? -1 : 1;
+  return check * (speed / 100) * 12000;
+  
+  }
 
   // returns sum of all vals in array
   double sumOf(int length, double nums[]) {

@@ -112,8 +112,8 @@ void opcontrol()
         //}
 
         // starts the spin on motors or cuts power
-        Bongo.Movement.move();
-        
+        //Bongo.Movement.move();
+        Bongo.Movement.moveVolt();
         //delay between updates
 
         setDataToSd();
