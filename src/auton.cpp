@@ -112,7 +112,7 @@ void setData(){
         replayData[currentDataLine][RarmVolt] = Rarm.get_voltage();
         replayData[currentDataLine][ClawVolt] = Claw.get_voltage();
         replayData[currentDataLine][VincentRotation] = Vincent.get_rotation();
-        replayData[currentDataLine][WristPitch] = Wrist.get_pitch();
+        replayData[currentDataLine][WristRotation] = Wrist.get_pitch();
         replayData[currentDataLine][VincentPitch] = Vincent.get_pitch();
         replayData[currentDataLine][recordedX] = Bongo.getX();
         replayData[currentDataLine][recordedY] = Bongo.getY();
@@ -193,7 +193,7 @@ void setDataToSd(){
             lineData[RarmVolt] = Rarm.get_voltage();
             lineData[ClawVolt] = Claw.get_voltage();
             lineData[VincentRotation] = Vincent.get_rotation();
-            lineData[WristPitch] = Wrist.get_pitch();
+            lineData[WristRotation] = Wrist.get_rotation();
             lineData[VincentPitch] = Vincent.get_pitch();
             lineData[recordedX] = Bongo.getX();
             lineData[recordedY] = Bongo.getY();
@@ -467,7 +467,7 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
 
-    double headingPval = 45;
+    double headingPval = 150;
 
     //errors
     double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();

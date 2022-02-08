@@ -96,7 +96,7 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define ClawVolt 48
 
 #define VincentRotation 49
-#define WristPitch 50
+#define WristRotation 50
 #define VincentPitch 51
 
 #define recordedX 52
@@ -135,7 +135,7 @@ extern void setDataToSd();
 
 extern void learnEncoder(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime);
 
-#define skills_dataLength 300
+#define skills_dataLength 1200
 
 extern int skillsDataTime;
 

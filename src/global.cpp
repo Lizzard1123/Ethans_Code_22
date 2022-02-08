@@ -68,8 +68,8 @@ ADIDigitalIn leftSwitch('H');
 //ADIAnalogIn rightArmPot('F');
 
 // Odom 
-okapi::ADIEncoder  rightOdom('A', 'B', true); //true
-okapi::ADIEncoder  leftOdom('C', 'D', true); //true
+okapi::ADIEncoder  rightOdom('C', 'D', true); //true
+okapi::ADIEncoder  leftOdom('A', 'B', false); //true
 //okapi::ADIEncoder  middleOdom('a', 'b', false);
 
 // Staic defines

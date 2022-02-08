@@ -14,7 +14,7 @@
  * task, not resume it from where it left off.
  */
  //test from phone
-
+int count = 0;
 
 void opcontrol()
 {
@@ -24,20 +24,20 @@ void opcontrol()
     //ADIDigitalOut backLock('H');
     master.print(0, 8, "Player 1");
     Bongo.Lift.stopPIDArm();
-    startRecording();
+    //startRecording();
     Bongo.Pneumatics.tiltRelease();
     Bongo.Pneumatics.backRelease();
     Bongo.Pneumatics.clawRelease();
     while (true)
     {//
         //
-        //if(master.get_digital_new_press(DIGITAL_LEFT)){
-        //    //if(!hasRecorded()){
-        //    //    startRecording();
-        //    //}
-        //    //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
-        //    //Bongo.autonomous();
-        //}
+        if(master.get_digital_new_press(DIGITAL_LEFT)){
+            //if(!hasRecorded()){
+            //    startRecording();
+            //}
+            //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
+            Bongo.autonomous();
+        }
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
             printf("Triggered\n");
@@ -119,11 +119,19 @@ void opcontrol()
         setDataToSd();
         finalizeData();
         //FL:FR:BL:BR:Rarm:Larm:Claw
-        //std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
-        //master.set_text(1, 0, values);
-        std::string values = std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
-        master.set_text(2, 0, values);
+        if(count%2 == 0){
+            std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+            master.set_text(0, 0, values);
+        } else if(count%3 == 1){
+            std::string odomvalues = std::__cxx11::to_string(int(leftOdom.get())) + ":" +  std::__cxx11::to_string(int(rightOdom.get()));
+            master.set_text(1, 0, odomvalues);
+        } else {
+            master.clear();
+        }
+        count++;
+        
+        
         delay(driverSpeed);
-        //master.clear();
+        
     }
 }

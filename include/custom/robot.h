@@ -357,14 +357,13 @@ public:
             leftOdomVal = leftOdom.get();
             rightOdomDist = myMath.toInch(rightOdomVal - lastRightOdomVal, wheelCircumfrence);
             leftOdomDist = myMath.toInch(leftOdomVal - lastLeftOdomVal, wheelCircumfrence);
-            double changeHeading = head - Vincent.get_rotation();
-            double moveDist = leftOdomDist - (leftOdomDist * (changeHeading * M_PI / 180)); //(rightOdomDist + leftOdomDist) / 2;
-            totalForwardMovement += rightOdomVal;
+            double moveDist = (leftOdomDist + rightOdomDist) / 2; //(rightOdomDist + leftOdomDist) / 2;
+            totalForwardMovement += moveDist;
 
             //printf("h %f \n", head);
             //printf("v %f \n", rightOdomVal);
                 // YWhee
-            Y += moveDist * cos(head * M_PI / 180);
+            Y -= moveDist * cos(head * M_PI / 180);
             X += moveDist * sin(head * M_PI / 180);
 
             //debug
@@ -378,10 +377,10 @@ public:
             lastLeftOdomVal = leftOdomVal;
             head = Vincent.get_rotation();
             rotation = head;
-            std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
-            master.set_text(1, 0, values);
-            values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
-            master.set_text(2, 0, values);
+            //std::string values = std::__cxx11::to_string(int(FL.get_temperature())) + ":" +  std::__cxx11::to_string(int(FR.get_temperature())) + ":" +  std::__cxx11::to_string(int(BL.get_temperature())) + ":" +  std::__cxx11::to_string(int(BR.get_temperature())) + ":" +  std::__cxx11::to_string(int(Rarm.get_temperature())) + ":" +  std::__cxx11::to_string(int(Larm.get_temperature())) + ":" + std::__cxx11::to_string(int(Claw.get_temperature()));
+            //master.set_text(1, 0, values);
+            //values = std::__cxx11::to_string(int(leftSwitch.get_value())) + ":" +  std::__cxx11::to_string(int(rightOdom.get())) + ":" +  std::__cxx11::to_string(int(leftOdom.get()));
+            //master.set_text(2, 0, values);
             c::task_delay(posDelay);
         }
     }
