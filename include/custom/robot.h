@@ -119,7 +119,7 @@ public:
 
     void autonomous(){
         //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(4, false, false);
+        Autonomous(2, false, false);
     }
 
     void catieControl(){
@@ -561,117 +561,17 @@ public:
     }
 
     void AutonomousOne(bool isLeft, bool isBlue){
-        if(isLeft){
-            Claw.move_relative(-400, 100);
-            Pneumatics.clawRelease();
-            //race
-            moveForwardTimed(1.4);
-            Pneumatics.clawGrab();
-            //drop turn lift manuver
-            totalForwardMovement = 0;
-            moveBackwardTimed(1.60);
-            //check for tugging
-            while(totalForwardMovement > -20){
-                moveBackwardTimed(.25);
-            }
-            Pneumatics.clawRelease();
-            moveBackwardTimed(.15);
-            Lift.liftUp();
-            delay(1500);
-            Lift.stopAll();
-            //sus code
-            PIDTurn(rotation - 100);
-            //strafe left to wall
-            strafeTimed(1.4, false, 50);
-            //right
-            strafeTimed(.4, true, 50);
-            
-            //rotate and grab
-            Pneumatics.toggletilt();
-            
-            moveBackwardTimed(1, 30);
-            Pneumatics.toggleRingles();
-            Pneumatics.toggleBack();
-            delay(100);
-            Pneumatics.toggletilt();
-            moveForwardTimed(2, 30);
-            moveBackwardTimed(2, 30);
-            moveForwardTimed(2, 30);
-            moveBackwardTimed(2, 30);
-        } else { //right small
-            Claw.move_relative(-400, 100);
-            Pneumatics.clawRelease();
-            //forward
-            moveForwardTimed(1.3);
-            Pneumatics.clawGrab();
-
-            totalForwardMovement = 0;
-            moveBackwardTimed(.3);
-
-            //check for tugging
-            while(totalForwardMovement > -4){
-                moveBackwardTimed(.25);
-            }
-            
-            //delay(1000000); //check rotation
-
-            //turn and drop
-            //PIDTurn(-90);
-
-            //double turnTime = .6;
-            setRotation(0);
-            PIDTurn(-100);
-            //turnTimed(turnTime,  false, 50); //turn right
-            Pneumatics.clawRelease();
-            Lift.liftUp();
-
-            //rotate and grab
-            Pneumatics.toggletilt();
-            Pneumatics.toggleRingles();
-            moveBackwardTimed(1.5, 50);
-            Pneumatics.toggleBack();
-            Pneumatics.toggletilt();
-            
-            //move to line up 
-            setRotation(-90);
-            PIDTurn(0);
-            Lift.stopAll();
-            //turnTimed(turnTime,  true, 50); //turn left
-            strafeTimed(1.4, true, 100); //right
-            strafeTimed(1, false, 50); //left
-
-            //lined up with the ringles
-            Pneumatics.setRingles(true);
-            moveForwardTimed(2, 30);
-
-            //point turn to get to home zone and slow for more rings
-            setRotation(0);
-            PIDTurn(180);
-            //turnTimed(2*turnTime,  false, 50); //turn right
-
-            moveForwardTimed(.5, 100);
-            Pneumatics.setRingles(true);
-            moveForwardTimed(3, 30);
+        if(!isLeft && !isBlue){
+            //red right
+            executeData(auton_Data_RRS, auton_dataLength, autonDataTime);
+        } else if (isLeft && !isBlue){
+            executeData(auton_Data_RLS, auton_dataLength, autonDataTime);
         }
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
-        if(isLeft){
-            setRotation(40);
-        } else {
-            setRotation(-40);
-        }
-        //Pneumatics.toggleClaw();
-        //delay(.25);
-        Claw.move_relative(-400, 100);
-        Pneumatics.clawRelease();
-        moveForwardTimed(2.25);
-        Pneumatics.clawGrab();
-        //tug
-        totalForwardMovement = 0;
-        moveBackwardTimed(1.25);
-        //check for tugging
-        while(totalForwardMovement > -20){
-            moveBackwardTimed(.25);
+        if(!isLeft && !isBlue){
+            //red right
+            executeData(auton_Data_RRM, auton_dataLength, autonDataTime);
         }
     };
     void AutonomousThree(bool isLeft, bool isBlue){

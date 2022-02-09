@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 15; // in seconds
+const int recordTime = 16; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -255,6 +255,7 @@ void stopRecording(){
     Bongo.Lift.stopAll();
     Bongo.Movement.stopAll();
     Bongo.Pneumatics.setRingles(false);
+    delay(1000000000);
 }
 
 void printUnfilteredData(){
@@ -402,6 +403,11 @@ void setPIDSForSubs(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
 
 }
 
+bool needclawToggled = true;
+bool needtiltToggled = true;
+bool needbackToggled = true;
+
+
 void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords], bool useDrive, bool usePos){
     //DRIVE CODE
     if(useDrive){
@@ -454,25 +460,25 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
         Bongo.Pneumatics.toggleRingles();
     }
     */
-
-    if ((int)dataToBeReplayed[AButtonDigital] == 1){
+    /*
+    if ((int)dataToBeReplayed[AButtonDigital] == 1 && needclawToggled){
         //printf("Triggered claw\n");
-        //Bongo.Pneumatics.toggleClaw();
-        Bongo.Pneumatics.clawGrab();
+        Bongo.Pneumatics.toggleClaw();
+        needclawToggled = false;
     } else {
-        Bongo.Pneumatics.clawRelease();
+        needclawToggled = true;
     }
-    if ((int)dataToBeReplayed[XButtonDigital] == 1){
-        //Bongo.Pneumatics.toggletilt();
-        Bongo.Pneumatics.tiltGrab();
+    if ((int)dataToBeReplayed[XButtonDigital] == 1 && needtiltToggled){
+        Bongo.Pneumatics.toggletilt();
+        needtiltToggled = false;
     } else {
-        Bongo.Pneumatics.tiltRelease();
+        needtiltToggled = true;
     }
-    if ((int)dataToBeReplayed[YButtonDigital] == 1){
-        //Bongo.Pneumatics.toggleBack();
-        Bongo.Pneumatics.backGrab();
+    if ((int)dataToBeReplayed[YButtonDigital] == 1 && needbackToggled){
+        Bongo.Pneumatics.toggleBack();
+        needbackToggled = false;
     } else {
-        Bongo.Pneumatics.backGrab();
+        needbackToggled = true;
     }
     if ((int)dataToBeReplayed[downArrowDigital] == 1){
         //RingleLift.move_relative(-360, 50);
@@ -480,6 +486,18 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
     if((int)dataToBeReplayed[upArrowDigital] == 1){
         //Bongo.Pneumatics.toggleRingles();
     }
+    */
+   if ((int)dataToBeReplayed[AButtonDigital] == 1){
+        printf("Triggered claw\n");
+        Bongo.Pneumatics.clawGrab();
+    }
+    if ((int)dataToBeReplayed[XButtonDigital] == 1){
+        Bongo.Pneumatics.tiltGrab();
+    }
+    if ((int)dataToBeReplayed[YButtonDigital] == 1){
+        Bongo.Pneumatics.backGrab();
+    }
+
 
 }
 
@@ -501,11 +519,11 @@ double maxVoltage(double checkVolt){
 }
 
 void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
-    double pVal = 60;
+    double pVal = 50;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
 
-    double headingPval = 150;
+    double headingPval = 350;
 
     //errors
     double leftError = futureDataToBeReplayed[leftOdomPosition] - leftOdom.get();

@@ -31,7 +31,7 @@ private:
     double clawOffset = 0;
     double clawIncrease = 6;
 
-    double moveClawPval = 15;
+    double moveClawPval = 25;
     double moveArmPval = 15;
 
     bool PIDControl = false;

@@ -137,8 +137,21 @@ extern void learnEncoder(double dataToBeReplayed[][MaxRecords], int dataLength, 
 
 #define skills_dataLength 300
 
+#define auton_dataLength 300
+
 extern int skillsDataTime;
 
+extern int autonDataTime;
+
 extern double skills_Data[][MaxRecords];
+
+extern double auton_Data_RRS[][MaxRecords];
+
+extern double auton_Data_RRM[][MaxRecords];
+
+
+extern double auton_Data_RLS[][MaxRecords];
+
+
 
 #endif
