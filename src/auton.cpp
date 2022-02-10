@@ -408,7 +408,7 @@ bool needtiltToggled = true;
 bool needbackToggled = true;
 
 
-void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords], bool useDrive, bool usePos){
+void controllerVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords], bool useDrive, bool usePos){
     //DRIVE CODE
     if(useDrive){
         Bongo.Movement.tylerControl(dataToBeReplayed[LXDataNum],dataToBeReplayed[LYDataNum],dataToBeReplayed[RXDataNum]);
@@ -460,25 +460,16 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
         Bongo.Pneumatics.toggleRingles();
     }
     */
-    /*
-    if ((int)dataToBeReplayed[AButtonDigital] == 1 && needclawToggled){
+    
+    if ((int)dataToBeReplayed[AButtonDigital] == 1 && (int)prevDataToBeReplayed[AButtonDigital] == 0){
         //printf("Triggered claw\n");
         Bongo.Pneumatics.toggleClaw();
-        needclawToggled = false;
-    } else {
-        needclawToggled = true;
     }
-    if ((int)dataToBeReplayed[XButtonDigital] == 1 && needtiltToggled){
+    if ((int)dataToBeReplayed[XButtonDigital] == 1 && (int)prevDataToBeReplayed[XButtonDigital] == 0){
         Bongo.Pneumatics.toggletilt();
-        needtiltToggled = false;
-    } else {
-        needtiltToggled = true;
     }
-    if ((int)dataToBeReplayed[YButtonDigital] == 1 && needbackToggled){
+    if ((int)dataToBeReplayed[YButtonDigital] == 1 && (int)prevDataToBeReplayed[YButtonDigital] == 0){
         Bongo.Pneumatics.toggleBack();
-        needbackToggled = false;
-    } else {
-        needbackToggled = true;
     }
     if ((int)dataToBeReplayed[downArrowDigital] == 1){
         //RingleLift.move_relative(-360, 50);
@@ -486,7 +477,9 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
     if((int)dataToBeReplayed[upArrowDigital] == 1){
         //Bongo.Pneumatics.toggleRingles();
     }
-    */
+    
+   
+   /*
    if ((int)dataToBeReplayed[AButtonDigital] == 1){
         printf("Triggered claw\n");
         Bongo.Pneumatics.clawGrab();
@@ -497,7 +490,7 @@ void controllerVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRe
     if ((int)dataToBeReplayed[YButtonDigital] == 1){
         Bongo.Pneumatics.backGrab();
     }
-
+    */
 
 }
 
@@ -518,7 +511,7 @@ double maxVoltage(double checkVolt){
     return checkVolt;
 }
 
-void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
+void encoderVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
     double pVal = 50;
     double dVal = 0;
     double v_Pval = .5; // to input what the motor should be around
@@ -548,7 +541,7 @@ void encoderVals(double dataToBeReplayed[MaxRecords], double futureDataToBeRepla
     //printf("rightSpeed: %f\n", rightSpeed);
 
 
-    controllerVals(dataToBeReplayed, futureDataToBeReplayed, false, true);
+    controllerVals(prevDataToBeReplayed, dataToBeReplayed, futureDataToBeReplayed, false, true);
 
     checkLeftError(dataToBeReplayed[leftOdomPosition]);
     checkRightError(dataToBeReplayed[rightOdomPosition]);
@@ -582,7 +575,7 @@ void runSegment(double dataToBeReplayed[][MaxRecords], int index){
     //run off of controller values
     //controllerVals(dataToBeReplayed, false);
     //run off of encoderPID
-    encoderVals(dataToBeReplayed[index], dataToBeReplayed[index+1]);
+    encoderVals(dataToBeReplayed[index - 1], dataToBeReplayed[index], dataToBeReplayed[index+1]);
 }
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){

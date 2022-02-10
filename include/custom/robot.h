@@ -119,7 +119,7 @@ public:
 
     void autonomous(){
         //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(3, false, false);
+        Autonomous(1, true, false);
     }
 
     void catieControl(){
@@ -561,15 +561,15 @@ public:
     }
 
     void AutonomousOne(bool isLeft, bool isBlue){
-        if(!isLeft && !isBlue){
+        if(!isLeft){
             //red right
             executeData(auton_Data_RS, auton_dataLength, autonDataTime);
-        } else if (isLeft && !isBlue){
+        } else if (isLeft){
             executeData(auton_Data_LS, auton_dataLength, autonDataTime);
         }
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
-        if(!isLeft && !isBlue){
+        if(!isLeft){
             //red right
             executeData(auton_Data_RM, auton_dataLength, autonDataTime);
         }
