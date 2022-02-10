@@ -145,13 +145,13 @@ extern int autonDataTime;
 
 extern double skills_Data[][MaxRecords];
 
-extern double auton_Data_RRS[][MaxRecords];
+extern double auton_Data_RS[][MaxRecords];
 
-extern double auton_Data_RRM[][MaxRecords];
+extern double auton_Data_RM[][MaxRecords];
 
 extern double auton_Data_HR[][MaxRecords];
 
-extern double auton_Data_RLS[][MaxRecords];
+extern double auton_Data_LS[][MaxRecords];
 
 
 

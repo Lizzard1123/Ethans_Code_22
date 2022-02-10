@@ -563,15 +563,15 @@ public:
     void AutonomousOne(bool isLeft, bool isBlue){
         if(!isLeft && !isBlue){
             //red right
-            executeData(auton_Data_RRS, auton_dataLength, autonDataTime);
+            executeData(auton_Data_RS, auton_dataLength, autonDataTime);
         } else if (isLeft && !isBlue){
-            executeData(auton_Data_RLS, auton_dataLength, autonDataTime);
+            executeData(auton_Data_LS, auton_dataLength, autonDataTime);
         }
     };
     void AutonomousTwo(bool isLeft, bool isBlue){
         if(!isLeft && !isBlue){
             //red right
-            executeData(auton_Data_RRM, auton_dataLength, autonDataTime);
+            executeData(auton_Data_RM, auton_dataLength, autonDataTime);
         }
     };
     void AutonomousThree(bool isLeft, bool isBlue){
