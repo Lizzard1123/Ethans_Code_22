@@ -149,6 +149,7 @@ extern double auton_Data_RRS[][MaxRecords];
 
 extern double auton_Data_RRM[][MaxRecords];
 
+extern double auton_Data_HR[][MaxRecords];
 
 extern double auton_Data_RLS[][MaxRecords];
 

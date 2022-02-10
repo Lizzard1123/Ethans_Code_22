@@ -32,11 +32,11 @@ void opcontrol()
     {//
         //
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            if(!hasRecorded()){
-                startRecording();
-            }
+            //if(!hasRecorded()){
+            //    startRecording();
+            //}
             //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
-            //Bongo.autonomous();
+            Bongo.autonomous();
         }
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){

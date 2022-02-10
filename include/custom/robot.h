@@ -119,7 +119,7 @@ public:
 
     void autonomous(){
         //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(2, false, false);
+        Autonomous(3, false, false);
     }
 
     void catieControl(){
@@ -576,6 +576,8 @@ public:
     };
     void AutonomousThree(bool isLeft, bool isBlue){
         //TODO finish this auton pathing
+        executeData(auton_Data_HR, auton_dataLength, autonDataTime);
+
     };
     void AutonomousFour(bool isLeft, bool isBlue){
         printf("Starting skills\n");
