@@ -119,7 +119,7 @@ public:
 
     void autonomous(){
         //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(1, true, false);
+        Autonomous(4, true, false);
     }
 
     void catieControl(){

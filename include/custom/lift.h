@@ -6,10 +6,10 @@ class LiftClass
 {
 private:
     double minLiftSpeed = 50;
-    double maxLiftSpeed = 100 * maxSpeedMultiplier;
+    double maxLiftSpeed = 100;
 
     double minClawSpeed = 40; 
-    double maxClawSpeed = 80 * maxSpeedMultiplier; 
+    double maxClawSpeed = 80; 
 
 
 
@@ -32,7 +32,7 @@ private:
     double clawIncrease = 6;
 
     double moveClawPval = 25;
-    double moveArmPval = 15;
+    double moveArmPval = 100;
 
     bool PIDControl = false;
     

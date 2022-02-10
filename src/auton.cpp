@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 16; // in seconds
+const int recordTime = 124; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -514,7 +514,8 @@ double maxVoltage(double checkVolt){
 void encoderVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
     double pVal = 50;
     double dVal = 0;
-    double v_Pval = .5; // to input what the motor should be around
+    //double v_Pval = .5; // to input what the motor should be around
+    double v_Pval = 1;
 
     double headingPval = 350;
 
@@ -580,13 +581,14 @@ void runSegment(double dataToBeReplayed[][MaxRecords], int index){
 
 void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int dataTime){
     printf("Executing Data\n");
-    dataTime = (dataTime * 1000) / driverSpeed;
+    dataTime = (dataTime * 1000) / (driverSpeed / 2);
     printf("Total Data time: %f\n", (double)dataTime);
     for(int i = 0; i < dataTime; i++){
         //printf("running line: %f\n", (double)i);
         //printf("total: %f\n", (double)dataLength);
         runSegment(dataToBeReplayed, i); //similate inputs 
-        delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
+        //delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
+        delay(driverSpeed / 2); // NEEDS to be the same as driver collected dataLine
     }
     printf("Total leftError: %f\n", leftErrorScore);
     printf("Total rightError: %f\n", rightErrorScore);
