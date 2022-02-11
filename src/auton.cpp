@@ -514,8 +514,8 @@ double maxVoltage(double checkVolt){
 void encoderVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplayed[MaxRecords], double futureDataToBeReplayed[MaxRecords]){
     double pVal = 50;
     double dVal = 0;
-    //double v_Pval = .5; // to input what the motor should be around
-    double v_Pval = 1;
+    double v_Pval = .5; // to input what the motor should be around
+    //double v_Pval = 1;
 
     double headingPval = 350;
 
@@ -587,8 +587,8 @@ void executeData(double dataToBeReplayed[][MaxRecords], int dataLength, int data
         //printf("running line: %f\n", (double)i);
         //printf("total: %f\n", (double)dataLength);
         runSegment(dataToBeReplayed, i); //similate inputs 
-        //delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
-        delay(driverSpeed / 2); // NEEDS to be the same as driver collected dataLine
+        delay(driverSpeed); // NEEDS to be the same as driver collected dataLine
+        //delay(driverSpeed / 2); // NEEDS to be the same as driver collected dataLine
     }
     printf("Total leftError: %f\n", leftErrorScore);
     printf("Total rightError: %f\n", rightErrorScore);
