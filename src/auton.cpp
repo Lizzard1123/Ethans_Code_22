@@ -469,6 +469,7 @@ void controllerVals(double prevDataToBeReplayed[MaxRecords], double dataToBeRepl
         Bongo.Pneumatics.toggletilt();
     }
     if ((int)dataToBeReplayed[YButtonDigital] == 1 && (int)prevDataToBeReplayed[YButtonDigital] == 0){
+        Bongo.Pmeumatics.setRingles(true);
         Bongo.Pneumatics.toggleBack();
     }
     if ((int)dataToBeReplayed[downArrowDigital] == 1){

@@ -83,6 +83,8 @@ public:
     void setRingles(bool on){
         if(on){
             RingleLift.move_velocity(ringlesSpeed);
+        } else {
+            RingleLift.move_velocity(0);
         }
     }
 

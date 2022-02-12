@@ -118,8 +118,8 @@ public:
     }
 
     void autonomous(){
-        //Autonomous(getAutonNum(), getSide(), getColor());
-        Autonomous(4, true, false);
+        Autonomous(getAutonNum(), getSide(), getColor());
+        //Autonomous(4, true, false);
     }
 
     void catieControl(){
@@ -582,6 +582,9 @@ public:
     void AutonomousFour(bool isLeft, bool isBlue){
         printf("Starting skills\n");
         //This is skills!!!
+        Bongo.Pneumatics.setRingles(true);
+        delay(500);
+        Bongo.Pneumatics.setRingles(false);
         executeData(skills_Data, skills_dataLength, skillsDataTime);
     };
 

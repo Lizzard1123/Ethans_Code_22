@@ -36,7 +36,7 @@ void opcontrol()
             //    startRecording();
             //}
             //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
-            Bongo.autonomous();
+            //Bongo.autonomous();
         }
         /*
         if(master.get_digital_new_press(DIGITAL_RIGHT)){
@@ -48,9 +48,9 @@ void opcontrol()
         Bongo.debugPos();
 
         // tyler control
-        //Bongo.tylerControl();
+        Bongo.tylerControl();
 
-        Bongo.arcadeControl();
+        //Bongo.arcadeControl();
 
 
         // catie control
@@ -80,7 +80,7 @@ void opcontrol()
             Bongo.Pneumatics.toggleClaw();
         }
 
-        //Toggle frpnt
+        //Toggle tilt
         if (master.get_digital_new_press(DIGITAL_X)){
             Bongo.Pneumatics.toggletilt();
         }
@@ -100,10 +100,10 @@ void opcontrol()
         //    Bongo.testOdom();
         //}
 //
-        //if(master.get_digital_new_press(DIGITAL_UP)){
-        //    //Bongo.Pneumatics.toggleRingles();
+        if(master.get_digital_new_press(DIGITAL_UP)){
+      Bongo.Pneumatics.toggleRingles();
         //    Bongo.testOdom2();
-        //}
+        }
 //
         //if(master.get_digital_new_press(DIGITAL_RIGHT)){
         //    //Bongo.setRotation(0);

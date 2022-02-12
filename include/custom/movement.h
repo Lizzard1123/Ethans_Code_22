@@ -13,7 +13,7 @@ private:
     double RYaxis = 0;
 
     //higher the number the slower the turn
-    double rotationTune = 3;
+    double rotationTune = 1.5;
 
     //deadzone : min num to be detected from joystick
     double deadZone = 5;
