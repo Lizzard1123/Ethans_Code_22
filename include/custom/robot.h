@@ -582,14 +582,18 @@ public:
     void AutonomousFour(bool isLeft, bool isBlue){
         printf("Starting skills\n");
         //This is skills!!!
-        Bongo.Pneumatics.setRingles(true);
+        Pneumatics.setRingles(true);
         delay(500);
-        Bongo.Pneumatics.setRingles(false);
+        Pneumatics.setRingles(false);
         executeData(skills_Data, skills_dataLength, skillsDataTime);
     };
 
     void Autonomous(int num, bool isLeft, bool isBlue)
     {
+        
+        Pneumatics.tiltRelease(); 
+        Pneumatics.backRelease();
+        Pneumatics.clawRelease();
         switch (num)
         {
         case 1:

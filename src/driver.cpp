@@ -25,9 +25,6 @@ void opcontrol()
     master.print(0, 8, "Player 1");
     Bongo.Lift.stopPIDArm();
     //startRecording();
-    Bongo.Pneumatics.tiltRelease();
-    Bongo.Pneumatics.backRelease();
-    Bongo.Pneumatics.clawRelease();
     while (true)
     {//
         //

@@ -13,7 +13,7 @@ public:
 
     //ringles
     bool ringlesToggled = false;
-    double ringlesSpeed = 110 * maxSpeedMultiplier;
+    double ringlesSpeed = 60; //rpm
 
     void clawGrab(){
         clawLock.set_value(LOW);
