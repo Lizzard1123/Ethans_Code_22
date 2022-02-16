@@ -11,8 +11,6 @@ private:
     double minClawSpeed = 40; 
     double maxClawSpeed = 80; 
 
-
-
     double defaultClawSpeed = 100;
     double liftSpeed = 50;
 
@@ -21,12 +19,11 @@ private:
     double LarmLiftSpeed = 0;
 
     double Pval = .1;
-    double Dval = 0;
 
     double armMaxTorque = 1.05;
     double clawMaxTorque = 2.1;
 
-    bool autoLevel = true;
+    bool autoLevel = false;
     double CPval = 3;
     double clawOffset = 0;
     double clawIncrease = 6;
@@ -64,12 +61,6 @@ public:
         Larm.move_velocity(0);
         Rarm.move_velocity(0);
     }
-
-    //void level(){
-    //    double error = getRightMoved() - getLeftMoved();
-    //    LarmLiftSpeed -= error * Pval;
-    //    RarmLiftSpeed += error * Pval;
-    //} 1134 degrees / 3951 analog vals
 
     void toggleAutoLevel(){
         //autoLevel = !autoLevel;
@@ -161,21 +152,27 @@ public:
     }
 
     void clawUp(){
-        clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        Claw.move_velocity(clawSpeed);
-        //if(clawOffset <= 70){
-        //    clawOffset+=clawIncrease;
-        //}
+        if(autoLevel){
+            if(clawOffset <= 70){
+                clawOffset+=clawIncrease;
+            }
+        } else {
+            clawSpeed = torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed); 
+        }
         //clawSpeed = defaultClawSpeed;
+        //Claw.move_velocity(clawSpeed);
     }
  
     void clawDown(){
-        clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
-        Claw.move_velocity(clawSpeed);
-        //if(clawOffset >= -80){
-        //    clawOffset-=clawIncrease;
-        //}
+        if(autoLevel){
+            if(clawOffset >= -80){
+                clawOffset-=clawIncrease;
+            }
+        } else {
+            clawSpeed = -1 * torqueLimiter(clawMaxTorque, Claw.get_torque(), minClawSpeed, maxClawSpeed);
+        }
         //clawSpeed = -defaultClawSpeed;
+        //Claw.move_velocity(clawSpeed);
     }
 
 
