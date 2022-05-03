@@ -75,12 +75,12 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define BLActualVelocity 30
 #define BRActualVelocity 31
 #define ClawActualVelocity 32
-#define RingleLiftActualVelocity 33
+#define MWActualVelocity 33
 #define LarmActualVelocity 34
 #define RarmActualVelocity 35
 
 #define ClawPosition 36
-#define RingleLiftPosition 37
+#define MWPosition 37
 #define LarmPosition 38
 #define RarmPosition 39
 #define rightOdomPosition 40
@@ -91,6 +91,7 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define FRVolt 43
 #define BLVolt 44
 #define BRVolt 45
+#define MWVolt 54
 #define LarmVolt 46
 #define RarmVolt 47
 #define ClawVolt 48
@@ -102,7 +103,7 @@ extern pros::c::ext_adi_encoder_t  leftOdom;
 #define recordedX 52
 #define recordedY 53
 
-#define MaxRecords 54
+#define MaxRecords 55
 
 
 extern void fillEmpty();

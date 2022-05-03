@@ -7,10 +7,10 @@ Motor FL(FLPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor FR(FRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor BL(BLPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES);
 Motor BR(BRPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
+Motor MW(MWPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES);
 Motor Larm(LarmPort, E_MOTOR_GEARSET_18, true, E_MOTOR_ENCODER_DEGREES); 
 Motor Rarm(RarmPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
 Motor Claw(ClawPort, E_MOTOR_GEARSET_36, true, E_MOTOR_ENCODER_DEGREES); 
-Motor RingleLift(LiftPort, E_MOTOR_GEARSET_18, false, E_MOTOR_ENCODER_DEGREES); 
 /*
 motor FrontLeft = motor(PORT14, ratio18_1, false);
 motor FrontRight = motor(PORT15, ratio18_1, true);
@@ -55,12 +55,13 @@ vision::signature SIG_1 (1, 189, 1879, 1034, -3857, -2845, -3352, 0.700, 0);
 ADIDigitalOut clawLock('E');
 ADIDigitalOut tiltLock('F');
 ADIDigitalOut backLock('G');
+ADIDigitalOut liftShifter('H');
 
 
 
 //button / limit switch
 //ADIDigitalIn tailSensor(tailSensorPort);
-ADIDigitalIn leftSwitch('H');
+//ADIDigitalIn leftSwitch('H');
 
 //pots
 //ADIAnalogIn liftPot('c');

@@ -24,6 +24,7 @@ public:
     double FRspeed;
     double BLspeed;
     double BRspeed;
+    double MWspeed;
     /*subsytem class declarions of the bot*/
     //custom math reference
     Math myMath;
@@ -94,6 +95,7 @@ public:
         FRspeed = LYaxis - LXaxis - RXaxis;
         BLspeed = LYaxis - LXaxis + RXaxis;
         BRspeed = LYaxis + LXaxis - RXaxis;
+        MWspeed = LYaxis;
 
         //under is the number in the denominator of the largest number when it equals 100
         //scales down other numbers relative to it
@@ -117,6 +119,8 @@ public:
         FRspeed = LYaxis - RXaxis;
         BLspeed = LYaxis + RXaxis;
         BRspeed = LYaxis - RXaxis;
+        MWspeed = LYaxis;
+
 
         //under is the number in the denominator of the largest number when it equals 100
         //scales down other numbers relative to it
@@ -137,6 +141,7 @@ public:
         FL.move_velocity(myMath.toRPM(false, FLspeed, FL.get_gearing()));
         BR.move_velocity(myMath.toRPM(false, BRspeed, BR.get_gearing()));
         BL.move_velocity(myMath.toRPM(false, BLspeed, BL.get_gearing()));
+        MW.move_velocity(myMath.toRPM(false, MWspeed, MW.get_gearing()));
     }
     
     void moveVolt(){

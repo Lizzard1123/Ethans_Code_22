@@ -9,8 +9,8 @@
 #define BRPort 11
 #define LarmPort 18
 #define RarmPort 16
-#define ClawPort 10
-#define LiftPort 17
+#define ClawPort 9
+#define MWPort 17
 #define VincentPORT 1
 #define WristPORT 2
 
@@ -25,7 +25,7 @@ extern Motor FR;
 extern Motor BL;
 extern Motor BR;
 extern Motor Claw;
-extern Motor RingleLift;
+extern Motor MW;
 extern Motor Larm;
 extern Motor Rarm;
 

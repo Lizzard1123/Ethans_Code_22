@@ -32,6 +32,7 @@ private:
     double moveArmPval = 100;
 
     bool PIDControl = false;
+
     
 public:
     Math myMath;
@@ -99,7 +100,7 @@ public:
         //if(autoLevel){
         //    Claw.move_velocity(autoLevelClaw());
         //} else {
-        //    Claw.move_velocity(clawSpeed);
+        Claw.move_velocity(clawSpeed);
         //}
         if(!PIDControl){
             if(Larm.get_position() >= 0 && LarmLiftSpeed < 0){

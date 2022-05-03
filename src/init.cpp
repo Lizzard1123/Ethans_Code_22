@@ -1018,7 +1018,7 @@ void initialize()
     Larm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     Rarm.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     Claw.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    RingleLift.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    MW.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
     
 
     Vincent.reset();
@@ -1036,9 +1036,11 @@ void initialize()
     ADIDigitalOut clawLock('E');
     ADIDigitalOut frontLock('H');
     ADIDigitalOut backLock('G');
+    ADIDigitalOut wheelShifter('G');
     //Bongo.Pneumatics.clawGrab();
     Bongo.Pneumatics.backRelease();
     Bongo.Pneumatics.tiltRelease();
+    Bongo.Pneumatics.shiftWheelDown();
 
 }
 

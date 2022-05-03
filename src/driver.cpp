@@ -29,9 +29,9 @@ void opcontrol()
     {//
         //
         if(master.get_digital_new_press(DIGITAL_LEFT)){
-            //if(!hasRecorded()){
-            //    startRecording();
-            //}
+            if(!hasRecorded()){
+               startRecording();
+            }
             //learnEncoder(skills_Data, skills_dataLength, skillsDataTime);
             //Bongo.autonomous();
         }
@@ -88,14 +88,21 @@ void opcontrol()
             Bongo.Lift.toggleAutoLevel();
         }
 
-        if (master.get_digital_new_press(DIGITAL_DOWN)){
-            RingleLift.move_relative(-360, 50);
-            //Bongo.testOdom();
+        //if (master.get_digital_new_press(DIGITAL_DOWN)){
+        //    //RingleLift.move_relative(-360, 50);
+        //    //Bongo.testOdom();
+        //}
+
+        if(master.get_digital(DIGITAL_UP)){
+            //Bongo.Pneumatics.toggleRingles();
+            //Bongo.testOdom2();
+            Bongo.Pneumatics.shiftWheelUp();
         }
 
-        if(master.get_digital_new_press(DIGITAL_UP)){
-            Bongo.Pneumatics.toggleRingles();
+        if(master.get_digital(DIGITAL_DOWN)){
+            //Bongo.Pneumatics.toggleRingles();
             //Bongo.testOdom2();
+            Bongo.Pneumatics.shiftWheelDown();
         }
 
         //if(master.get_digital_new_press(DIGITAL_RIGHT)){

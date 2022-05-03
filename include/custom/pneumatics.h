@@ -10,6 +10,7 @@ public:
     bool clawToggled = false;
     bool tiltToggled = false;
     bool backToggled = false;
+    bool wheelIsDown = false;
 
     //ringles
     bool ringlesToggled = false;
@@ -73,19 +74,34 @@ public:
 
     void toggleRingles(){
         if(ringlesToggled){
-            RingleLift.move_velocity(0);
+            //RingleLift.move_velocity(0);
         } else {
-            RingleLift.move_velocity(ringlesSpeed);
+            //RingleLift.move_velocity(ringlesSpeed);
         }
         ringlesToggled = !ringlesToggled;
     }
 
     void setRingles(bool on){
         if(on){
-            RingleLift.move_velocity(ringlesSpeed);
+            //RingleLift.move_velocity(ringlesSpeed);
         } else {
-            RingleLift.move_velocity(0);
+            //RingleLift.move_velocity(0);
         }
+    }
+
+    void shiftWheelDown(){
+        wheelIsDown = true;
+        liftShifter.set_value(!wheelIsDown);
+    }
+
+    void shiftWheelUp(){
+        wheelIsDown = false;
+        liftShifter.set_value(!wheelIsDown);
+    }
+
+    void shiftWheelToggle(){
+        wheelIsDown = !wheelIsDown;
+        liftShifter.set_value(!wheelIsDown);
     }
 
 };

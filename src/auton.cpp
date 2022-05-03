@@ -23,7 +23,7 @@ FILE* sd = fopen("/usd/RecordedData.txt", "w");
 
 int currentDataLine = 0;
 
-const int recordTime = 62; // in seconds
+const int recordTime = 16; // in seconds
 int recordLength = 0;
 const int maxDataLength = (recordTime * 1000) / driverSpeed;
 const int maxSegmentLength = MaxRecords;
@@ -93,11 +93,11 @@ void setData(){
         replayData[currentDataLine][BLActualVelocity] = BL.get_actual_velocity();
         replayData[currentDataLine][BRActualVelocity] = BR.get_actual_velocity();
         replayData[currentDataLine][ClawActualVelocity] = Claw.get_actual_velocity();
-        replayData[currentDataLine][RingleLiftActualVelocity] = RingleLift.get_actual_velocity();
+        replayData[currentDataLine][MWActualVelocity] = MW.get_actual_velocity();
         replayData[currentDataLine][LarmActualVelocity] = Larm.get_actual_velocity();
         replayData[currentDataLine][RarmActualVelocity] = Rarm.get_actual_velocity();
         replayData[currentDataLine][ClawPosition] = Claw.get_position();
-        replayData[currentDataLine][RingleLiftPosition] = RingleLift.get_position();
+        replayData[currentDataLine][MWPosition] = MW.get_position();
         replayData[currentDataLine][LarmPosition] = Larm.get_position();
         replayData[currentDataLine][RarmPosition] = Rarm.get_position();
         replayData[currentDataLine][rightOdomPosition] = rightOdom.get();
@@ -108,6 +108,7 @@ void setData(){
         replayData[currentDataLine][FRVolt] = FR.get_voltage();
         replayData[currentDataLine][BLVolt] = BL.get_voltage();
         replayData[currentDataLine][BRVolt] = BR.get_voltage();
+        replayData[currentDataLine][MWVolt] = MW.get_voltage();
         replayData[currentDataLine][LarmVolt] = Larm.get_voltage();
         replayData[currentDataLine][RarmVolt] = Rarm.get_voltage();
         replayData[currentDataLine][ClawVolt] = Claw.get_voltage();
@@ -176,11 +177,11 @@ void setDataToSd(){
             lineData[BLActualVelocity] = BL.get_actual_velocity();
             lineData[BRActualVelocity] = BR.get_actual_velocity();
             lineData[ClawActualVelocity] = Claw.get_actual_velocity();
-            lineData[RingleLiftActualVelocity] = RingleLift.get_actual_velocity();
+            lineData[MWActualVelocity] = MW.get_actual_velocity();
             lineData[LarmActualVelocity] = Larm.get_actual_velocity();
             lineData[RarmActualVelocity] = Rarm.get_actual_velocity();
             lineData[ClawPosition] = Claw.get_position();
-            lineData[RingleLiftPosition] = RingleLift.get_position();
+            lineData[MWPosition] = MW.get_position();
             lineData[LarmPosition] = Larm.get_position();
             lineData[RarmPosition] = Rarm.get_position();
             lineData[rightOdomPosition] = rightOdom.get();
@@ -189,6 +190,7 @@ void setDataToSd(){
             lineData[FRVolt] = FR.get_voltage();
             lineData[BLVolt] = BL.get_voltage();
             lineData[BRVolt] = BR.get_voltage();
+            lineData[MWVolt] = MW.get_voltage();
             lineData[LarmVolt] = Larm.get_voltage();
             lineData[RarmVolt] = Rarm.get_voltage();
             lineData[ClawVolt] = Claw.get_voltage();
@@ -472,9 +474,6 @@ void controllerVals(double prevDataToBeReplayed[MaxRecords], double dataToBeRepl
         Bongo.Pneumatics.setRingles(true);
         Bongo.Pneumatics.toggleBack();
     }
-    if ((int)dataToBeReplayed[downArrowDigital] == 1){
-        //RingleLift.move_relative(-360, 50);
-    }
     if((int)dataToBeReplayed[upArrowDigital] == 1){
         //Bongo.Pneumatics.toggleRingles();
     }
@@ -526,6 +525,7 @@ void encoderVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplaye
 
     double leftactV = dataToBeReplayed[FLVolt] + dataToBeReplayed[BLVolt];
     double rightactV = dataToBeReplayed[FRVolt] + dataToBeReplayed[BRVolt];
+    double midactV = dataToBeReplayed[MWVolt];
 
     double headingError = futureDataToBeReplayed[VincentRotation] - Vincent.get_rotation();
     
@@ -538,6 +538,7 @@ void encoderVals(double prevDataToBeReplayed[MaxRecords], double dataToBeReplaye
 
     Bongo.Movement.moveLeftVolt(leftSpeed);
     Bongo.Movement.moveRightVolt(rightSpeed);
+    MW.move_voltage(midactV);
 
     //printf("leftSpeed: %f\n", leftSpeed);
     //printf("rightSpeed: %f\n", rightSpeed);
